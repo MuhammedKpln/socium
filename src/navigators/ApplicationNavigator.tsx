@@ -1,9 +1,12 @@
+import { Toast } from '@/components/Toast/Toast.component'
 import { updateTheme } from '@/store/reducers/theme.reducer'
 import { configureDesignSystem } from '@/theme/designSystem'
+import { toastRef } from '@/utils/toast'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React, { useCallback, useEffect, useState } from 'react'
-import { SafeAreaView, StatusBar, useColorScheme } from 'react-native'
+import { StatusBar, useColorScheme } from 'react-native'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { useDispatch } from 'react-redux'
 import BottomTabBarNavigator from './BottomTabNavigator'
 import { navigationRef } from './utils/navigation'
@@ -34,14 +37,15 @@ const ApplicationNavigator = () => {
   if (!ready) return null
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaProvider style={{ flex: 1 }}>
       <NavigationContainer ref={navigationRef}>
         <StatusBar />
+        <Toast ref={toastRef} />
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Main" component={BottomTabBarNavigator} />
         </Stack.Navigator>
       </NavigationContainer>
-    </SafeAreaView>
+    </SafeAreaProvider>
   )
 }
 

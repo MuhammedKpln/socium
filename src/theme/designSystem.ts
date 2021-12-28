@@ -8,6 +8,9 @@ const colors = {
   blackish2: Colors.rgba(50, 50, 50, 1),
   whitish: Colors.rgba(250, 250, 250, 1),
   whitish2: Colors.rgba(230, 230, 230, 1),
+  info: '#5383b8',
+  error: Colors.red40,
+  success: Colors.green40,
 }
 
 const themes = {

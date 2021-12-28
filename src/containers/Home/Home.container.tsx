@@ -1,12 +1,12 @@
 import { useAppSelector } from '@/store'
+import { incremented } from '@/store/reducers/counter.reducer'
+import { updateTheme } from '@/store/reducers/theme.reducer'
+import { showToast, ToastStatus } from '@/utils/toast'
 import React from 'react'
 import { Text } from 'react-native'
-import { Button, Colors } from 'react-native-ui-lib'
+import { Button } from 'react-native-ui-lib'
 import View from 'react-native-ui-lib/view'
 import { useDispatch } from 'react-redux'
-import { incremented } from '@/store/reducers/counter.reducer'
-import { SCHEME_TYPES } from '@/theme/designSystem'
-import { updateTheme } from '@/store/reducers/theme.reducer'
 
 const HomeContainer = () => {
   const value = useAppSelector(state => state.counterSlice.value)
@@ -17,6 +17,9 @@ const HomeContainer = () => {
       <Text>selam {value}</Text>
 
       <Button onPress={() => dispatch(incremented())}>
+        <Text>selam</Text>
+      </Button>
+      <Button onPress={() => showToast(ToastStatus.Success, 'selam')}>
         <Text>selam</Text>
       </Button>
       <Button

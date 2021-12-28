@@ -6,7 +6,7 @@ import rootReducer from './reducers'
 
 const persistConfig = {
   key: 'root',
-  whitelist: ['comments', 'theme'],
+  blacklist: ['comments', 'theme'],
   storage,
 }
 

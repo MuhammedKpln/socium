@@ -1,9 +1,10 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {Text} from 'react-native';
+import View from 'react-native-ui-lib/view';
 
 const HomeContainer = () => {
   return (
-    <View style={{margin: 100}}>
+    <View>
       <Text>selam</Text>
     </View>
   );

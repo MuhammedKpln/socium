@@ -1,20 +1,9 @@
-import {Navigation} from 'react-native-navigation';
+/**
+ * @format
+ */
+
+import {AppRegistry} from 'react-native';
 import App from './App';
+import {name as appName} from './app.json';
 
-Navigation.registerComponent('com.socium.WelcomeScreen', () => App);
-
-Navigation.events().registerAppLaunchedListener(() => {
-  Navigation.setRoot({
-    root: {
-      stack: {
-        children: [
-          {
-            component: {
-              name: 'com.socium.WelcomeScreen',
-            },
-          },
-        ],
-      },
-    },
-  });
-});
+AppRegistry.registerComponent(appName, () => App);

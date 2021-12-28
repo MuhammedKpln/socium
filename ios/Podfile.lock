@@ -73,7 +73,6 @@ PODS:
   - fmt (6.2.1)
   - glog (0.3.5)
   - hermes-engine (0.9.0)
-  - HMSegmentedControl (1.5.6)
   - libevent (2.1.12)
   - MMKV (1.2.10):
     - MMKVCore (~> 1.2.10)
@@ -362,17 +361,6 @@ PODS:
     - React-jsi (= 0.66.4)
     - React-logger (= 0.66.4)
     - React-perflogger (= 0.66.4)
-  - ReactNativeNavigation (7.24.3):
-    - HMSegmentedControl
-    - React-Core
-    - React-RCTImage
-    - React-RCTText
-    - ReactNativeNavigation/Core (= 7.24.3)
-  - ReactNativeNavigation/Core (7.24.3):
-    - HMSegmentedControl
-    - React-Core
-    - React-RCTImage
-    - React-RCTText
   - RNGestureHandler (2.1.0):
     - React-Core
   - RNReanimated (2.3.1):
@@ -464,7 +452,6 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
-  - ReactNativeNavigation (from `../node_modules/react-native-navigation`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -483,7 +470,6 @@ SPEC REPOS:
     - FlipperKit
     - fmt
     - hermes-engine
-    - HMSegmentedControl
     - libevent
     - MMKV
     - MMKVCore
@@ -553,8 +539,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
-  ReactNativeNavigation:
-    :path: "../node_modules/react-native-navigation"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNReanimated:
@@ -580,7 +564,6 @@ SPEC CHECKSUMS:
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 5337263514dd6f09803962437687240c5dc39aa4
   hermes-engine: bf7577d12ac6ccf53ab8b5af3c6ccf0dd8458c5c
-  HMSegmentedControl: 34c1f54d822d8308e7b24f5d901ec674dfa31352
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   MMKV: 76033b9ace2006623308910a3afcc0e25eba3140
   MMKVCore: b00e7a09ec77a1b916aef336eedd3b99ec249978
@@ -611,7 +594,6 @@ SPEC CHECKSUMS:
   React-RCTVibration: e3ffca672dd3772536cb844274094b0e2c31b187
   React-runtimeexecutor: dec32ee6f2e2a26e13e58152271535fadff5455a
   ReactCommon: 57b69f6383eafcbd7da625bfa6003810332313c4
-  ReactNativeNavigation: e16d74494fbac09d9ff9681b8089a20fad593aeb
   RNGestureHandler: e5c7cab5f214503dcefd6b2b0cefb050e1f51c4a
   RNReanimated: da3860204e5660c0dd66739936732197d359d753
   Yoga: e7dc4e71caba6472ff48ad7d234389b91dadc280

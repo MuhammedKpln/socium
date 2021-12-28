@@ -3,10 +3,9 @@ package com.socium;
 import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
-import com.reactnativenavigation.NavigationApplication;
+import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
-import com.reactnativenavigation.react.NavigationReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
@@ -14,10 +13,10 @@ import java.util.List;
 import com.your.project.name.CustomMMKVJSIModulePackage;
 import com.facebook.react.bridge.JSIModulePackage;
 
-public class MainApplication extends NavigationApplication {
+public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost =
-      new NavigationReactNativeHost(this) {
+      new ReactNativeHost(this) {
         @Override
         public boolean getUseDeveloperSupport() {
           return BuildConfig.DEBUG;
@@ -51,7 +50,7 @@ public class MainApplication extends NavigationApplication {
   @Override
   public void onCreate() {
     super.onCreate();
-    
+    SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
   }
 

@@ -1,8 +1,10 @@
+import { updateTheme } from '@/store/reducers/theme.reducer'
 import { configureDesignSystem } from '@/theme/designSystem'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React, { useCallback, useEffect, useState } from 'react'
-import { SafeAreaView, StatusBar } from 'react-native'
+import { SafeAreaView, StatusBar, useColorScheme } from 'react-native'
+import { useDispatch } from 'react-redux'
 import BottomTabBarNavigator from './BottomTabNavigator'
 import { navigationRef } from './utils/navigation'
 
@@ -10,13 +12,20 @@ const Stack = createNativeStackNavigator()
 
 // @refresh reset
 const ApplicationNavigator = () => {
+  const colorScheme = useColorScheme()
+  const dispatch = useDispatch()
+
   const [ready, setReady] = useState(false)
 
   const startApp = useCallback(async () => {
     configureDesignSystem()
-
+    dispatch(
+      updateTheme({
+        theme: colorScheme === 'dark' ? 'dark' : 'light',
+      }),
+    )
     setReady(true)
-  }, [])
+  }, [colorScheme, dispatch])
 
   useEffect(() => {
     startApp()

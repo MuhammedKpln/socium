@@ -11,6 +11,8 @@ import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import com.your.project.name.CustomMMKVJSIModulePackage;
+import com.facebook.react.bridge.JSIModulePackage;
 
 public class MainApplication extends NavigationApplication {
 
@@ -33,6 +35,11 @@ public class MainApplication extends NavigationApplication {
         @Override
         protected String getJSMainModuleName() {
           return "index";
+        }
+
+        @Override
+        protected JSIModulePackage getJSIModulePackage() {
+          return new CustomMMKVJSIModulePackage();
         }
       };
 

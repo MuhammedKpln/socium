@@ -7,17 +7,17 @@
 import {
   CommonActions,
   createNavigationContainerRef,
-} from '@react-navigation/native';
+} from '@react-navigation/native'
 
-export const navigationRef = createNavigationContainerRef();
+export const navigationRef = createNavigationContainerRef()
 
 //@ts-ignore
 export const navigate = (name, params) => {
   if (navigationRef.isReady()) {
     //@ts-ignore
-    navigationRef.navigate(name, params);
+    navigationRef.navigate(name, params)
   }
-};
+}
 
 export const navigateAndReset = (routes = [], index = 0) => {
   if (navigationRef.isReady()) {
@@ -26,9 +26,9 @@ export const navigateAndReset = (routes = [], index = 0) => {
         index,
         routes,
       }),
-    );
+    )
   }
-};
+}
 
 //@ts-ignore
 export const navigateAndSimpleReset = (name, index = 0) => {
@@ -36,8 +36,8 @@ export const navigateAndSimpleReset = (name, index = 0) => {
     navigationRef.dispatch(
       CommonActions.reset({
         index,
-        routes: [{name}],
+        routes: [{ name }],
       }),
-    );
+    )
   }
-};
+}

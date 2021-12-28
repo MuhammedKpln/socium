@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1001258849296",
+    "project_id": "socium-e5049",
+    "storage_bucket": "socium-e5049.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1001258849296:android:a7199102a18d1d6dc86695",
+        "android_client_info": {
+          "package_name": "com.socium"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1001258849296-e528teili1d1l9t5aonmm0enebq6bfie.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.socium",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "1001258849296-qj3oj2fq8irkr8vtmrn57j8cpal1u73d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBq3FypPS78GGkLSjehmzLsurAy_ebu_fQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1001258849296-qj3oj2fq8irkr8vtmrn57j8cpal1u73d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

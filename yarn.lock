@@ -5887,6 +5887,11 @@ react-native-mmkv-storage@^0.6.6:
   resolved "https://registry.yarnpkg.com/react-native-mmkv-storage/-/react-native-mmkv-storage-0.6.6.tgz#bd2cabecdcfa751dff7c3b517bce77a2e9a45355"
   integrity sha512-SV7tm3K5nD9x0KZf6ayj8G+xx1LmqKnwcvhXrg66awopEf8Y7JAy9kH4G4ngJzBWfXVyYo5E93RPv9MlQdCfxQ==
 
+react-native-notifications@^4.1.3:
+  version "4.1.3"
+  resolved "https://registry.yarnpkg.com/react-native-notifications/-/react-native-notifications-4.1.3.tgz#841e4a1542c45184a6725eaa46094acf5d1edc48"
+  integrity sha512-A4SmRyfh2OlkptlJQvcQKkfnBKO1toUShmFplTkLXPNCqfpm/i4Fz+Uv+LzHSvbsU5U7EYf3JX9sfuyR06ZGPg==
+
 react-native-reanimated@^2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-2.3.1.tgz#c7abad48f9e6c84610b0d5e270088ecd61750382"

@@ -1,4 +1,4 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit'
 
 const counterSlice = createSlice({
   name: 'counter',
@@ -11,13 +11,13 @@ const counterSlice = createSlice({
       // doesn't actually mutate the state because it uses the Immer library,
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
-      state.value += 1;
+      state.value += 1
     },
     decremented: state => {
-      state.value -= 1;
+      state.value -= 1
     },
   },
-});
+})
 
-export const {incremented, decremented} = counterSlice.actions;
-export default counterSlice.reducer;
+export const { incremented, decremented } = counterSlice.actions
+export default counterSlice.reducer

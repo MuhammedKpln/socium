@@ -1,16 +1,23 @@
-import {createStore} from 'redux';
-import {persistStore, persistReducer} from 'redux-persist';
-import {storage} from '../storage';
-import rootReducer from './reducers';
+import { useSelector } from 'react-redux'
+import { createStore } from 'redux'
+import { persistReducer, persistStore } from 'redux-persist'
+import { storage } from '../storage'
+import rootReducer from './reducers'
 
 const persistConfig = {
   key: 'root',
   storage,
-};
+}
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+const persistedReducer = persistReducer(persistConfig, rootReducer)
 
-let store = createStore(persistedReducer);
-let persistedStore = persistStore(store);
+let store = createStore(persistedReducer)
+let persistedStore = persistStore(store)
 
-export {store, persistedStore};
+export type RootState = ReturnType<typeof rootReducer>
+export const useAppSelector = (
+  selector: (state: RootState) => unknown,
+  equalityFn?: (left: unknown, right: unknown) => boolean,
+) => useSelector<RootState>(selector, equalityFn)
+
+export { store, persistedStore }

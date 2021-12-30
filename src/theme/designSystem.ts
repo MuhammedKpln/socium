@@ -17,11 +17,13 @@ const themes = {
   light: {
     textColor: colors.blackish,
     screenBG: colors.whitish,
+    surfaceBG: colors.whitish2,
     bg2Color: colors.whitish2,
   },
   dark: {
     textColor: colors.whitish,
     screenBG: colors.blackish,
+    surfaceBG: colors.blackish2,
     bg2Color: colors.blackish2,
   },
 }

@@ -1,4 +1,6 @@
 import IconComponent from '@/components/Icon/Icon.component'
+import { Page } from '@/components/Page/Page.component'
+import { Surface } from '@/components/Surface/Surface.component'
 import { useAppSelector } from '@/store'
 import { incremented } from '@/store/reducers/counter.reducer'
 import { updateTheme } from '@/store/reducers/theme.reducer'
@@ -6,7 +8,6 @@ import { showToast, ToastStatus } from '@/utils/toast'
 import React from 'react'
 import { Text } from 'react-native'
 import { Button } from 'react-native-ui-lib'
-import View from 'react-native-ui-lib/view'
 import { useDispatch } from 'react-redux'
 
 const HomeContainer = () => {
@@ -14,12 +15,13 @@ const HomeContainer = () => {
   const dispatch = useDispatch()
 
   return (
-    <View flex bg-screenBG>
+    <Page scrollable>
       <IconComponent name="Untitled" size={30} />
-
-      <Button onPress={() => dispatch(incremented())}>
-        <Text>selam {value}</Text>
-      </Button>
+      <Surface padding-20 margin-10>
+        <Button onPress={() => dispatch(incremented())}>
+          <Text>selam {value}</Text>
+        </Button>
+      </Surface>
       <Button onPress={() => showToast(ToastStatus.Success, 'selam')}>
         <Text>selam</Text>
       </Button>
@@ -45,7 +47,7 @@ const HomeContainer = () => {
       >
         <Text>light mode</Text>
       </Button>
-    </View>
+    </Page>
   )
 }
 

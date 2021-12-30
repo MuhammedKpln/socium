@@ -7,7 +7,7 @@ export const Page = (props: IPageProps) => {
   const { scrollable, children } = props
 
   return (
-    <View flex bg-screenBG {...props}>
+    <View flex bg-screenBG useSafeArea {...props}>
       {scrollable ? <ScrollView>{children}</ScrollView> : children}
     </View>
   )

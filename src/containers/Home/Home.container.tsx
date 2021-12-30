@@ -1,4 +1,4 @@
-import IconComponent from '@/components/Icon/Icon.component'
+import { Icon } from '@/components/Icon/Icon.component'
 import { Page } from '@/components/Page/Page.component'
 import { Surface } from '@/components/Surface/Surface.component'
 import { useAppSelector } from '@/store'
@@ -16,7 +16,7 @@ const HomeContainer = () => {
 
   return (
     <Page scrollable>
-      <IconComponent name="Untitled" size={30} />
+      <Icon name="Untitled" size={30} />
       <Surface padding-20 margin-10>
         <Button onPress={() => dispatch(incremented())}>
           <Text>selam {value}</Text>

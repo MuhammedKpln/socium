@@ -1,3 +1,4 @@
+import IconComponent from '@/components/Icon/Icon.component'
 import { useAppSelector } from '@/store'
 import { incremented } from '@/store/reducers/counter.reducer'
 import { updateTheme } from '@/store/reducers/theme.reducer'
@@ -14,10 +15,10 @@ const HomeContainer = () => {
 
   return (
     <View flex bg-screenBG>
-      <Text>selam {value}</Text>
+      <IconComponent name="Untitled" size={30} />
 
       <Button onPress={() => dispatch(incremented())}>
-        <Text>selam</Text>
+        <Text>selam {value}</Text>
       </Button>
       <Button onPress={() => showToast(ToastStatus.Success, 'selam')}>
         <Text>selam</Text>

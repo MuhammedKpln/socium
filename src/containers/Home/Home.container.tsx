@@ -1,31 +1,62 @@
 import { Icon } from '@/components/Icon/Icon.component'
 import { Page } from '@/components/Page/Page.component'
 import { Surface } from '@/components/Surface/Surface.component'
+import { useFeatureHighlight } from '@/hooks/useFeatureHighlight'
 import { useAppSelector } from '@/store'
 import { incremented } from '@/store/reducers/counter.reducer'
+import { FeatureHighlights } from '@/store/reducers/featureHighlight.reducer'
 import { updateTheme } from '@/store/reducers/theme.reducer'
 import { showToast, ToastStatus } from '@/utils/toast'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Text } from 'react-native'
 import { Button } from 'react-native-ui-lib'
+import FeatureHighlight from 'react-native-ui-lib/featureHighlight'
 import { useDispatch } from 'react-redux'
 
 const HomeContainer = () => {
   const value = useAppSelector(state => state.counterSlice.value)
   const dispatch = useDispatch()
+  const featureHighlightTitles = useMemo(
+    () => [
+      'Konuşmak mı istiyorsun?',
+      'Kullanıcıyı takip edin!',
+      'İçinizi dökün!',
+    ],
+    [],
+  )
+  const featureHighlightMessages = useMemo(
+    () => [
+      'Kullanıcıya dertleşme isteği gönderin!',
+      'Kullanıcıyı takip ederek, kullanıcının en son ki yazılarını ana sayfada görebilirsiniz.',
+      'Konuşmak için kafa dengi birisine mi ihtiyacınız var? İçinizi dökün!',
+    ],
+    [],
+  )
+
+  const { addTarget, featureHighlightProps } = useFeatureHighlight(
+    FeatureHighlights.DiscoverPosts,
+    featureHighlightTitles,
+    featureHighlightMessages,
+  )
 
   return (
     <Page scrollable>
       <Icon name="Untitled" size={30} />
-      <Surface padding-20 margin-10>
+      <Surface padding-20 margin-10 ref={r => addTarget(r, 0)}>
         <Button onPress={() => dispatch(incremented())}>
           <Text>selam {value}</Text>
         </Button>
       </Surface>
-      <Button onPress={() => showToast(ToastStatus.Success, 'selam')}>
+      <Button
+        onPress={() => showToast(ToastStatus.Success, 'selam')}
+        testID="w"
+      >
         <Text>selam</Text>
       </Button>
       <Button
+        ref={ref => addTarget(ref, 1)}
+        testID="we"
+        style={{ opacity: 1 }}
         onPress={() =>
           dispatch(
             updateTheme({
@@ -37,6 +68,7 @@ const HomeContainer = () => {
         <Text>dark mode</Text>
       </Button>
       <Button
+        ref={ref => addTarget(ref, 2)}
         onPress={() =>
           dispatch(
             updateTheme({
@@ -47,6 +79,7 @@ const HomeContainer = () => {
       >
         <Text>light mode</Text>
       </Button>
+      <FeatureHighlight {...featureHighlightProps()} />
     </Page>
   )
 }

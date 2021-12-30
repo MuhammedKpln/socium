@@ -16,9 +16,9 @@ let store = createStore(persistedReducer)
 let persistedStore = persistStore(store)
 
 export type RootState = ReturnType<typeof rootReducer>
-export const useAppSelector = (
-  selector: (state: RootState) => unknown,
-  equalityFn?: (left: unknown, right: unknown) => boolean,
-) => useSelector<RootState>(selector, equalityFn)
+export const useAppSelector = <TState = RootState, TSelected = unknown>(
+  selector: (state: TState) => TSelected,
+  equalityFn?: (left: TSelected, right: TSelected) => boolean,
+): TSelected => useSelector(selector, equalityFn)
 
 export { store, persistedStore }

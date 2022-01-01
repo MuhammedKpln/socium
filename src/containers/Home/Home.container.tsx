@@ -8,7 +8,8 @@ import { incremented } from '@/store/reducers/counter.reducer'
 import { FeatureHighlights } from '@/store/reducers/featureHighlight.reducer'
 import { updateTheme } from '@/store/reducers/theme.reducer'
 import { showToast, ToastStatus } from '@/utils/toast'
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
+import { useEffect } from 'react'
 import { Text } from 'react-native'
 import { Button } from 'react-native-ui-lib'
 import FeatureHighlight from 'react-native-ui-lib/featureHighlight'
@@ -16,8 +17,14 @@ import { useDispatch } from 'react-redux'
 
 const HomeContainer = () => {
   const value = useAppSelector(state => state.counterSlice.value)
+  const [loading, setLoading] = useState(false)
   const dispatch = useDispatch()
   const { image } = useZodiac('2000-01-05')
+
+  useEffect(() => {
+    setTimeout(() => setLoading(true), 3000)
+  }, [])
+
   const featureHighlightTitles = useMemo(
     () => [
       'Konuşmak mı istiyorsun?',
@@ -43,13 +50,20 @@ const HomeContainer = () => {
 
   return (
     <Page scrollable>
-      <Surface padding-20 margin-10 ref={r => addTarget(r, 0)}>
-        <Icon name="Untitled" size={30} />
-        <Icon name={image} size={30} />
-        <Button onPress={() => dispatch(incremented())}>
-          <Text>selaem {value}</Text>
-        </Button>
-      </Surface>
+      <SkeletonView
+        showContent={loading}
+        template={SkeletonView.templates.TEXT_CONTENT}
+        renderContent={() => (
+          <Surface padding-20 margin-10 ref={r => addTarget(r, 0)}>
+            <Icon name="Untitled" size={30} />
+            <Icon name={image} size={30} />
+            <Button onPress={() => dispatch(incremented())}>
+              <Text>selaem {value}</Text>
+            </Button>
+          </Surface>
+        )}
+      />
+
       <Button
         onPress={() => showToast(ToastStatus.Success, 'selam')}
         testID="w"

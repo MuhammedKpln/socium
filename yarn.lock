@@ -5949,6 +5949,11 @@ react-native-gesture-handler@^2.1.0:
     lodash "^4.17.21"
     prop-types "^15.7.2"
 
+react-native-linear-gradient@^2.5.6:
+  version "2.5.6"
+  resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.5.6.tgz#96215cbc5ec7a01247a20890888aa75b834d44a0"
+  integrity sha512-HDwEaXcQIuXXCV70O+bK1rizFong3wj+5Q/jSyifKFLg0VWF95xh8XQgfzXwtq0NggL9vNjPKXa016KuFu+VFg==
+
 react-native-mmkv-storage@^0.6.6:
   version "0.6.6"
   resolved "https://registry.yarnpkg.com/react-native-mmkv-storage/-/react-native-mmkv-storage-0.6.6.tgz#bd2cabecdcfa751dff7c3b517bce77a2e9a45355"
@@ -5994,6 +5999,11 @@ react-native-screens@^3.10.1, react-native-screens@^3.4.0:
   dependencies:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
+
+react-native-shimmer-placeholder@^2.0.8:
+  version "2.0.8"
+  resolved "https://registry.yarnpkg.com/react-native-shimmer-placeholder/-/react-native-shimmer-placeholder-2.0.8.tgz#1b6deadc49319a4e46cd6ed7eac32d34355de3d5"
+  integrity sha512-I9Fn7f/dAPSQK+Aj0DXC1PG302iE3HXCsRJu5ic6CldJaAzkynEXHVGOTcW+mEcgXM+GvviITjS8TsYrxKvX5Q==
 
 react-native-slider@^0.11.0:
   version "0.11.0"

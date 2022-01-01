@@ -11,7 +11,7 @@ import { showToast, ToastStatus } from '@/utils/toast'
 import React, { useMemo, useState } from 'react'
 import { useEffect } from 'react'
 import { Text } from 'react-native'
-import { Button } from 'react-native-ui-lib'
+import { Button, SkeletonView } from 'react-native-ui-lib'
 import FeatureHighlight from 'react-native-ui-lib/featureHighlight'
 import { useDispatch } from 'react-redux'
 

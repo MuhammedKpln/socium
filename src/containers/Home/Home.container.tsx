@@ -2,6 +2,7 @@ import { Icon } from '@/components/Icon/Icon.component'
 import { Page } from '@/components/Page/Page.component'
 import { Surface } from '@/components/Surface/Surface.component'
 import { useFeatureHighlight } from '@/hooks/useFeatureHighlight'
+import { useZodiac } from '@/hooks/useZodiac'
 import { useAppSelector } from '@/store'
 import { incremented } from '@/store/reducers/counter.reducer'
 import { FeatureHighlights } from '@/store/reducers/featureHighlight.reducer'
@@ -16,6 +17,7 @@ import { useDispatch } from 'react-redux'
 const HomeContainer = () => {
   const value = useAppSelector(state => state.counterSlice.value)
   const dispatch = useDispatch()
+  const { image } = useZodiac('2000-01-05')
   const featureHighlightTitles = useMemo(
     () => [
       'Konuşmak mı istiyorsun?',
@@ -41,10 +43,11 @@ const HomeContainer = () => {
 
   return (
     <Page scrollable>
-      <Icon name="Untitled" size={30} />
       <Surface padding-20 margin-10 ref={r => addTarget(r, 0)}>
+        <Icon name="Untitled" size={30} />
+        <Icon name={image} size={30} />
         <Button onPress={() => dispatch(incremented())}>
-          <Text>selam {value}</Text>
+          <Text>selaem {value}</Text>
         </Button>
       </Surface>
       <Button

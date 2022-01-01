@@ -9,6 +9,7 @@ const BottomTabBarNavigator = () => {
   return (
     <Tab.Navigator>
       <Tab.Screen name="Home" component={HomeContainer} />
+      <Tab.Screen name="Home2" component={HomeContainer} />
     </Tab.Navigator>
   )
 }

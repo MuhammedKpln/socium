@@ -2,14 +2,14 @@ import { Icon } from '@/components/Icon/Icon.component'
 import { Page } from '@/components/Page/Page.component'
 import { Surface } from '@/components/Surface/Surface.component'
 import { useFeatureHighlight } from '@/hooks/useFeatureHighlight'
+import { useSocket } from '@/hooks/useSocket'
 import { useZodiac } from '@/hooks/useZodiac'
 import { useAppSelector } from '@/store'
 import { incremented } from '@/store/reducers/counter.reducer'
 import { FeatureHighlights } from '@/store/reducers/featureHighlight.reducer'
 import { updateTheme } from '@/store/reducers/theme.reducer'
 import { showToast, ToastStatus } from '@/utils/toast'
-import React, { useMemo, useState } from 'react'
-import { useEffect } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Text } from 'react-native'
 import { Button, SkeletonView } from 'react-native-ui-lib'
 import FeatureHighlight from 'react-native-ui-lib/featureHighlight'
@@ -48,6 +48,10 @@ const HomeContainer = () => {
     featureHighlightMessages,
   )
 
+  function showToastt() {
+    showToast(ToastStatus.Success, 'selam')
+  }
+
   return (
     <Page scrollable>
       <SkeletonView
@@ -64,10 +68,7 @@ const HomeContainer = () => {
         )}
       />
 
-      <Button
-        onPress={() => showToast(ToastStatus.Success, 'selam')}
-        testID="w"
-      >
+      <Button onPress={() => showToastt()} testID="w">
         <Text>selam</Text>
       </Button>
       <Button

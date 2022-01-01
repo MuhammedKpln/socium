@@ -30,8 +30,10 @@
     "react-native-shimmer-placeholder": "^2.0.8",
     "react-native-ui-lib": "^6.6.2",
     "react-native-vector-icons": "^9.0.0",
+    "react-native-webrtc": "^1.94.1",
     "react-redux": "^7.2.6",
-    "redux-persist": "^6.0.0"
+    "redux-persist": "^6.0.0",
+    "socket.io-client": "^4.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
@@ -41,6 +43,7 @@
     "@types/lodash": "^4.14.178",
     "@types/react-native": "^0.66.4",
     "@types/react-native-vector-icons": "^6.4.10",
+    "@types/react-native-webrtc": "^1.75.5",
     "@types/react-redux": "^7.1.21",
     "@types/react-test-renderer": "^17.0.1",
     "@typescript-eslint/eslint-plugin": "^5.7.0",

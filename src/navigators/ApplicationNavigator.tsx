@@ -9,6 +9,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { StatusBar, useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Colors } from 'react-native-ui-lib'
+import ConnectionStatusBar from 'react-native-ui-lib/connectionStatusBar'
 import { useDispatch } from 'react-redux'
 import BottomTabBarNavigator from './BottomTabNavigator'
 import { navigationRef } from './utils/navigation'
@@ -60,6 +61,10 @@ const ApplicationNavigator = () => {
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Main" component={BottomTabBarNavigator} />
         </Stack.Navigator>
+        <ConnectionStatusBar
+          useAbsolutePosition
+          label="Lütfen internet bağlantınızı kontrol ediniz."
+        />
       </NavigationContainer>
     </SafeAreaProvider>
   )

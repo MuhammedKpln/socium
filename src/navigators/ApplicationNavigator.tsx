@@ -35,7 +35,8 @@ const ApplicationNavigator = () => {
       },
       dark: theme === 'dark' ? true : false,
     }
-  }, [theme])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [theme, ready])
 
   const startApp = useCallback(async () => {
     configureDesignSystem()

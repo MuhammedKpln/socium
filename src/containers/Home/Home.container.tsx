@@ -10,8 +10,7 @@ import { FeatureHighlights } from '@/store/reducers/featureHighlight.reducer'
 import { updateTheme } from '@/store/reducers/theme.reducer'
 import { showToast, ToastStatus } from '@/utils/toast'
 import React, { useEffect, useMemo, useState } from 'react'
-import { Text } from 'react-native'
-import { Button, SkeletonView } from 'react-native-ui-lib'
+import { Button, SkeletonView, Text } from 'react-native-ui-lib'
 import FeatureHighlight from 'react-native-ui-lib/featureHighlight'
 import { useDispatch } from 'react-redux'
 
@@ -95,7 +94,7 @@ const HomeContainer = () => {
           )
         }
       >
-        <Text>light mode</Text>
+        <Text header>light mode</Text>
       </Button>
       <FeatureHighlight {...featureHighlightProps()} />
     </Page>

@@ -4,7 +4,6 @@ import { updateTheme } from '@/store/reducers/theme.reducer'
 import { configureDesignSystem } from '@/theme/designSystem'
 import { toastRef } from '@/utils/toast'
 import { NavigationContainer, Theme } from '@react-navigation/native'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { StatusBar, useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
@@ -12,11 +11,7 @@ import { Colors } from 'react-native-ui-lib'
 import ConnectionStatusBar from 'react-native-ui-lib/connectionStatusBar'
 import { useDispatch } from 'react-redux'
 import MainNavigator from './BottomTabNavigator'
-import BottomTabBarNavigator from './BottomTabNavigator'
-import { RouteComponents, Routes } from './navigator.props'
 import { navigationRef } from './utils/navigation'
-
-const Stack = createNativeStackNavigator()
 
 // @refresh reset
 const ApplicationNavigator = () => {
@@ -29,11 +24,11 @@ const ApplicationNavigator = () => {
     return {
       colors: {
         background: Colors.screenBG,
-        card: Colors.surfaceBG,
+        card: Colors.navigationSurfaceBG,
         text: Colors.textColor,
         primary: Colors.primary,
-        border: Colors.surfaceBG,
-        notification: Colors.surfaceBG,
+        border: Colors.navigationSurfaceBG,
+        notification: Colors.navigationSurfaceBG,
       },
       dark: theme === 'dark' ? true : false,
     }

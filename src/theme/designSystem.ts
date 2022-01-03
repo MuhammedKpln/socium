@@ -15,11 +15,13 @@ const themes = {
     textColor: colors.textLight,
     screenBG: '#fff',
     surfaceBG: colors.surfaceLight,
+    navigationSurfaceBG: Colors.white,
   },
   dark: {
     textColor: colors.textDark,
     screenBG: '#000',
     surfaceBG: colors.surfaceDark,
+    navigationSurfaceBG: Colors.black,
   },
 }
 

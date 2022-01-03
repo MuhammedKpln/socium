@@ -1,7 +1,8 @@
+import { HeaderRight } from '@/components/Navigation/HeaderRight.component'
+import { HeaderTitle } from '@/components/Navigation/HeaderTitle.component'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React from 'react'
-import { Image } from 'react-native-ui-lib'
 import HomeContainer from '../containers/Home/Home.container'
 import {
   applyRouteTitle,
@@ -19,15 +20,8 @@ const BottomTabBarNavigator = () => {
     <Tab.Navigator
       initialRouteName={Routes.Home}
       screenOptions={{
-        headerRight: () => (
-          <Image
-            source={{
-              uri: 'https://avatars.dicebear.com/api/miniavs/your-custom-seed.png',
-            }}
-            width={30}
-            height={30}
-          />
-        ),
+        headerTitle: () => <HeaderTitle />,
+        headerRight: () => <HeaderRight />,
         headerTitleAlign: 'left',
       }}
     >

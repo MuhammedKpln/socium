@@ -9,6 +9,7 @@ import {
 import { Routes } from '@/navigators/navigator.props'
 import { navigate, navigateAndSimpleReset } from '@/navigators/utils/navigation'
 import { EncryptedStorageKeys, useStorage } from '@/storage'
+import { updateLoginStatus } from '@/store/reducers/user.reducer'
 import { ERROR_CODES, ERROR_CODES_RAW } from '@/types/error_codes'
 import { handleApolloErrors } from '@/utils/apollo'
 import { showToast, ToastStatus } from '@/utils/toast'
@@ -16,10 +17,12 @@ import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
 import React, { useMemo } from 'react'
 import { Image, Text, View } from 'react-native-ui-lib'
+import { useDispatch } from 'react-redux'
 import * as Yup from 'yup'
 
 export function LoginContainer() {
   const [login] = useMutation<ILoginResponse, ILoginVariables>(LOGIN)
+  const dispatch = useDispatch()
   const [, saveAccessToken] = useStorage(EncryptedStorageKeys.AccessToken)
   const [, saveRefreshToken] = useStorage(EncryptedStorageKeys.RefreshToken)
   const [, saveAccessTokenExpireDate] = useStorage(
@@ -55,11 +58,19 @@ export function LoginContainer() {
         }
       },
       onCompleted: data => {
+        dispatch(
+          updateLoginStatus({
+            isLoggedIn: true,
+            user: data.login.user,
+          }),
+        )
+
+        saveAccessToken(data.login.access_token)
+        saveRefreshToken(data.login.refresh_token)
+        saveAccessTokenExpireDate(data.login.expire_date)
+
         if (!data.login.user.isEmailConfirmed) {
           showToast(ToastStatus.Error, 'Lütfen e-posta adresinizi doğrulayın.')
-          saveAccessToken(data.login.access_token)
-          saveRefreshToken(data.login.refresh_token)
-          saveAccessTokenExpireDate(data.login.expire_date)
 
           navigateAndSimpleReset(Routes.EmailVerification)
         } else {
@@ -67,9 +78,6 @@ export function LoginContainer() {
             ToastStatus.Success,
             `Hoşgeldin ${data.login.user.username}!`,
           )
-          saveAccessToken(data.login.access_token)
-          saveRefreshToken(data.login.refresh_token)
-          saveAccessTokenExpireDate(data.login.expire_date)
 
           navigate(Routes.App, {})
         }
@@ -135,7 +143,7 @@ export function LoginContainer() {
                 marginT-36
                 enableShadow
                 loading={isSubmitting}
-                disabled={isSubmitting || !isValid || errors ? true : false}
+                disabled={isSubmitting || !isValid ? true : false}
               >
                 <Text white>Giriş yap</Text>
               </Button>

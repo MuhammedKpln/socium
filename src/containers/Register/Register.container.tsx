@@ -184,7 +184,7 @@ export function RegisterContainer() {
                 marginT-36
                 enableShadow
                 loading={isSubmitting}
-                disabled={isSubmitting || !isValid || errors ? true : false}
+                disabled={isSubmitting || !isValid ? true : false}
               >
                 <Text white>Kayıt ol</Text>
               </Button>

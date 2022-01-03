@@ -16,7 +16,7 @@ import { onError } from '@apollo/client/link/error'
 import { setContext } from '@apollo/client/link/context'
 import { EncryptedStorageKeys, storage } from './storage'
 import { getMainDefinition } from '@apollo/client/utilities'
-import { apolloCache } from './utils/apollo'
+import { apolloCache, WebSocketLink } from './utils/apollo'
 
 const httpLink = createHttpLink({
   uri: Config.API_URL + '/graphql',
@@ -30,6 +30,20 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (networkError) {
     console.error(networkError)
   }
+})
+
+const websocketLink = new WebSocketLink({
+  url: Config.GRAPHQL_WS_URL,
+  connectionParams: async () => {
+    const authToken = await storage.getStringAsync(
+      EncryptedStorageKeys.AccessToken,
+    )
+
+    return {
+      authToken,
+    }
+  },
+  lazy: true,
 })
 
 const authLink = setContext(async (_, { headers }) => {
@@ -56,13 +70,17 @@ const authLink = setContext(async (_, { headers }) => {
   }
 })
 
-const splitLink = split(({ query }) => {
-  const definition = getMainDefinition(query)
-  return (
-    definition.kind === 'OperationDefinition' &&
-    definition.operation === 'subscription'
-  )
-}, httpLink)
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query)
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    )
+  },
+  websocketLink,
+  httpLink,
+)
 
 export const client = new ApolloClient({
   cache: apolloCache,

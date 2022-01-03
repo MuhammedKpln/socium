@@ -9,7 +9,7 @@ export const Page = forwardRef(
     const { scrollable, children } = props
 
     return (
-      <View flex bg-screenBG useSafeArea {...props} ref={ref}>
+      <View flex bg-screenBG useSafeArea {...props} ref={ref} margin-20>
         {scrollable ? <ScrollView>{children}</ScrollView> : children}
       </View>
     )

@@ -1,5 +1,5 @@
 import { Platform } from 'react-native'
-import { Colors, Typography } from 'react-native-ui-lib'
+import { Assets, Colors, ThemeManager, Typography } from 'react-native-ui-lib'
 
 const colors = {
   primary: '#FE7949',
@@ -13,7 +13,7 @@ const colors = {
 const themes = {
   light: {
     textColor: colors.textLight,
-    screenBG: '#000',
+    screenBG: '#fff',
     surfaceBG: colors.surfaceLight,
   },
   dark: {
@@ -27,6 +27,9 @@ const themes = {
 export const configureDesignSystem = (): void => {
   Colors.loadColors(colors)
   Colors.loadSchemes(themes)
+  Assets.loadAssetsGroup('app', {
+    logo: require('@/assets/images/logo.png'),
+  })
 
   Typography.loadTypographies({
     section: { fontSize: 26, fontWeight: '600' },
@@ -52,5 +55,9 @@ export const configureDesignSystem = (): void => {
         fontWeight: '700',
       },
     }),
+  })
+
+  ThemeManager.setComponentTheme('Button', {
+    height: 55,
   })
 }

@@ -11,7 +11,9 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Colors } from 'react-native-ui-lib'
 import ConnectionStatusBar from 'react-native-ui-lib/connectionStatusBar'
 import { useDispatch } from 'react-redux'
+import MainNavigator from './BottomTabNavigator'
 import BottomTabBarNavigator from './BottomTabNavigator'
+import { RouteComponents, Routes } from './navigator.props'
 import { navigationRef } from './utils/navigation'
 
 const Stack = createNativeStackNavigator()
@@ -59,9 +61,7 @@ const ApplicationNavigator = () => {
       <NavigationContainer ref={navigationRef} theme={navigationTheme}>
         <StatusBar />
         <Toast ref={toastRef} />
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Main" component={BottomTabBarNavigator} />
-        </Stack.Navigator>
+        <MainNavigator />
         <ConnectionStatusBar
           useAbsolutePosition
           label="Lütfen internet bağlantınızı kontrol ediniz."

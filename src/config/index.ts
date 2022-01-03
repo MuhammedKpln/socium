@@ -5,7 +5,7 @@ export const Config = {
   GRAPHQL_WS_URL: __DEV__
     ? 'ws://LOCALHOST:3000/graphql'
     : 'wss://derdevam.com/graphql',
-  API_URL: __DEV__ ? 'http://LOCALHOST:3000' : 'https://derdevam.com',
+  API_URL: __DEV__ ? 'http://localhost:3000' : 'https://derdevam.com',
   SOCKET_URL: __DEV__
     ? 'http://LOCALHOST:3001/PairingScreen'
     : 'https://cio.derdevam.com/PairingScreen',

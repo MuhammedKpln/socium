@@ -4,6 +4,8 @@ import { Surface } from '@/components/Surface/Surface.component'
 import { useFeatureHighlight } from '@/hooks/useFeatureHighlight'
 import { useSocket } from '@/hooks/useSocket'
 import { useZodiac } from '@/hooks/useZodiac'
+import { Routes } from '@/navigators/navigator.props'
+import { navigate } from '@/navigators/utils/navigation'
 import { useAppSelector } from '@/store'
 import { incremented } from '@/store/reducers/counter.reducer'
 import { FeatureHighlights } from '@/store/reducers/featureHighlight.reducer'
@@ -49,6 +51,7 @@ const HomeContainer = () => {
 
   function showToastt() {
     showToast(ToastStatus.Success, 'selam')
+    navigate(Routes.Login, {})
   }
 
   return (

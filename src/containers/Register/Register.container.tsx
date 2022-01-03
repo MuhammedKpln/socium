@@ -11,8 +11,9 @@ import { showToast, ToastStatus } from '@/utils/toast'
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
 import React, { useMemo } from 'react'
-import { Text, View } from 'react-native-ui-lib'
 import Checkbox from 'react-native-ui-lib/checkbox'
+import Text from 'react-native-ui-lib/text'
+import View from 'react-native-ui-lib/view'
 import * as Yup from 'yup'
 
 export function RegisterContainer() {

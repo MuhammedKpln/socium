@@ -29,7 +29,9 @@ export function LoginContainer() {
   const formValidationSchema = useMemo(
     () =>
       Yup.object({
-        email: Yup.string().email().required(),
+        email: Yup.string()
+          .email('Lütfen geçerli bir e-posta adresi giriniz')
+          .required(),
         password: Yup.string().required(),
       }),
     [],
@@ -106,15 +108,11 @@ export function LoginContainer() {
                   value={values.email}
                   placeholder="muhammed@kaplan.com"
                   enableErrors={errors.email ? true : false}
-                  validate={['email']}
                   keyboardType="email-address"
                   autoCapitalize="none"
                   autoCorrect={false}
                   autoComplete="email"
-                  validationMessage={[
-                    'Lütfen geçerli bir e-posta adresi giriniz',
-                  ]}
-                  validateOnBlur
+                  validationMessage={errors.email}
                 />
               </View>
               <View marginT-30>
@@ -124,10 +122,12 @@ export function LoginContainer() {
                   onBlur={handleBlur('password')}
                   value={values.password}
                   placeholder="Parola"
+                  enableErrors={errors.password ? true : false}
                   secureTextEntry
                   autoCorrect={false}
                   autoCapitalize="none"
                   autoComplete="password"
+                  validationMessage={errors.password}
                 />
               </View>
               <Button

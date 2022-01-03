@@ -24,7 +24,7 @@ export const applyRouteTitle = (title: RouteTitles, args?: object): object => {
 export const RouteComponents = {
   Login: () => require('@/containers/Login/Login.container').LoginContainer,
   Register: () =>
-    require('@/containers/Register/Register.container').LoginContainer,
+    require('@/containers/Register/Register.container').RegisterContainer,
 }
 
 export interface INavigatorParamsList extends ParamListBase {

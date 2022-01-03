@@ -31,8 +31,8 @@ export function LoginContainer() {
       Yup.object({
         email: Yup.string()
           .email('Lütfen geçerli bir e-posta adresi giriniz')
-          .required(),
-        password: Yup.string().required(),
+          .required('Burası zorunlu bir alandır'),
+        password: Yup.string().required('Burası zorunlu bir alandır'),
       }),
     [],
   )
@@ -135,11 +135,7 @@ export function LoginContainer() {
                 marginT-36
                 enableShadow
                 loading={isSubmitting}
-                disabled={
-                  errors.email || errors.password || isSubmitting || !isValid
-                    ? true
-                    : false
-                }
+                disabled={isSubmitting || !isValid || errors ? true : false}
               >
                 <Text white>Giriş yap</Text>
               </Button>

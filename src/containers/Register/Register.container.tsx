@@ -15,7 +15,7 @@ import { Text, View } from 'react-native-ui-lib'
 import Checkbox from 'react-native-ui-lib/checkbox'
 import * as Yup from 'yup'
 
-export function LoginContainer() {
+export function RegisterContainer() {
   const [register] = useMutation<IRegisterResponse, IRegisterVariables>(
     REGISTER,
   )
@@ -184,11 +184,7 @@ export function LoginContainer() {
                 marginT-36
                 enableShadow
                 loading={isSubmitting}
-                disabled={
-                  errors.email || errors.password || isSubmitting || !isValid
-                    ? true
-                    : false
-                }
+                disabled={isSubmitting || !isValid || errors ? true : false}
               >
                 <Text white>Kayıt ol</Text>
               </Button>

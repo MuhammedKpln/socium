@@ -34,7 +34,6 @@ export const configureDesignSystem = (): void => {
   })
 
   Typography.loadTypographies({
-    section: { fontSize: 26, fontWeight: '600' },
     header: Platform.select({
       android: {
         fontSize: 22,
@@ -57,6 +56,12 @@ export const configureDesignSystem = (): void => {
         fontWeight: '700',
       },
     }),
+    text: {
+      fontSize: 12,
+    },
+    document: {
+      fontSize: 14,
+    },
   })
 
   ThemeManager.setComponentTheme('Button', {

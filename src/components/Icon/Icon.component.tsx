@@ -11,8 +11,10 @@ const _Icon = createIconSetFromIcoMoon(icoMoonConfig)
 export const Icon = React.memo((props: IconProps) => {
   const theme = useAppSelector(state => state.themeReducer.theme)
   const fontColor = useMemo(() => {
+    if (props.color) return props.color.toString()
+
     return theme === 'dark' ? Colors.white : Colors.black
-  }, [theme])
+  }, [theme, props.color])
 
   return <_Icon {...props} color={fontColor} style={{ color: fontColor }} />
 })

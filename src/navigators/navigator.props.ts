@@ -6,6 +6,8 @@ export enum Routes {
   Login = 'login',
   Register = 'register',
   EmailVerification = 'EmailVerification',
+  Post = 'post',
+  Profile = 'profile',
 }
 export enum RouteTitles {
   Login = 'Giriş yap',

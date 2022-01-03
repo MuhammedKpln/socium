@@ -48,6 +48,11 @@ const MainNavigator = () => {
         getComponent={RouteComponents.Login}
         {...applyRouteTitle(RouteTitles.Login)}
       />
+      <Stack.Screen
+        name={Routes.Register}
+        getComponent={RouteComponents.Register}
+        {...applyRouteTitle(RouteTitles.Register)}
+      />
     </Stack.Navigator>
   )
 }

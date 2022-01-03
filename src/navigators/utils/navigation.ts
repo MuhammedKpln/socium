@@ -8,6 +8,7 @@ import {
   CommonActions,
   createNavigationContainerRef,
 } from '@react-navigation/native'
+import { Routes } from '../navigator.props'
 
 export const navigationRef = createNavigationContainerRef()
 
@@ -39,5 +40,13 @@ export const navigateAndSimpleReset = (name, index = 0) => {
         routes: [{ name }],
       }),
     )
+  }
+}
+
+export function navigateBack() {
+  if (navigationRef.current?.canGoBack()) {
+    navigationRef.current?.goBack()
+  } else {
+    navigationRef.current?.navigate(Routes.App, {})
   }
 }

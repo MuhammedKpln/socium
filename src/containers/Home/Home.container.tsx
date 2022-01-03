@@ -2,7 +2,6 @@ import { Icon } from '@/components/Icon/Icon.component'
 import { Page } from '@/components/Page/Page.component'
 import { Surface } from '@/components/Surface/Surface.component'
 import { useFeatureHighlight } from '@/hooks/useFeatureHighlight'
-import { useSocket } from '@/hooks/useSocket'
 import { useZodiac } from '@/hooks/useZodiac'
 import { Routes } from '@/navigators/navigator.props'
 import { navigate } from '@/navigators/utils/navigation'
@@ -10,6 +9,7 @@ import { useAppSelector } from '@/store'
 import { incremented } from '@/store/reducers/counter.reducer'
 import { FeatureHighlights } from '@/store/reducers/featureHighlight.reducer'
 import { updateTheme } from '@/store/reducers/theme.reducer'
+import { logout } from '@/store/reducers/user.reducer'
 import { showToast, ToastStatus } from '@/utils/toast'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Button, SkeletonView, Text } from 'react-native-ui-lib'
@@ -86,6 +86,14 @@ const HomeContainer = () => {
         }
       >
         <Text>dark mode</Text>
+      </Button>
+      <Button
+        ref={ref => addTarget(ref, 1)}
+        testID="we"
+        style={{ opacity: 1 }}
+        onPress={() => dispatch(logout())}
+      >
+        <Text>logout</Text>
       </Button>
       <Button
         ref={ref => addTarget(ref, 2)}

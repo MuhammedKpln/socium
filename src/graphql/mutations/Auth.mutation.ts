@@ -1,5 +1,6 @@
 import { UserFragment } from '@/graphql/fragments/User.fragment'
 import { ILogin } from '@/Types/login.types'
+import { IRegisterData } from '@/types/register.types'
 import { gql } from '@apollo/client'
 
 export const REGISTER_WITH_GOOGLE = gql`
@@ -60,6 +61,17 @@ export const LOGIN = gql`
     }
   }
 `
+
+export interface IRegisterVariables {
+  username: string
+  password: string
+  passwordConfirmation: string
+  email: string
+}
+
+export interface IRegisterResponse {
+  register: IRegisterData
+}
 
 export const REGISTER = gql`
   ${UserFragment}

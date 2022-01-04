@@ -3,7 +3,7 @@ import React, { useMemo } from 'react'
 import { Avatar } from '../Avatar/Avatar.component'
 import { NoAvatar } from '../NoAvatar/NoAvatar.component'
 
-export function HeaderRight() {
+export const HeaderRight = React.memo(function HeaderRight() {
   const isLoggedIn = useAppSelector(state => state.userReducer.isLoggedIn)
   const user = useAppSelector(state => state.userReducer.user)
   const randomUsername = useMemo(() => {
@@ -25,4 +25,4 @@ export function HeaderRight() {
   }
 
   return <NoAvatar username={randomUsername} />
-}
+})

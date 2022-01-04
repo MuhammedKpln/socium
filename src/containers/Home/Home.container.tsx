@@ -23,7 +23,7 @@ const HomeContainer = () => {
         date={item.created_at}
         likesCount={item.postLike.likeCount}
         onPressPost={() => {
-          navigate(Routes.Post, { postId: item.id })
+          navigate(Routes.Login, { postId: item.id })
         }}
         postType={item.type}
         isLiked={item.userLike?.liked}
@@ -38,12 +38,17 @@ const HomeContainer = () => {
   }
 
   function renderContent() {
-    return <FlatList data={posts} renderItem={renderItem} />
+    return (
+      <FlatList
+        data={posts}
+        renderItem={renderItem}
+        ListHeaderComponent={<Text title>🚀 Öne çıkanlar</Text>}
+      />
+    )
   }
 
   return (
     <Page>
-      <Text title>🚀 Öne çıkanlar</Text>
       <SkeletonView
         showContent={!fetchPosts.loading}
         template={SkeletonView.templates.LIST_ITEM}

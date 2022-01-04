@@ -16,15 +16,19 @@ const BottomTabBarNavigator = () => {
     <Tab.Navigator
       initialRouteName={Routes.Home}
       screenOptions={{
-        headerShown: false,
+        headerTitle: () => <HeaderTitle />,
+        headerRight: () => <HeaderRight />,
+        headerTitleAlign: 'left',
         tabBarShowLabel: false,
       }}
-      detachInactiveScreens
     >
       <Tab.Screen
         name={Routes.Home}
         component={HomeContainer}
         {...applyTabIcon('home')}
+        options={{
+          tabBarLabel: undefined,
+        }}
       />
       <Tab.Screen
         name={Routes.Profile}
@@ -42,7 +46,7 @@ const BottomTabBarNavigator = () => {
         {...applyTabIcon('fire')}
       />
       <Tab.Screen
-        name={Routes.Post}
+        name={Routes.Login}
         component={HomeContainer}
         {...applyTabIcon('chat')}
       />
@@ -52,18 +56,8 @@ const BottomTabBarNavigator = () => {
 
 const MainNavigator = () => {
   return (
-    <Stack.Navigator
-      initialRouteName={Routes.App}
-      screenOptions={{
-        title: 'Ana sayfa',
-        headerTitle: () => <HeaderTitle />,
-        headerRight: () => <HeaderRight />,
-        headerShadowVisible: false,
-        headerTitleAlign: 'left',
-        headerShown: true,
-      }}
-    >
-      <Stack.Group>
+    <Stack.Navigator initialRouteName={Routes.App}>
+      <Stack.Group screenOptions={{ headerShown: false }}>
         {/* // Header disabled routes */}
         <Stack.Screen name={Routes.App} component={BottomTabBarNavigator} />
       </Stack.Group>

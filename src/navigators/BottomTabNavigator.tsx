@@ -16,8 +16,6 @@ const BottomTabBarNavigator = () => {
     <Tab.Navigator
       initialRouteName={Routes.Home}
       screenOptions={{
-        headerTitle: () => <HeaderTitle />,
-        headerRight: () => <HeaderRight />,
         headerTitleAlign: 'left',
         tabBarShowLabel: false,
       }}
@@ -25,10 +23,10 @@ const BottomTabBarNavigator = () => {
       <Tab.Screen
         name={Routes.Home}
         component={HomeContainer}
-        {...applyTabIcon('home')}
-        options={{
-          tabBarLabel: undefined,
-        }}
+        {...applyTabIcon('home', {
+          headerTitle: () => <HeaderTitle />,
+          headerRight: () => <HeaderRight />,
+        })}
       />
       <Tab.Screen
         name={Routes.Profile}

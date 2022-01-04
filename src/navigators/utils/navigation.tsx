@@ -4,11 +4,14 @@
  *
  * You can add other navigation functions that you need and export them
  */
+import { Icon } from '@/components/Icon/Icon.component'
 import {
   CommonActions,
   createNavigationContainerRef,
 } from '@react-navigation/native'
-import { Routes } from '../navigator.props'
+import React from 'react'
+import { Colors } from 'react-native-ui-lib'
+import { Routes, RouteTitles } from '../navigator.props'
 
 export const navigationRef = createNavigationContainerRef()
 
@@ -48,5 +51,29 @@ export function navigateBack() {
     navigationRef.current?.goBack()
   } else {
     navigationRef.current?.navigate(Routes.App, {})
+  }
+}
+
+export const applyRouteTitle = (title: RouteTitles, args?: object): object => {
+  return {
+    options: {
+      title: title,
+      ...args,
+    },
+  }
+}
+
+export const applyTabIcon = (iconName: string, args?: object): object => {
+  return {
+    options: {
+      tabBarIcon: ({ focused }: { focused: boolean }) => (
+        <Icon
+          name={iconName}
+          size={25}
+          color={!focused ? '#A3BDCB' : Colors.primary}
+        />
+      ),
+      ...args,
+    },
   }
 }

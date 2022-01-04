@@ -14,15 +14,6 @@ export enum RouteTitles {
   Register = 'Kayıt ol',
 }
 
-export const applyRouteTitle = (title: RouteTitles, args?: object): object => {
-  return {
-    options: {
-      title: title,
-      ...args,
-    },
-  }
-}
-
 export const RouteComponents = {
   Login: () => require('@/containers/Login/Login.container').LoginContainer,
   Register: () =>

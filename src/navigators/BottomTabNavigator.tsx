@@ -4,12 +4,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React from 'react'
 import HomeContainer from '../containers/Home/Home.container'
-import {
-  applyRouteTitle,
-  RouteComponents,
-  Routes,
-  RouteTitles,
-} from './navigator.props'
+import { RouteComponents, Routes, RouteTitles } from './navigator.props'
+import { applyRouteTitle, applyTabIcon } from './utils/navigation'
 
 const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
@@ -23,9 +19,37 @@ const BottomTabBarNavigator = () => {
         headerTitle: () => <HeaderTitle />,
         headerRight: () => <HeaderRight />,
         headerTitleAlign: 'left',
+        tabBarShowLabel: false,
       }}
     >
-      <Tab.Screen name={Routes.Home} component={HomeContainer} />
+      <Tab.Screen
+        name={Routes.Home}
+        component={HomeContainer}
+        {...applyTabIcon('home')}
+        options={{
+          tabBarLabel: undefined,
+        }}
+      />
+      <Tab.Screen
+        name={Routes.Profile}
+        component={HomeContainer}
+        {...applyTabIcon('compass')}
+      />
+      <Tab.Screen
+        name={Routes.Register}
+        component={HomeContainer}
+        {...applyTabIcon('Untitled')}
+      />
+      <Tab.Screen
+        name={Routes.EmailVerification}
+        component={HomeContainer}
+        {...applyTabIcon('fire')}
+      />
+      <Tab.Screen
+        name={Routes.Login}
+        component={HomeContainer}
+        {...applyTabIcon('chat')}
+      />
     </Tab.Navigator>
   )
 }

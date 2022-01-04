@@ -17,6 +17,7 @@ const BottomTabBarNavigator = () => {
       initialRouteName={Routes.Home}
       screenOptions={{
         headerShown: false,
+        tabBarShowLabel: false,
       }}
       detachInactiveScreens
     >

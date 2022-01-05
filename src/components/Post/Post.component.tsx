@@ -10,6 +10,7 @@ import { Colors } from 'react-native-ui-lib'
 import Text from 'react-native-ui-lib/text'
 import TouchableOpacity from 'react-native-ui-lib/touchableOpacity'
 import View from 'react-native-ui-lib/view'
+import { Avatar } from '../Avatar/Avatar.component'
 import Button from '../Button/Button.component'
 import { Icon } from '../Icon/Icon.component'
 import { MarkdownRenderer } from '../MarkdownRenderer/MarkdownRenderer.component'
@@ -34,9 +35,11 @@ export const Post = React.memo((props: IPostProps) => {
     onPressComment,
     onPressLike,
     onPressPost,
+    onPressSave,
     postType,
     title,
     user,
+    loading,
   } = props
   const isLoggedIn = useAppSelector(state => state.userReducer.isLoggedIn)
 
@@ -70,22 +73,34 @@ export const Post = React.memo((props: IPostProps) => {
       userId: user.id,
     })
   }
+  const _onPressSave = () => {
+    if (isLoggedIn) {
+      return onPressSave()
+    }
+
+    return navigate(Routes.Login, {})
+  }
 
   return (
     <TouchableOpacity onPress={_onPressPost}>
       <View row marginV-20>
-        <NoAvatar username="awd" />
+        {user.avatar ? (
+          <Avatar userAvatar={user?.avatar} />
+        ) : (
+          <NoAvatar username={user.username} />
+        )}
 
         <Surface
           width="100%"
           padding-10
+          marginL-10
           style={{ borderRadius: 6, flexWrap: 'wrap' }}
         >
           <View style={{ minWidth: '90%', maxWidth: '91%' }}>
             <View row spread>
               <TouchableOpacity onPress={onPressUsername}>
                 <View row>
-                  <Text text50R text>
+                  <Text text50R text textColor>
                     {user.username}
                   </Text>
                   <Text greyText text marginL-7 marginT-6>
@@ -107,16 +122,15 @@ export const Post = React.memo((props: IPostProps) => {
             </View>
 
             <View margin-5>
-              <Text document style={{ lineHeight: 17 }}>
+              <Text document textColor style={{ lineHeight: 17 }}>
                 {postType === PostType.Content ? (
                   <MarkdownRenderer>{content}</MarkdownRenderer>
                 ) : null}
                 {postType !== PostType.Content ? content : null}
               </Text>
 
-              <View row>
-                {typeof title === 'string' &&
-                postType === PostType.Instagram ? (
+              {typeof title === 'string' && postType === PostType.Instagram ? (
+                <View row>
                   <FastImage
                     source={{ uri: title }}
                     style={{
@@ -127,9 +141,8 @@ export const Post = React.memo((props: IPostProps) => {
                       marginRight: 10,
                     }}
                   />
-                ) : null}
-              </View>
-
+                </View>
+              ) : null}
               <View row spread marginT-20>
                 <View row>
                   <Button
@@ -148,6 +161,7 @@ export const Post = React.memo((props: IPostProps) => {
                       color: '#7F8386',
                       marginLeft: 10,
                     }}
+                    disabled={loading}
                   />
                   <View
                     marginH-40
@@ -168,6 +182,7 @@ export const Post = React.memo((props: IPostProps) => {
                   iconSource={() => <Icon name="bookmark" size={16} />}
                   link
                   text
+                  onPress={_onPressSave}
                 />
               </View>
             </View>

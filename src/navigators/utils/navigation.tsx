@@ -70,7 +70,7 @@ export const applyTabIcon = (iconName: string, args?: object): object => {
         <Icon
           name={iconName}
           size={25}
-          color={!focused ? '#A3BDCB' : Colors.primary}
+          color={!focused ? Colors.bottomTabIcon : Colors.primary}
         />
       ),
       ...args,

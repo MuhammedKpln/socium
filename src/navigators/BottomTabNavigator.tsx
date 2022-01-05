@@ -44,7 +44,7 @@ const BottomTabBarNavigator = () => {
         {...applyTabIcon('fire')}
       />
       <Tab.Screen
-        name={Routes.Login}
+        name={Routes.Post}
         component={HomeContainer}
         {...applyTabIcon('chat')}
       />

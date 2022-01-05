@@ -16,12 +16,14 @@ const themes = {
     screenBG: '#fff',
     surfaceBG: colors.surfaceLight,
     navigationSurfaceBG: Colors.white,
+    bottomTabIcon: '#A3BDCB',
   },
   dark: {
     textColor: colors.textDark,
     screenBG: '#000',
     surfaceBG: colors.surfaceDark,
     navigationSurfaceBG: Colors.black,
+    bottomTabIcon: '#6B6B6B',
   },
 }
 

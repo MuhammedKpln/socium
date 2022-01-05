@@ -15,6 +15,7 @@ export type IPostProps = {
   onPressLike: () => void
   onPressPost: () => void
   onPressRemove?: () => null
+  onPressSave: () => void
   title: string | React.ReactElement
   content: string
   date: Date
@@ -23,4 +24,5 @@ export type IPostProps = {
   isLiked: boolean
   user: IUser
   postType: PostType
+  loading: boolean
 } & typeof defaultProps

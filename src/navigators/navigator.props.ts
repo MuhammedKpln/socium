@@ -6,7 +6,7 @@ export enum Routes {
   Login = 'login',
   Register = 'register',
   EmailVerification = 'EmailVerification',
-  Post = 'post',
+  PostDetails = 'post-details',
   Profile = 'profile',
 }
 export enum RouteTitles {
@@ -18,10 +18,16 @@ export const RouteComponents = {
   Login: () => require('@/containers/Login/Login.container').LoginContainer,
   Register: () =>
     require('@/containers/Register/Register.container').RegisterContainer,
+  PostDetails: () =>
+    require('@/containers/PostDetails/PostDetails.container').PostDetails,
 }
 
 export interface INavigatorParamsList extends ParamListBase {
+  [Routes.App]: undefined
   [Routes.Home]: undefined
   [Routes.Login]: undefined
+  [Routes.Register]: undefined
   [Routes.EmailVerification]: undefined
+  [Routes.Profile]: undefined
+  [Routes.PostDetails]: { postId: number }
 }

@@ -59,10 +59,10 @@ export const configureDesignSystem = (): void => {
       },
     }),
     text: {
-      fontSize: 12,
+      fontSize: 14,
     },
     document: {
-      fontSize: 14,
+      fontSize: 15,
     },
   })
 

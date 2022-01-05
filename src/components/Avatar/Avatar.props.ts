@@ -1,3 +1,3 @@
 export interface IAvatarProps {
-  userAvatar: string
+  userAvatar: string | null | undefined
 }

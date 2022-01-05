@@ -36,6 +36,8 @@
     "react-native-ui-lib": "^6.6.2",
     "react-native-vector-icons": "^9.0.0",
     "react-native-webrtc": "^1.94.1",
+    "react-native-webview": "^11.15.0",
+    "react-native-youtube-iframe": "^2.2.1",
     "react-redux": "^7.2.6",
     "redux-persist": "^6.0.0",
     "socket.io-client": "^4.4.0",

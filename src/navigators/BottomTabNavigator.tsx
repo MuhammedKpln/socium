@@ -15,6 +15,7 @@ const BottomTabBarNavigator = () => {
   return (
     <Tab.Navigator
       initialRouteName={Routes.Home}
+      detachInactiveScreens
       screenOptions={{
         headerTitleAlign: 'left',
         tabBarShowLabel: false,
@@ -43,11 +44,6 @@ const BottomTabBarNavigator = () => {
         component={HomeContainer}
         {...applyTabIcon('fire')}
       />
-      <Tab.Screen
-        name={Routes.Post}
-        component={HomeContainer}
-        {...applyTabIcon('chat')}
-      />
     </Tab.Navigator>
   )
 }
@@ -59,16 +55,28 @@ const MainNavigator = () => {
         {/* // Header disabled routes */}
         <Stack.Screen name={Routes.App} component={BottomTabBarNavigator} />
       </Stack.Group>
-      <Stack.Screen
-        name={Routes.Login}
-        getComponent={RouteComponents.Login}
-        {...applyRouteTitle(RouteTitles.Login)}
-      />
-      <Stack.Screen
-        name={Routes.Register}
-        getComponent={RouteComponents.Register}
-        {...applyRouteTitle(RouteTitles.Register)}
-      />
+      <Stack.Group
+        screenOptions={{
+          headerTitleAlign: 'left',
+          headerShadowVisible: false,
+          title: '',
+        }}
+      >
+        <Stack.Screen
+          name={Routes.Login}
+          getComponent={RouteComponents.Login}
+          {...applyRouteTitle(RouteTitles.Login)}
+        />
+        <Stack.Screen
+          name={Routes.Register}
+          getComponent={RouteComponents.Register}
+          {...applyRouteTitle(RouteTitles.Register)}
+        />
+        <Stack.Screen
+          name={Routes.PostDetails}
+          getComponent={RouteComponents.PostDetails}
+        />
+      </Stack.Group>
     </Stack.Navigator>
   )
 }

@@ -1,3 +1,4 @@
+import Button from '@/components/Button/Button.component'
 import { Page } from '@/components/Page/Page.component'
 import { Post } from '@/components/Post/Post.component'
 import { LIKE_POST, UNLIKE_POST } from '@/graphql/mutations/LikePost.mutation'
@@ -10,6 +11,7 @@ import {
   updatePostLiked,
   updatePostUnLiked,
 } from '@/store/reducers/post.reducer'
+import { logout } from '@/store/reducers/user.reducer'
 import { ERROR_CODES, ERROR_CODES_RAW } from '@/types/error_codes'
 import { IPost, IUserlike } from '@/Types/post.types'
 import { handleApolloErrors } from '@/utils/apollo'
@@ -101,7 +103,7 @@ const HomeContainer = () => {
         date={item.created_at}
         likesCount={item.postLike.likeCount}
         onPressPost={() => {
-          navigate(Routes.Login, { postId: item.id })
+          navigate(Routes.PostDetails, { postId: item.id })
         }}
         postType={item.type}
         isLiked={item.userLike?.liked}
@@ -140,6 +142,7 @@ const HomeContainer = () => {
         renderContent={renderContent}
         times={8}
       />
+      <Button onPress={() => dispatch(logout())} label="logogut" />
     </Page>
   )
 }

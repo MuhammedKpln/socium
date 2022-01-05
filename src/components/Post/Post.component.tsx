@@ -11,12 +11,12 @@ import Text from 'react-native-ui-lib/text'
 import TouchableOpacity from 'react-native-ui-lib/touchableOpacity'
 import View from 'react-native-ui-lib/view'
 import { Avatar } from '../Avatar/Avatar.component'
-import Button from '../Button/Button.component'
 import { Icon } from '../Icon/Icon.component'
 import { MarkdownRenderer } from '../MarkdownRenderer/MarkdownRenderer.component'
 import { NoAvatar } from '../NoAvatar/NoAvatar.component'
 import { Surface } from '../Surface/Surface.component'
 import { IPostProps } from './Post.props'
+import { PostActions } from './PostActions.component'
 
 var customParseFormat = require('dayjs/plugin/customParseFormat')
 var relativeTime = require('dayjs/plugin/relativeTime')
@@ -81,6 +81,21 @@ export const Post = React.memo((props: IPostProps) => {
     return navigate(Routes.Login, {})
   }
 
+  const renderYoutubeIframe = (postContent: string) => {
+    const YoutubePlayer =
+      require('@/components/YoutubePlayer/YoutubePlayer.component').YTPlayer
+    let videoId: string = ''
+
+    if (postContent.includes('youtu.be')) {
+      videoId = postContent.split('https://youtu.be/')[1]
+    }
+    if (postContent.includes('watch?v=')) {
+      videoId = postContent.split('watch?v=')[1]
+    }
+
+    return <YoutubePlayer videoId={videoId} />
+  }
+
   return (
     <TouchableOpacity onPress={_onPressPost}>
       <View row marginV-20>
@@ -134,8 +149,8 @@ export const Post = React.memo((props: IPostProps) => {
                   <FastImage
                     source={{ uri: title }}
                     style={{
-                      width: 94,
-                      height: 63,
+                      width: 150,
+                      height: 100,
                       borderRadius: 4,
                       marginTop: 20,
                       marginRight: 10,
@@ -143,49 +158,19 @@ export const Post = React.memo((props: IPostProps) => {
                   />
                 </View>
               ) : null}
-              <View row spread marginT-20>
-                <View row>
-                  <Button
-                    iconSource={() =>
-                      !isLiked ? (
-                        <Icon name="heart" size={14} color="#7F8386" />
-                      ) : (
-                        <Icon name="heart-filled" size={14} color="#FD5D5D" />
-                      )
-                    }
-                    label={likesCount.toString()}
-                    link
-                    text
-                    onPress={_onPressLike}
-                    labelStyle={{
-                      color: '#7F8386',
-                      marginLeft: 10,
-                    }}
-                    disabled={loading}
-                  />
-                  <View
-                    marginH-40
-                    style={{ borderColor: '#E0E0E0', borderWidth: 0.5 }}
-                  />
-                  <Button
-                    onPress={_onPressComment}
-                    iconSource={() => (
-                      <Icon name="comment" size={14} color="#7F8386" />
-                    )}
-                    label={commentsCount.toString()}
-                    link
-                    text
-                    labelStyle={{ color: '#7F8386', marginLeft: 10 }}
-                  />
-                </View>
-                <Button
-                  iconSource={() => <Icon name="bookmark" size={16} />}
-                  link
-                  text
-                  onPress={_onPressSave}
-                />
-              </View>
+              {postType === PostType.Youtube ? (
+                <View>{renderYoutubeIframe(content)}</View>
+              ) : null}
             </View>
+            <PostActions
+              commentsCount={commentsCount.toString()}
+              isLiked={isLiked}
+              likesCount={likesCount.toString()}
+              loading={loading}
+              onPressComment={_onPressComment}
+              onPressLike={_onPressLike}
+              onPressSave={_onPressSave}
+            />
           </View>
         </Surface>
       </View>

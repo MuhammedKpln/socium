@@ -20,8 +20,8 @@ export function PostActions(props: IPostActionsProps) {
   } = props
 
   return (
-    <View row spread marginT-20>
-      <View row>
+    <View row spread marginT-20 width="100%">
+      <View row left>
         <Button
           iconSource={() =>
             !isLiked ? (
@@ -50,22 +50,23 @@ export function PostActions(props: IPostActionsProps) {
           labelStyle={{ color: '#7F8386', marginLeft: 10 }}
         />
       </View>
-
-      {!showDate ? (
-        <Button
-          iconSource={() => <Icon name="bookmark" size={16} />}
-          link
-          text
-          onPress={onPressSave}
-        />
-      ) : (
-        <View row marginT-5>
-          <Icon name="clock" color={Colors.greyText} />
-          <Text greyText text marginL-5 style={{ marginTop: -2 }}>
-            {date}
-          </Text>
-        </View>
-      )}
+      <View right row marginT-5>
+        {!showDate ? (
+          <Button
+            iconSource={() => <Icon name="bookmark" size={16} />}
+            link
+            text
+            onPress={onPressSave}
+          />
+        ) : (
+          <View row right marginR-10>
+            <Icon name="clock" color={Colors.greyText} />
+            <Text greyText text style={{ marginTop: -2 }}>
+              {date}
+            </Text>
+          </View>
+        )}
+      </View>
     </View>
   )
 }

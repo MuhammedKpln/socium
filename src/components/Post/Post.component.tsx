@@ -2,11 +2,12 @@ import { Routes } from '@/navigators/navigator.props'
 import { navigate } from '@/navigators/utils/navigation'
 import { useAppSelector } from '@/store'
 import { PostType } from '@/types/post.types'
+import { IInstagramMeta } from '@/types/socialMedia.types'
 import * as dayjs from 'dayjs'
 import 'dayjs/locale/tr'
-import React from 'react'
-import FastImage from 'react-native-fast-image'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Colors } from 'react-native-ui-lib'
+import Image from 'react-native-ui-lib/image'
 import Text from 'react-native-ui-lib/text'
 import TouchableOpacity from 'react-native-ui-lib/touchableOpacity'
 import View from 'react-native-ui-lib/view'
@@ -26,6 +27,7 @@ dayjs.extend(customParseFormat)
 dayjs.extend(relativeTime)
 
 export const Post = React.memo((props: IPostProps) => {
+  const [instagramThumbnailUrl, setInstagramThumbnailUrl] = useState<string>('')
   const {
     content,
     commentsCount,
@@ -42,6 +44,20 @@ export const Post = React.memo((props: IPostProps) => {
     loading,
   } = props
   const isLoggedIn = useAppSelector(state => state.userReducer.isLoggedIn)
+
+  const fetchInstagramPost = useCallback(async () => {
+    const url = `https://api.instagram.com/oembed/?url=${title}`
+    const response = await fetch(url)
+    const data: IInstagramMeta = await response.json()
+
+    setInstagramThumbnailUrl(data.thumbnail_url)
+  }, [title])
+
+  useEffect(() => {
+    if (postType === PostType.Instagram) {
+      fetchInstagramPost()
+    }
+  }, [fetchInstagramPost, postType])
 
   const _onPressPost = () => {
     if (isLoggedIn) {
@@ -97,24 +113,23 @@ export const Post = React.memo((props: IPostProps) => {
   }
 
   return (
-    <TouchableOpacity onPress={_onPressPost}>
-      <View row marginV-20>
-        {user.avatar ? (
-          <Avatar userAvatar={user?.avatar} />
-        ) : (
-          <NoAvatar username={user.username} />
-        )}
-
-        <Surface
-          width="100%"
-          padding-10
-          marginL-10
-          style={{ borderRadius: 6, flexWrap: 'wrap' }}
-        >
-          <View style={{ minWidth: '90%', maxWidth: '91%' }}>
-            <View row spread>
+    <TouchableOpacity
+      onPress={_onPressPost}
+      style={{
+        marginVertical: 10,
+      }}
+    >
+      <>
+        <Surface padding-20 width="100%" br20>
+          <View row spread>
+            <View row left>
+              {user.avatar ? (
+                <Avatar userAvatar={user?.avatar} />
+              ) : (
+                <NoAvatar username={user.username} />
+              )}
               <TouchableOpacity onPress={onPressUsername}>
-                <View row>
+                <View row marginL-10>
                   <Text text50R text textColor>
                     {user.username}
                   </Text>
@@ -123,57 +138,60 @@ export const Post = React.memo((props: IPostProps) => {
                   </Text>
                 </View>
               </TouchableOpacity>
-              <View>
-                <Text greyText text marginT-6>
-                  <Icon
-                    name="clock"
-                    color={Colors.greyText}
-                    style={{ color: '#fff', marginRight: 10 }}
-                  />
-                  {/* @ts-ignore */}
-                  {dayjs.default(date).fromNow()}
-                </Text>
-              </View>
             </View>
-
-            <View margin-5>
-              <Text document textColor style={{ lineHeight: 17 }}>
-                {postType === PostType.Content ? (
-                  <MarkdownRenderer>{content}</MarkdownRenderer>
-                ) : null}
-                {postType !== PostType.Content ? content : null}
+            <View row right>
+              <Icon
+                name="clock"
+                color={Colors.greyText}
+                style={{ color: '#fff', marginRight: 10 }}
+              />
+              <Text greyText text marginL-5 style={{ marginTop: -2 }}>
+                {/* @ts-ignore */}
+                {dayjs.default(date).fromNow()}
               </Text>
-
-              {typeof title === 'string' && postType === PostType.Instagram ? (
-                <View row>
-                  <FastImage
-                    source={{ uri: title }}
-                    style={{
-                      width: 150,
-                      height: 100,
-                      borderRadius: 4,
-                      marginTop: 20,
-                      marginRight: 10,
-                    }}
-                  />
-                </View>
-              ) : null}
-              {postType === PostType.Youtube ? (
-                <View>{renderYoutubeIframe(content)}</View>
-              ) : null}
             </View>
-            <PostActions
-              commentsCount={commentsCount.toString()}
-              isLiked={isLiked}
-              likesCount={likesCount.toString()}
-              loading={loading}
-              onPressComment={_onPressComment}
-              onPressLike={_onPressLike}
-              onPressSave={_onPressSave}
-            />
           </View>
+
+          <View margin-5>
+            <Text document textColor style={{ lineHeight: 17 }}>
+              {postType === PostType.Content ? (
+                <MarkdownRenderer>{content}</MarkdownRenderer>
+              ) : null}
+              {postType !== PostType.Content ? content : null}
+            </Text>
+
+            {postType === PostType.Instagram ? (
+              <View row>
+                <Image
+                  source={{ uri: instagramThumbnailUrl }}
+                  overlayColor="#000"
+                  overlayType={Image.overlayTypes.BOTTOM}
+                  overlayIntensity={Image.overlayIntensityType.MEDIUM}
+                  style={{
+                    width: 150,
+                    height: 100,
+                    borderRadius: 4,
+                    marginTop: 20,
+                    marginRight: 10,
+                  }}
+                />
+              </View>
+            ) : null}
+            {postType === PostType.Youtube ? (
+              <View>{renderYoutubeIframe(content)}</View>
+            ) : null}
+          </View>
+          <PostActions
+            commentsCount={commentsCount.toString()}
+            isLiked={isLiked}
+            likesCount={likesCount.toString()}
+            loading={loading}
+            onPressComment={_onPressComment}
+            onPressLike={_onPressLike}
+            onPressSave={_onPressSave}
+          />
         </Surface>
-      </View>
+      </>
     </TouchableOpacity>
   )
 })

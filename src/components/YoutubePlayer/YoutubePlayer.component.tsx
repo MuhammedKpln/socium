@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Image, TouchableOpacity } from 'react-native'
+import { Image as IM, ImageBackground, TouchableOpacity } from 'react-native'
 import SkeletonView from 'react-native-ui-lib/skeletonView'
 import View from 'react-native-ui-lib/view'
 import YoutubePlayer, { getYoutubeMeta } from 'react-native-youtube-iframe'
+import { Icon } from '../Icon/Icon.component'
 import { IYTPlayerProps } from './YoutubePlayer.props'
 
 export function YTPlayer(props: IYTPlayerProps) {
@@ -46,7 +47,7 @@ export function YTPlayer(props: IYTPlayerProps) {
   }, [fetchYoutubeMeta])
 
   useEffect(() => {
-    Image.prefetch(thumbnailUrl).then(val => {
+    IM.prefetch(thumbnailUrl).then(val => {
       if (val) {
         setShowContent(true)
       }
@@ -55,16 +56,21 @@ export function YTPlayer(props: IYTPlayerProps) {
 
   const renderContent = useCallback(() => {
     return (
-      <Image
+      <ImageBackground
         source={{ uri: thumbnailUrl }}
         style={{
           width: 150,
           height: 100,
           borderRadius: 4,
           marginTop: 20,
+          alignContent: 'center',
+          alignItems: 'center',
+          justifyContent: 'center',
           marginRight: 10,
         }}
-      />
+      >
+        <Icon name="playCircle" size={30} color="#fff" />
+      </ImageBackground>
     )
   }, [thumbnailUrl])
 

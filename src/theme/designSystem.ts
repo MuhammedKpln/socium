@@ -69,7 +69,12 @@ export const configureDesignSystem = (): void => {
     },
   })
 
-  ThemeManager.setComponentTheme('Button', {
-    height: 55,
+  //@ts-ignore
+  ThemeManager.setComponentTheme('Text', props => {
+    if (!props.color) {
+      return {
+        color: Colors.textcolor,
+      }
+    }
   })
 }

@@ -139,7 +139,7 @@ export const Post = React.memo((props: IPostProps) => {
                 </View>
               </TouchableOpacity>
             </View>
-            <View row right>
+            <View row right style={{ marginTop: 7 }}>
               <Icon
                 name="clock"
                 color={Colors.greyText}

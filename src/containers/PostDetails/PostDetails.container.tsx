@@ -28,6 +28,7 @@ import SkeletonView from 'react-native-ui-lib/skeletonView'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
 import { useDispatch } from 'react-redux'
+import { PostComments } from './components/Comments.component'
 
 var customParseFormat = require('dayjs/plugin/customParseFormat')
 var relativeTime = require('dayjs/plugin/relativeTime')
@@ -129,7 +130,7 @@ export function PostDetails() {
     if (!post) return
 
     return (
-      <Page scrollable>
+      <Page width="100%">
         <View row>
           <Avatar userAvatar={post?.user?.avatar} />
           <View marginL-5>
@@ -170,6 +171,10 @@ export function PostDetails() {
             // @ts-ignore
             date={dayjs.default(post.created_at).fromNow()}
           />
+        </View>
+
+        <View>
+          <PostComments postId={post.id} />
         </View>
       </Page>
     )

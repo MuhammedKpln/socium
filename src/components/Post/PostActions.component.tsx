@@ -1,7 +1,8 @@
 import React from 'react'
-import { Colors, Text } from 'react-native-ui-lib'
+import { Colors } from 'react-native-ui-lib'
 import Button from 'react-native-ui-lib/button'
 import View from 'react-native-ui-lib/view'
+import Text from 'react-native-ui-lib/text'
 import { Icon } from '../Icon/Icon.component'
 import { IPostActionsProps } from './Post.props'
 
@@ -58,14 +59,12 @@ export function PostActions(props: IPostActionsProps) {
           onPress={onPressSave}
         />
       ) : (
-        <Text greyText text marginT-6>
-          <Icon
-            name="clock"
-            color={Colors.greyText}
-            style={{ color: '#fff', marginRight: 10 }}
-          />
-          {date}
-        </Text>
+        <View row marginT-5>
+          <Icon name="clock" color={Colors.greyText} />
+          <Text greyText text marginL-5 style={{ marginTop: -2 }}>
+            {date}
+          </Text>
+        </View>
       )}
     </View>
   )

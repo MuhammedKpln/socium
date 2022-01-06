@@ -10,4 +10,5 @@ export interface IComment {
   user: IUser
   userLike: IUserlike
   postLike: IPostLike
+  parentUser?: IUser
 }

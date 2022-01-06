@@ -1,4 +1,15 @@
+import { IComment } from '@/Types/comment.types'
 import gql from 'graphql-tag'
+
+export interface IFetchCommentsVariables {
+  postId: number
+  offset?: number
+  limit?: number
+}
+
+export interface IFetchCommentsResponse {
+  getPostComments: IComment[]
+}
 
 export const FETCH_COMMENTS = gql`
   query FETCH_POST_COMMENTS(
@@ -22,6 +33,22 @@ export const FETCH_COMMENTS = gql`
       }
       postLike {
         likeCount
+      }
+      parentUser {
+        userParentComments {
+          id
+          content
+          created_at
+
+          postLike {
+            likeCount
+          }
+          user {
+            id
+            bio
+            username
+          }
+        }
       }
     }
   }

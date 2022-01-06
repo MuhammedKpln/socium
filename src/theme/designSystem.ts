@@ -64,6 +64,9 @@ export const configureDesignSystem = (): void => {
     document: {
       fontSize: 15,
     },
+    bold: {
+      fontWeight: 'bold',
+    },
   })
 
   ThemeManager.setComponentTheme('Button', {

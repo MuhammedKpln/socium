@@ -1,3 +1,5 @@
+import { IComment } from './comment.types'
+
 export interface ILoginGoogleData {
   email: string
   idToken: string
@@ -27,6 +29,7 @@ export interface IUser {
   birthday: string
   _count: IUserCount
   userAvatarMeta: IUserAvatarMeta
+  userParentComments?: IComment[]
 }
 
 export interface IErrorResponse {

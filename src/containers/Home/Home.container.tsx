@@ -129,7 +129,11 @@ const HomeContainer = () => {
       <FlatList
         data={posts}
         renderItem={renderItem}
-        ListHeaderComponent={<Text title>🚀 Öne çıkanlar</Text>}
+        ListHeaderComponent={
+          <Text title textColor>
+            🚀 Öne çıkanlar
+          </Text>
+        }
       />
     )
   }

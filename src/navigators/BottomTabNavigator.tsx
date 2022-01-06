@@ -50,7 +50,14 @@ const BottomTabBarNavigator = () => {
 
 const MainNavigator = () => {
   return (
-    <Stack.Navigator initialRouteName={Routes.App}>
+    <Stack.Navigator
+      initialRouteName={Routes.App}
+      screenOptions={{
+        contentStyle: {
+          padding: 20,
+        },
+      }}
+    >
       <Stack.Group screenOptions={{ headerShown: false }}>
         {/* // Header disabled routes */}
         <Stack.Screen name={Routes.App} component={BottomTabBarNavigator} />

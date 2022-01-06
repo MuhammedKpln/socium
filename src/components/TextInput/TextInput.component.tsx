@@ -1,5 +1,5 @@
 import React from 'react'
-import { Incubator } from 'react-native-ui-lib'
+import { Colors, Incubator } from 'react-native-ui-lib'
 import TextInputStyle from './TextInput.style'
 
 const { TextField } = Incubator
@@ -10,5 +10,11 @@ export const TextInput = (
   },
   //@ts-ignore
 ) => {
-  return <TextField fieldStyle={TextInputStyle.input} {...props} />
+  return (
+    <TextField
+      fieldStyle={TextInputStyle.input}
+      color={Colors.textColor}
+      {...props}
+    />
+  )
 }

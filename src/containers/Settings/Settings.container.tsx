@@ -1,3 +1,4 @@
+import LogoGrey from '@/assets/icons/LogoGrey'
 import SettingsBell from '@/assets/icons/SettingsBell'
 import SettingsKullanim from '@/assets/icons/SettingsKullanim'
 import SettingsLogout from '@/assets/icons/SettingsLogout'
@@ -12,7 +13,7 @@ import { updateTheme } from '@/store/reducers/theme.reducer'
 import { logout } from '@/store/reducers/user.reducer'
 import { map } from 'lodash'
 import React, { useCallback, useMemo } from 'react'
-import { ListItem, Switch, Text } from 'react-native-ui-lib'
+import { ListItem, Switch, Text, View } from 'react-native-ui-lib'
 import { useDispatch } from 'react-redux'
 
 export interface IMenu {
@@ -72,17 +73,31 @@ export function SettingsContainer() {
 
   return (
     <Page>
-      {map(menu, m => (
-        <ListItem style={{ marginBottom: 20 }}>
-          <ListItem.Part left>{m.icon}</ListItem.Part>
-          <ListItem.Part middle marginL-15>
-            <Text document textColor>
-              {m.title}
-            </Text>
-          </ListItem.Part>
-          <ListItem.Part right>{m.right}</ListItem.Part>
-        </ListItem>
-      ))}
+      <View>
+        {map(menu, m => (
+          <ListItem style={{ marginBottom: 20 }}>
+            <ListItem.Part left>{m.icon}</ListItem.Part>
+            <ListItem.Part middle marginL-15>
+              <Text document textColor>
+                {m.title}
+              </Text>
+            </ListItem.Part>
+            <ListItem.Part right>{m.right}</ListItem.Part>
+          </ListItem>
+        ))}
+      </View>
+      <View
+        width={100}
+        height={30}
+        center
+        style={{
+          alignSelf: 'center',
+          position: 'absolute',
+          bottom: 50,
+        }}
+      >
+        <LogoGrey />
+      </View>
     </Page>
   )
 }

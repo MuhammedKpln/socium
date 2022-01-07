@@ -18,9 +18,11 @@ module.exports = async () => {
           inlineRequires: true,
         },
       }),
+      babelTransformerPath: require.resolve('react-native-svg-transformer'),
     },
     resolver: {
-      sourceExts: [...sourceExts, 'cjs'],
+      assetExts: assetExts.filter(ext => ext !== 'svg'),
+      sourceExts: [...sourceExts, 'cjs', 'svg'],
     },
   }
 }

@@ -33,6 +33,8 @@
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.10.1",
     "react-native-shimmer-placeholder": "^2.0.8",
+    "react-native-svg": "^12.1.1",
+    "react-native-svg-transformer": "^1.0.0",
     "react-native-ui-lib": "^6.6.2",
     "react-native-vector-icons": "^9.0.0",
     "react-native-webrtc": "^1.94.1",

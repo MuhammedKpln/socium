@@ -54,7 +54,7 @@ export const configureDesignSystem = (): void => {
         fontFamily: 'SourceSansPro-Bold',
       },
       ios: {
-        fontSize: 22,
+        fontSize: 17,
         fontWeight: '700',
       },
     }),

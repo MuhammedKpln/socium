@@ -20,3 +20,7 @@
   public *;
 }
 # //fastimage
+
+# react-native-svg
+-keep public class com.horcrux.svg.** {*;}
+# //react-native-svg

@@ -95,7 +95,7 @@ export function Comment(props: ICommentProps) {
 
   return (
     <>
-      <View marginV-5>
+      <View marginV-5 marginR-15>
         <View spread row marginT-20>
           <View row left>
             <NoAvatar username="qwe" />

@@ -1,8 +1,8 @@
 import React from 'react'
 import { Colors } from 'react-native-ui-lib'
 import Button from 'react-native-ui-lib/button'
-import View from 'react-native-ui-lib/view'
 import Text from 'react-native-ui-lib/text'
+import View from 'react-native-ui-lib/view'
 import { Icon } from '../Icon/Icon.component'
 import { IPostActionsProps } from './Post.props'
 
@@ -11,7 +11,6 @@ export function PostActions(props: IPostActionsProps) {
     commentsCount,
     isLiked,
     likesCount,
-    loading,
     onPressComment,
     onPressLike,
     onPressSave,
@@ -23,6 +22,11 @@ export function PostActions(props: IPostActionsProps) {
     <View row spread marginT-20 width="100%">
       <View row left>
         <Button
+          throttleTime={10000}
+          throttleOptions={{
+            leading: false,
+            trailing: true,
+          }}
           iconSource={() =>
             !isLiked ? (
               <Icon name="heart" size={14} color="#7F8386" />
@@ -38,7 +42,6 @@ export function PostActions(props: IPostActionsProps) {
             color: '#7F8386',
             marginLeft: 10,
           }}
-          disabled={loading}
         />
         <View marginH-40 style={{ borderColor: '#E0E0E0', borderWidth: 0.5 }} />
         <Button

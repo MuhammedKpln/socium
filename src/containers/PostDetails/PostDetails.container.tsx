@@ -73,21 +73,21 @@ export function PostDetails() {
     setInstagramMeta(responseJson)
   }, [post?.content])
 
-  const [likePost, likePostMeta] = useMutation<
-    { likeEntry: IUserlike },
-    { postId: number }
-  >(LIKE_POST, {
-    onCompleted: () => {
-      showToast(ToastStatus.Success, 'Beğendiniz!')
-    },
-    onError: err => {
-      const errorCode = handleApolloErrors(err, ERROR_CODES_RAW.ALREADY_LIKED)
+  const [likePost] = useMutation<{ likeEntry: IUserlike }, { postId: number }>(
+    LIKE_POST,
+    {
+      onCompleted: () => {
+        showToast(ToastStatus.Success, 'Beğendiniz!')
+      },
+      onError: err => {
+        const errorCode = handleApolloErrors(err, ERROR_CODES_RAW.ALREADY_LIKED)
 
-      if (errorCode) {
-        showToast(ToastStatus.Error, ERROR_CODES[errorCode])
-      }
+        if (errorCode) {
+          showToast(ToastStatus.Error, ERROR_CODES[errorCode])
+        }
+      },
     },
-  })
+  )
 
   const toggleLikeButton = async () => {
     if (post && post?.userLike?.liked) {
@@ -120,7 +120,7 @@ export function PostDetails() {
     }
   }
 
-  const [unlikePost, unlikePostMeta] = useMutation<
+  const [unlikePost] = useMutation<
     { likeEntry: IUserlike },
     { postId: number }
   >(UNLIKE_POST, {
@@ -166,7 +166,6 @@ export function PostDetails() {
             commentsCount={post?._count?.comment.toString()}
             likesCount={post?.postLike?.likeCount.toString()}
             isLiked={post?.userLike?.liked}
-            loading={likePostMeta.loading || unlikePostMeta.loading}
             onPressComment={() => null}
             onPressLike={toggleLikeButton}
             onPressSave={() => null}

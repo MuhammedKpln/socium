@@ -1,6 +1,6 @@
+import Logo from '@/assets/icons/Logo'
 import React from 'react'
-import Image from 'react-native-ui-lib/image'
 
 export const HeaderTitle = React.memo(function HeaderTitle() {
-  return <Image assetName="logo" assetGroup="app" width={94} height={25} />
+  return <Logo width={100} height={100} viewBox="0 0 150 50" />
 })

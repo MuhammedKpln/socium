@@ -8,10 +8,12 @@ export enum Routes {
   EmailVerification = 'EmailVerification',
   PostDetails = 'post-details',
   Profile = 'profile',
+  Settings = 'app-settings',
 }
 export enum RouteTitles {
   Login = 'Giriş yap',
   Register = 'Kayıt ol',
+  Settings = 'Ayarlar',
 }
 
 export const RouteComponents = {
@@ -20,6 +22,8 @@ export const RouteComponents = {
     require('@/containers/Register/Register.container').RegisterContainer,
   PostDetails: () =>
     require('@/containers/PostDetails/PostDetails.container').PostDetails,
+  Settings: () =>
+    require('@/containers/Settings/Settings.container').SettingsContainer,
 }
 
 export interface INavigatorParamsList extends ParamListBase {

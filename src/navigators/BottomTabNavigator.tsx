@@ -51,7 +51,12 @@ const BottomTabBarNavigator = () => {
 
 const MainNavigator = () => {
   return (
-    <Stack.Navigator initialRouteName={Routes.App}>
+    <Stack.Navigator
+      initialRouteName={Routes.App}
+      screenOptions={{
+        headerBackTitle: '',
+      }}
+    >
       <Stack.Group screenOptions={{ headerShown: false }}>
         {/* // Header disabled routes */}
         <Stack.Screen name={Routes.App} component={BottomTabBarNavigator} />
@@ -76,6 +81,11 @@ const MainNavigator = () => {
         <Stack.Screen
           name={Routes.PostDetails}
           getComponent={RouteComponents.PostDetails}
+        />
+        <Stack.Screen
+          name={Routes.Settings}
+          getComponent={RouteComponents.Settings}
+          {...applyRouteTitle(RouteTitles.Settings)}
         />
       </Stack.Group>
     </Stack.Navigator>

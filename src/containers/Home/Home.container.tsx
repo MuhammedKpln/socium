@@ -194,6 +194,7 @@ const HomeContainer = () => {
         times={8}
       />
       <Button onPress={() => dispatch(logout())} label="qwelqwekl" />
+      <Button onPress={() => navigate(Routes.Settings, {})} label="sett" />
     </Page>
   )
 }

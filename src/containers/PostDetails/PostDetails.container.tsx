@@ -3,6 +3,10 @@ import { Icon } from '@/components/Icon/Icon.component'
 import { MarkdownRenderer } from '@/components/MarkdownRenderer/MarkdownRenderer.component'
 import { Page } from '@/components/Page/Page.component'
 import { PostActions } from '@/components/Post/PostActions.component'
+import {
+  SkeletonView,
+  SkeletonViewTemplates,
+} from '@/components/SkeletonView/SkeletonView.component'
 import { LIKE_POST, UNLIKE_POST } from '@/graphql/mutations/LikePost.mutation'
 import {
   FETCH_POST,
@@ -24,7 +28,6 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import * as dayjs from 'dayjs'
 import React, { useCallback, useLayoutEffect, useState } from 'react'
 import Image from 'react-native-ui-lib/image'
-import SkeletonView from 'react-native-ui-lib/skeletonView'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
 import { useDispatch } from 'react-redux'
@@ -173,7 +176,7 @@ export function PostDetails() {
           />
         </View>
 
-        <View>
+        <View marginT-10>
           <PostComments postId={post.id} />
         </View>
       </Page>
@@ -183,8 +186,8 @@ export function PostDetails() {
   return (
     <SkeletonView
       renderContent={renderContent}
-      showContent={_post.loading ? false : true}
-      template={SkeletonView.templates.TEXT_CONTENT}
+      showContent={!_post.loading}
+      template={SkeletonViewTemplates.TEXT_CONTENT}
     />
   )
 }

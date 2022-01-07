@@ -1,8 +1,15 @@
 import Button from '@/components/Button/Button.component'
 import { Page } from '@/components/Page/Page.component'
 import { Post } from '@/components/Post/Post.component'
+import {
+  SkeletonView,
+  SkeletonViewTemplates,
+} from '@/components/SkeletonView/SkeletonView.component'
 import { LIKE_POST, UNLIKE_POST } from '@/graphql/mutations/LikePost.mutation'
-import { FETCH_POSTS } from '@/graphql/queries/FetchPosts.query'
+import {
+  FETCH_POSTS,
+  IFetchPostsVariables,
+} from '@/graphql/queries/FetchPosts.query'
 import { Routes } from '@/navigators/navigator.props'
 import { navigate } from '@/navigators/utils/navigation'
 import { useAppSelector } from '@/store'
@@ -17,18 +24,24 @@ import { IPost, IUserlike } from '@/Types/post.types'
 import { handleApolloErrors } from '@/utils/apollo'
 import { showToast, ToastStatus } from '@/utils/toast'
 import { useMutation, useQuery } from '@apollo/client'
-import React from 'react'
-import { FlatList } from 'react-native'
-import SkeletonView from 'react-native-ui-lib/skeletonView'
+import React, { useCallback } from 'react'
+import { FlatList, RefreshControl } from 'react-native'
 import Text from 'react-native-ui-lib/text'
 import { useDispatch } from 'react-redux'
 
 const HomeContainer = () => {
   const posts = useAppSelector(state => state.postReducer.posts)
   const dispatch = useDispatch()
-  const fetchPosts = useQuery<{ posts: IPost[] }>(FETCH_POSTS, {
-    onCompleted: data => dispatch(setPosts(data.posts)),
-  })
+  const fetchPosts = useQuery<{ posts: IPost[] }, IFetchPostsVariables>(
+    FETCH_POSTS,
+    {
+      variables: {
+        offset: 0,
+        limit: 15,
+      },
+      onCompleted: data => dispatch(setPosts(data.posts)),
+    },
+  )
 
   const [likePost, likePostMeta] = useMutation<
     { likeEntry: IUserlike },
@@ -95,6 +108,20 @@ const HomeContainer = () => {
     showToast(ToastStatus.Success, 'Kaydedilenlerinize ekleni.')
   }
 
+  const fetchMorePosts = useCallback(() => {
+    if (posts.length < 15) {
+      return
+    }
+
+    fetchPosts
+      .fetchMore({
+        variables: {
+          offset: posts.length + 15,
+        },
+      })
+      .then(data => dispatch(setPosts([...posts, ...data.data?.posts])))
+  }, [fetchPosts, posts, dispatch])
+
   function renderItem({ item }: { item: IPost }) {
     return (
       <Post
@@ -123,17 +150,37 @@ const HomeContainer = () => {
       />
     )
   }
+  const getItemLayout = (data: any, index: any) => ({
+    length: 50,
+    offset: 70 * index,
+    index,
+  })
+
+  const refreshControl = useCallback(() => {
+    return (
+      <RefreshControl
+        refreshing={fetchPosts.loading}
+        onRefresh={fetchPosts.refetch}
+      />
+    )
+  }, [fetchPosts])
 
   function renderContent() {
     return (
       <FlatList
         data={posts}
         renderItem={renderItem}
+        maxToRenderPerBatch={10}
         ListHeaderComponent={
           <Text title textColor>
             🚀 Öne çıkanlar
           </Text>
         }
+        onEndReached={fetchMorePosts}
+        onEndReachedThreshold={0.5}
+        getItemLayout={getItemLayout}
+        removeClippedSubviews
+        refreshControl={refreshControl()}
       />
     )
   }
@@ -142,11 +189,11 @@ const HomeContainer = () => {
     <Page>
       <SkeletonView
         showContent={!fetchPosts.loading}
-        template={SkeletonView.templates.LIST_ITEM}
+        template={SkeletonViewTemplates.LIST_ITEM}
         renderContent={renderContent}
         times={8}
       />
-      <Button onPress={() => dispatch(logout())} label="logogut" />
+      <Button onPress={() => dispatch(logout())} label="qwelqwekl" />
     </Page>
   )
 }

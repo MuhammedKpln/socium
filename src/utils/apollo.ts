@@ -7,7 +7,7 @@ import {
   Observable,
   Operation,
 } from '@apollo/client'
-import { offsetLimitPagination } from '@apollo/client/utilities'
+import { concatPagination } from '@apollo/client/utilities'
 import { GraphQLError, print } from 'graphql'
 import { Client, ClientOptions, createClient } from 'graphql-ws'
 
@@ -15,7 +15,7 @@ export const apolloCache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
-        feed: offsetLimitPagination(),
+        getPostComments: concatPagination(),
       },
     },
   },

@@ -71,7 +71,7 @@ export const configureDesignSystem = (): void => {
 
   //@ts-ignore
   ThemeManager.setComponentTheme('Text', props => {
-    if (!props.color) {
+    if (!props.color || !props.textColor) {
       return {
         color: Colors.textcolor,
       }

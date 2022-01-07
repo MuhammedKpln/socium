@@ -99,10 +99,10 @@ export function Comment(props: ICommentProps) {
         <View spread row marginT-20>
           <View row left>
             <NoAvatar username="qwe" />
-            <Text bold marginR-10 marginL-10>
+            <Text bold marginR-10 marginL-10 textColor>
               @{username}
             </Text>
-            <Text>{content}</Text>
+            <Text textColor>{content}</Text>
           </View>
           <View right row>
             <Icon name="heart" />

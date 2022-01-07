@@ -25,12 +25,13 @@ export function PostComments(props: IPostCommentsProps) {
     {
       variables: {
         postId,
+        limit: 15,
+        offset: 0,
       },
     },
   )
 
   const renderItem = useCallback(({ item }: { item: IComment }) => {
-    console.log
     return (
       <Comment
         parentComments={item?.parentUser?.userParentComments}
@@ -42,11 +43,31 @@ export function PostComments(props: IPostCommentsProps) {
     )
   }, [])
 
+  const fetchMorePosts = useCallback(async () => {
+    if (!comments.data?.getPostComments) {
+      return
+    }
+
+    const offset = comments.data?.getPostComments.length
+
+    await comments.fetchMore({
+      variables: {
+        limit: 10,
+        offset,
+        postId,
+      },
+    })
+  }, [comments, postId])
+
   const renderContent = useCallback(() => {
     return (
-      <FlatList data={comments.data?.getPostComments} renderItem={renderItem} />
+      <FlatList
+        data={comments.data?.getPostComments}
+        renderItem={renderItem}
+        onEndReached={fetchMorePosts}
+      />
     )
-  }, [comments.data?.getPostComments, renderItem])
+  }, [comments, renderItem, fetchMorePosts])
 
   return (
     <SkeletonView

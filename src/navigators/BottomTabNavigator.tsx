@@ -55,6 +55,10 @@ const MainNavigator = () => {
       initialRouteName={Routes.App}
       screenOptions={{
         headerBackTitle: '',
+        headerTitleStyle: {
+          fontFamily: 'Gilroy-ExtraBold',
+          fontWeight: '600',
+        },
       }}
     >
       <Stack.Group screenOptions={{ headerShown: false }}>

@@ -4,9 +4,9 @@ import { IAvatarProps } from './Avatar.props'
 import UIAvatar from 'react-native-ui-lib/avatar'
 
 export function Avatar(props: IAvatarProps) {
-  const { userAvatar } = props
+  const { userAvatar, size } = props
 
   const userAvatarUrl = avatarStatic(userAvatar)
 
-  return <UIAvatar source={{ uri: userAvatarUrl }} size={30} />
+  return <UIAvatar source={{ uri: userAvatarUrl }} size={size || 30} />
 }

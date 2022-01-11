@@ -1,5 +1,8 @@
+import { Routes } from '@/navigators/navigator.props'
+import { navigate } from '@/navigators/utils/navigation'
 import { useAppSelector } from '@/store'
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
+import { TouchableOpacity } from 'react-native'
 import { Avatar } from '../Avatar/Avatar.component'
 import { NoAvatar } from '../NoAvatar/NoAvatar.component'
 
@@ -14,9 +17,19 @@ export const HeaderRight = React.memo(function HeaderRight() {
     return ''
   }, [isLoggedIn])
 
+  const onPressAvatar = useCallback(() => {
+    navigate(Routes.MyProfile, {
+      username: user?.username,
+    })
+  }, [user])
+
   if (isLoggedIn) {
     if (user?.avatar) {
-      return <Avatar userAvatar={user?.avatar} />
+      return (
+        <TouchableOpacity onPress={onPressAvatar}>
+          <Avatar userAvatar={user?.avatar} />
+        </TouchableOpacity>
+      )
     } else {
       if (user) {
         return <NoAvatar username={user.username} />

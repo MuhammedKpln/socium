@@ -7,7 +7,7 @@ export enum Routes {
   Register = 'register',
   EmailVerification = 'EmailVerification',
   PostDetails = 'post-details',
-  Profile = 'profile',
+  MyProfile = 'profile',
   Settings = 'app-settings',
   Discover = 'discover',
 }
@@ -16,6 +16,7 @@ export enum RouteTitles {
   Register = 'Kayıt ol',
   Settings = 'Ayarlar',
   Discover = 'Keşfet',
+  MyProfile = 'Profilim',
 }
 
 export const RouteComponents = {
@@ -28,6 +29,8 @@ export const RouteComponents = {
     require('@/containers/Settings/Settings.container').SettingsContainer,
   Discover: () =>
     require('@/containers/Discover/Discover.container').DiscoverContainer,
+  MyProfile: () =>
+    require('@/containers/Profile/Profile.container').ProfileContainer,
 }
 
 export interface INavigatorParamsList extends ParamListBase {
@@ -36,6 +39,6 @@ export interface INavigatorParamsList extends ParamListBase {
   [Routes.Login]: undefined
   [Routes.Register]: undefined
   [Routes.EmailVerification]: undefined
-  [Routes.Profile]: undefined
+  [Routes.MyProfile]: { username: string }
   [Routes.PostDetails]: { postId: number }
 }

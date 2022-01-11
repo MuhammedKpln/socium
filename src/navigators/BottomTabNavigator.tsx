@@ -98,7 +98,12 @@ const MainNavigator = () => {
         <Stack.Screen
           name={Routes.Settings}
           getComponent={RouteComponents.Settings}
-          {...applyRouteTitle(RouteTitles.Settings)}
+          options={applyRouteTitle(RouteTitles.Settings)}
+        />
+        <Stack.Screen
+          name={Routes.MyProfile}
+          getComponent={RouteComponents.MyProfile}
+          options={applyRouteTitle(RouteTitles.MyProfile)}
         />
       </Stack.Group>
     </Stack.Navigator>

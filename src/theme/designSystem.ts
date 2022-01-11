@@ -67,6 +67,9 @@ export const configureDesignSystem = (): void => {
     bold: {
       fontWeight: 'bold',
     },
+    fontGilroy: {
+      fontFamily: 'Gilroy-ExtraBold',
+    },
   })
 
   //@ts-ignore

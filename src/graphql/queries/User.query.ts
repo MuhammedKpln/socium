@@ -1,5 +1,15 @@
 import { UserFragment } from '@/graphql/fragments/User.fragment'
+import { IUser } from '@/Types/login.types'
+import { IPost } from '@/Types/post.types'
 import gql from 'graphql-tag'
+
+export interface IFetchUserProfileResponse {
+  getUser: IUser
+  userPosts: IPost[]
+}
+export interface IFetchUserProfileVariables {
+  username: string
+}
 
 export const FETCH_USER_PRFOFILE = gql`
   ${UserFragment}

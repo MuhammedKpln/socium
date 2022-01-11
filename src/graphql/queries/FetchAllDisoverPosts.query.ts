@@ -1,4 +1,13 @@
+import { IPost } from '@/types/post.types'
 import { gql } from '@apollo/client'
+
+export interface IFetchallDiscoverPostsResponse {
+  postsWithoutBlog: IPost[]
+}
+export interface IFetchallDiscoverPostsVariables {
+  limit?: number
+  offset?: number
+}
 
 export const FETCH_ALL_DISCOVER_POSTS = gql`
   query FETCH_ALL_DISCOVER_POSTS($limit: Float! = 15, $offset: Float! = 0) {
@@ -7,12 +16,23 @@ export const FETCH_ALL_DISCOVER_POSTS = gql`
       title
       content
       type
+      _count {
+        comment
+      }
+      postLike {
+        likeCount
+      }
+
+      userLike {
+        liked
+      }
 
       user {
         id
         username
         avatar
       }
+      created_at
     }
   }
 `

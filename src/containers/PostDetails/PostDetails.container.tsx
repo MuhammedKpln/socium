@@ -25,20 +25,12 @@ import { handleApolloErrors } from '@/utils/apollo'
 import { showToast, ToastStatus } from '@/utils/toast'
 import { useMutation, useQuery } from '@apollo/client'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
-import * as dayjs from 'dayjs'
 import React, { useCallback, useLayoutEffect, useState } from 'react'
 import Image from 'react-native-ui-lib/image'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
 import { useDispatch } from 'react-redux'
 import { PostComments } from './components/Comments.component'
-
-var customParseFormat = require('dayjs/plugin/customParseFormat')
-var relativeTime = require('dayjs/plugin/relativeTime')
-
-dayjs.locale('tr')
-dayjs.extend(customParseFormat)
-dayjs.extend(relativeTime)
 
 export function PostDetails() {
   const navigation = useNavigation()
@@ -170,8 +162,7 @@ export function PostDetails() {
             onPressLike={toggleLikeButton}
             onPressSave={() => null}
             showDate
-            // @ts-ignore
-            date={dayjs.default(post.created_at).fromNow()}
+            date={post.created_at}
           />
         </View>
 

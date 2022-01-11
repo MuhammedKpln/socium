@@ -13,7 +13,10 @@ import { updateTheme } from '@/store/reducers/theme.reducer'
 import { logout } from '@/store/reducers/user.reducer'
 import { map } from 'lodash'
 import React, { useCallback, useMemo } from 'react'
-import { ListItem, Switch, Text, View } from 'react-native-ui-lib'
+import ListItem from 'react-native-ui-lib/listItem'
+import Switch from 'react-native-ui-lib/switch'
+import Text from 'react-native-ui-lib/text'
+import View from 'react-native-ui-lib/view'
 import { useDispatch } from 'react-redux'
 
 export interface IMenu {
@@ -21,13 +24,17 @@ export interface IMenu {
   icon: React.ReactElement
   onPress?: () => void
   right?: React.ReactElement
+  if?: boolean
+  else?: Exclude<IMenu, 'if' & 'else'>
 }
 
+//TODO: imports
 export function SettingsContainer() {
   const dispatch = useDispatch()
   const darkMode = useAppSelector(state =>
     state.themeReducer.theme === 'dark' ? true : false,
   )
+  const isLoggedIn = useAppSelector(state => state.userReducer.isLoggedIn)
 
   const toggleNotifications = useCallback(() => {}, [])
 
@@ -38,8 +45,11 @@ export function SettingsContainer() {
   const onPressLogout = useCallback(() => {
     dispatch(logout())
 
-    navigate(Routes.App, {})
+    navigate(Routes.Home, {})
   }, [dispatch])
+  const onPressLogin = useCallback(() => {
+    navigate(Routes.Login, {})
+  }, [])
 
   const menu = useMemo(() => {
     return [
@@ -66,23 +76,43 @@ export function SettingsContainer() {
       {
         icon: <SettingsLogout />,
         title: 'Çıkış Yap',
-        right: <Icon name="right" size={20} onPress={onPressLogout} />,
+        right: <Icon name="right" size={20} />,
+        onPress: onPressLogout,
+        if: !isLoggedIn,
+        else: {
+          icon: <SettingsLogout />,
+          title: 'Giris Yap',
+          right: <Icon name="right" size={20} />,
+          onPress: onPressLogin,
+        },
       },
     ]
-  }, [changeTheme, darkMode, toggleNotifications, onPressLogout])
+  }, [
+    changeTheme,
+    darkMode,
+    toggleNotifications,
+    onPressLogout,
+    isLoggedIn,
+    onPressLogin,
+  ])
 
   return (
     <Page>
       <View>
         {map(menu, m => (
-          <ListItem style={{ marginBottom: 20 }}>
+          <ListItem
+            style={{ marginBottom: 20 }}
+            onPress={m?.if ? m.else.onPress : m.onPress}
+          >
             <ListItem.Part left>{m.icon}</ListItem.Part>
             <ListItem.Part middle marginL-15>
               <Text document textColor>
-                {m.title}
+                {m?.if ? m.else.title : m.title}
               </Text>
             </ListItem.Part>
-            <ListItem.Part right>{m.right}</ListItem.Part>
+            <ListItem.Part right>
+              {m?.if ? m.else.right : m.right}
+            </ListItem.Part>
           </ListItem>
         ))}
       </View>

@@ -77,4 +77,7 @@ export const configureDesignSystem = (): void => {
       }
     }
   })
+  ThemeManager.setComponentTheme('Button', {
+    'bg-primary': true,
+  })
 }

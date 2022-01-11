@@ -24,7 +24,6 @@ export type IPostProps = {
   isLiked: boolean
   user: IUser
   postType: PostType
-  loading: boolean
 } & typeof defaultProps
 
 export interface IPostActionsProps {
@@ -32,7 +31,7 @@ export interface IPostActionsProps {
   likesCount: string
   commentsCount: string
   showDate?: boolean
-  date?: boolean
+  date?: Date
   onPressLike: () => void
   onPressComment: () => void
   onPressSave: () => void

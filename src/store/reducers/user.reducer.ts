@@ -1,3 +1,4 @@
+import { client } from '@/App'
 import { EncryptedStorageKeys, storage } from '@/storage'
 import { IUser } from '@/Types/login.types'
 import { createSlice } from '@reduxjs/toolkit'
@@ -31,6 +32,7 @@ const userSlice = createSlice({
       state.isLoggedIn = false
       state.user = null
 
+      client.clearStore()
       storage.removeItem(EncryptedStorageKeys.FcmToken)
       storage.removeItem(EncryptedStorageKeys.AccessToken)
       storage.removeItem(EncryptedStorageKeys.AccessTokenExpireDate)

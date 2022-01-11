@@ -5,6 +5,14 @@ import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
 import { Icon } from '../Icon/Icon.component'
 import { IPostActionsProps } from './Post.props'
+import * as dayjs from 'dayjs'
+
+var customParseFormat = require('dayjs/plugin/customParseFormat')
+var relativeTime = require('dayjs/plugin/relativeTime')
+
+dayjs.locale('tr')
+dayjs.extend(customParseFormat)
+dayjs.extend(relativeTime)
 
 export function PostActions(props: IPostActionsProps) {
   const {
@@ -19,14 +27,9 @@ export function PostActions(props: IPostActionsProps) {
   } = props
 
   return (
-    <View row spread marginT-20 width="100%">
+    <View row spread marginT-10 width="100%">
       <View row left>
         <Button
-          throttleTime={10000}
-          throttleOptions={{
-            leading: false,
-            trailing: true,
-          }}
           iconSource={() =>
             !isLiked ? (
               <Icon name="heart" size={14} color="#7F8386" />
@@ -38,6 +41,7 @@ export function PostActions(props: IPostActionsProps) {
           link
           text
           onPress={onPressLike}
+          delayPressOut={1000}
           labelStyle={{
             color: '#7F8386',
             marginLeft: 10,
@@ -62,10 +66,15 @@ export function PostActions(props: IPostActionsProps) {
             onPress={onPressSave}
           />
         ) : (
-          <View row right marginR-10>
-            <Icon name="clock" color={Colors.greyText} />
+          <View row right>
+            <Icon
+              name="clock"
+              color={Colors.greyText}
+              style={{ marginRight: 5 }}
+            />
             <Text greyText text style={{ marginTop: -2 }}>
-              {date}
+              {/* @ts-ignore */}
+              {dayjs.default(date).fromNow()}
             </Text>
           </View>
         )}

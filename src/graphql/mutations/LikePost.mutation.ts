@@ -1,4 +1,21 @@
+import { IUserlike } from '@/types/post.types'
 import { gql } from '@apollo/client'
+
+export interface ILikeCommentVariables {
+  commentId: number
+}
+
+export interface ILikeCommentResponse {
+  likeEntry: IUserlike
+}
+
+export interface IUnlikeCommentVariables {
+  commentId: number
+}
+
+export interface IUnlikeCommentResponse {
+  unlikeEntry: boolean
+}
 
 export const LIKE_COMMENT = gql`
   mutation LIKE_COMMENT($commentId: Float!) {

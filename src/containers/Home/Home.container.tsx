@@ -20,7 +20,7 @@ import {
 } from '@/store/reducers/post.reducer'
 import { logout } from '@/store/reducers/user.reducer'
 import { ERROR_CODES, ERROR_CODES_RAW } from '@/types/error_codes'
-import { IPost, IUserlike } from '@/Types/post.types'
+import { IPost, IUserlike } from '@/types/post.types'
 import { handleApolloErrors } from '@/utils/apollo'
 import { showToast, ToastStatus } from '@/utils/toast'
 import { useMutation, useQuery } from '@apollo/client'
@@ -43,23 +43,23 @@ const HomeContainer = () => {
     },
   )
 
-  const [likePost, likePostMeta] = useMutation<
-    { likeEntry: IUserlike },
-    { postId: number }
-  >(LIKE_POST, {
-    onCompleted: () => {
-      showToast(ToastStatus.Success, 'Beğendiniz!')
-    },
-    onError: err => {
-      const errorCode = handleApolloErrors(err, ERROR_CODES_RAW.ALREADY_LIKED)
+  const [likePost] = useMutation<{ likeEntry: IUserlike }, { postId: number }>(
+    LIKE_POST,
+    {
+      onCompleted: () => {
+        showToast(ToastStatus.Success, 'Beğendiniz!')
+      },
+      onError: err => {
+        const errorCode = handleApolloErrors(err, ERROR_CODES_RAW.ALREADY_LIKED)
 
-      if (errorCode) {
-        showToast(ToastStatus.Error, ERROR_CODES[errorCode])
-      }
+        if (errorCode) {
+          showToast(ToastStatus.Error, ERROR_CODES[errorCode])
+        }
+      },
     },
-  })
+  )
 
-  const [unlikePost, unlikePostMeta] = useMutation<
+  const [unlikePost] = useMutation<
     { likeEntry: IUserlike },
     { postId: number }
   >(UNLIKE_POST, {
@@ -146,7 +146,6 @@ const HomeContainer = () => {
             likeId: item.userLike?.id,
           })
         }
-        loading={likePostMeta.loading || unlikePostMeta.loading}
       />
     )
   }

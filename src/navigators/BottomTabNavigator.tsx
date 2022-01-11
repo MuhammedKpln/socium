@@ -25,25 +25,34 @@ const BottomTabBarNavigator = () => {
       <Tab.Screen
         name={Routes.Home}
         component={HomeContainer}
-        {...applyTabIcon('home', {
-          headerTitle: () => <HeaderTitle />,
-          headerRight: () => <HeaderRight />,
-        })}
+        options={{
+          ...applyTabIcon('home'),
+          ...{
+            headerTitle: () => <HeaderTitle />,
+            headerRight: () => <HeaderRight />,
+          },
+        }}
       />
       <Tab.Screen
-        name={Routes.Profile}
-        component={HomeContainer}
-        {...applyTabIcon('compass')}
+        name={Routes.Discover}
+        getComponent={RouteComponents.Discover}
+        options={{
+          ...applyTabIcon('compass'),
+          ...applyRouteTitle(RouteTitles.Discover),
+          ...{
+            headerRight: () => <HeaderRight />,
+          },
+        }}
       />
       <Tab.Screen
         name={Routes.Register}
         component={HomeContainer}
-        {...applyTabIcon('Untitled')}
+        options={{ ...applyTabIcon('Untitled') }}
       />
       <Tab.Screen
         name={Routes.EmailVerification}
         component={SettingsContainer}
-        {...applyTabIcon('fire')}
+        options={{ ...applyTabIcon('fire') }}
       />
     </Tab.Navigator>
   )

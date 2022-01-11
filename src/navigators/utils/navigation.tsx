@@ -54,26 +54,20 @@ export function navigateBack() {
   }
 }
 
-export const applyRouteTitle = (title: RouteTitles, args?: object): object => {
+export const applyRouteTitle = (title: RouteTitles): object => {
   return {
-    options: {
-      title: title,
-      ...args,
-    },
+    title: title,
   }
 }
 
-export const applyTabIcon = (iconName: string, args?: object): object => {
+export const applyTabIcon = (iconName: string): object => {
   return {
-    options: {
-      tabBarIcon: ({ focused }: { focused: boolean }) => (
-        <Icon
-          name={iconName}
-          size={25}
-          color={!focused ? Colors.bottomTabIcon : Colors.primary}
-        />
-      ),
-      ...args,
-    },
+    tabBarIcon: ({ focused }: { focused: boolean }) => (
+      <Icon
+        name={iconName}
+        size={25}
+        color={!focused ? Colors.bottomTabIcon : Colors.primary}
+      />
+    ),
   }
 }

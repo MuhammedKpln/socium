@@ -16,5 +16,11 @@ export const Icon = React.memo((props: IconProps) => {
     return theme === 'dark' ? Colors.white : Colors.black
   }, [theme, props.color])
 
-  return <_Icon {...props} color={fontColor} style={{ color: fontColor }} />
+  return (
+    <_Icon
+      {...props}
+      color={fontColor}
+      style={[{ color: fontColor }, props?.style]}
+    />
+  )
 })

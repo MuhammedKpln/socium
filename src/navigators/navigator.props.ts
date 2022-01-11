@@ -9,11 +9,13 @@ export enum Routes {
   PostDetails = 'post-details',
   Profile = 'profile',
   Settings = 'app-settings',
+  Discover = 'discover',
 }
 export enum RouteTitles {
   Login = 'Giriş yap',
   Register = 'Kayıt ol',
   Settings = 'Ayarlar',
+  Discover = 'Keşfet',
 }
 
 export const RouteComponents = {
@@ -24,6 +26,8 @@ export const RouteComponents = {
     require('@/containers/PostDetails/PostDetails.container').PostDetails,
   Settings: () =>
     require('@/containers/Settings/Settings.container').SettingsContainer,
+  Discover: () =>
+    require('@/containers/Discover/Discover.container').DiscoverContainer,
 }
 
 export interface INavigatorParamsList extends ParamListBase {

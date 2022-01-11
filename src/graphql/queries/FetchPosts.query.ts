@@ -1,4 +1,4 @@
-import { IPost } from '@/Types/post.types'
+import { IPost } from '@/types/post.types'
 import { gql } from '@apollo/client'
 
 export interface IFetchPostsVariables {

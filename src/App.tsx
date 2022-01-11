@@ -3,6 +3,7 @@ import {
   ApolloProvider,
   createHttpLink,
   from,
+  fromPromise,
   split,
 } from '@apollo/client'
 import React from 'react'
@@ -17,20 +18,71 @@ import { setContext } from '@apollo/client/link/context'
 import { EncryptedStorageKeys, storage } from './storage'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { apolloCache, WebSocketLink } from './utils/apollo'
+import { getNewToken } from './services/token.service'
 
 const httpLink = createHttpLink({
   uri: Config.API_URL + '/graphql',
 })
 
-const errorLink = onError(({ graphQLErrors, networkError }) => {
-  if (graphQLErrors) {
-    console.error(graphQLErrors)
-  }
+let isRefreshing = false
+let pendingRequests: Function[] = []
 
-  if (networkError) {
-    console.error(networkError)
-  }
-})
+const resolvePendingRequests = () => {
+  pendingRequests.map(callback => callback())
+  pendingRequests = []
+}
+
+const errorLink = onError(
+  ({ graphQLErrors, networkError, forward, operation }) => {
+    if (graphQLErrors) {
+      for (let err of graphQLErrors) {
+        console.error(err)
+        //@ts-ignore
+        console.warn('calisiyrum')
+        // error code is set to UNAUTHENTICATED
+        // when AuthenticationError thrown in resolver
+        let forward$
+
+        if (
+          err.extensions?.exception?.name === 'TokenExpiredError' ||
+          err.message === 'JWT_EXPIRED'
+        ) {
+          if (!isRefreshing) {
+            isRefreshing = true
+            forward$ = fromPromise(
+              getNewToken()
+                .then(({ token }) => {
+                  // Store the new tokens for your auth link
+                  resolvePendingRequests()
+                  return token
+                })
+                .catch(() => {
+                  pendingRequests = []
+                  // Handle token refresh errors e.g clear stored tokens, redirect to login, ...
+                  return
+                })
+                .finally(() => {
+                  isRefreshing = false
+                }),
+            ).filter(value => Boolean(value))
+          } else {
+            // Will only emit once the Promise is resolved
+            forward$ = fromPromise(
+              new Promise(resolve => {
+                pendingRequests.push(resolve)
+              }),
+            )
+          }
+
+          return forward$.flatMap(() => forward(operation))
+        }
+      }
+    }
+    if (networkError) {
+      console.error(networkError)
+    }
+  },
+)
 
 const websocketLink = new WebSocketLink({
   url: Config.GRAPHQL_WS_URL,

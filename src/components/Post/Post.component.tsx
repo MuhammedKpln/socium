@@ -41,7 +41,6 @@ export const Post = React.memo((props: IPostProps) => {
     postType,
     title,
     user,
-    loading,
   } = props
   const isLoggedIn = useAppSelector(state => state.userReducer.isLoggedIn)
 
@@ -185,7 +184,6 @@ export const Post = React.memo((props: IPostProps) => {
             commentsCount={commentsCount.toString()}
             isLiked={isLiked}
             likesCount={likesCount.toString()}
-            loading={loading}
             onPressComment={_onPressComment}
             onPressLike={_onPressLike}
             onPressSave={_onPressSave}

@@ -18,3 +18,4 @@ export function SkeletonView(props: SkeletonViewProps) {
 }
 
 export const SkeletonViewTemplates = SKView.templates
+export const SkeletonViewContentTypes = SKView.contentTypes

@@ -1,6 +1,7 @@
 import { Routes } from '@/navigators/navigator.props'
 import { navigate } from '@/navigators/utils/navigation'
 import { useAppSelector } from '@/store'
+import { authRequiredFunction } from '@/utils/auth'
 import React, { useCallback, useMemo } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { Avatar } from '../Avatar/Avatar.component'
@@ -26,7 +27,7 @@ export const HeaderRight = React.memo(function HeaderRight() {
   if (isLoggedIn) {
     if (user?.avatar) {
       return (
-        <TouchableOpacity onPress={onPressAvatar}>
+        <TouchableOpacity onPress={() => authRequiredFunction(onPressAvatar)}>
           <Avatar userAvatar={user?.avatar} />
         </TouchableOpacity>
       )
@@ -37,5 +38,9 @@ export const HeaderRight = React.memo(function HeaderRight() {
     }
   }
 
-  return <NoAvatar username={randomUsername} />
+  return (
+    <TouchableOpacity onPress={() => authRequiredFunction(onPressAvatar)}>
+      <NoAvatar username={randomUsername} />
+    </TouchableOpacity>
+  )
 })

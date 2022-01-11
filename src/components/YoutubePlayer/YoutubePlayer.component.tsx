@@ -69,7 +69,7 @@ export function YTPlayer(props: IYTPlayerProps) {
           marginRight: 10,
         }}
       >
-        <Icon name="playCircle" size={30} color="#fff" />
+        <Icon name="play-circle" size={30} color="#fff" />
       </ImageBackground>
     )
   }, [thumbnailUrl])

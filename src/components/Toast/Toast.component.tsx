@@ -5,8 +5,10 @@ import React, {
   useMemo,
   useState,
 } from 'react'
-import { Colors } from 'react-native-ui-lib'
-import ToastUI from 'react-native-ui-lib/toast'
+import { Incubator } from 'react-native-ui-lib'
+
+const ToastUI = Incubator.Toast
+const ToastPresets = Incubator.ToastPresets
 
 const _Toast = (_: any, ref: any) => {
   const [message, setMessage] = useState<string>('')
@@ -27,27 +29,29 @@ const _Toast = (_: any, ref: any) => {
     ),
   )
 
-  const bgColor = useMemo(() => {
+  const toastPreset = useMemo(() => {
     switch (toastStatus) {
       case ToastStatus.Info:
-        return Colors.info
+        return ToastPresets.GENERAL
 
       case ToastStatus.Error:
-        return Colors.error
+        return ToastPresets.FAILURE
 
       case ToastStatus.Success:
-        return Colors.success
+        return ToastPresets.SUCCESS
     }
   }, [toastStatus])
 
   return (
     <ToastUI
-      autoDismiss={2500}
+      autoDismiss={3000}
       message={message}
       visible={visible}
-      showDismiss
       onDismiss={() => setVisible(false)}
-      backgroundColor={bgColor}
+      preset={toastPreset}
+      swipeable
+      centerMessage
+      position="top"
     />
   )
 }

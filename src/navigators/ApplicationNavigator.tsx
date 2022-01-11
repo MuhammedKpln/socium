@@ -55,13 +55,13 @@ const ApplicationNavigator = () => {
     <SafeAreaProvider>
       <NavigationContainer ref={navigationRef} theme={navigationTheme}>
         <StatusBar />
-        <Toast ref={toastRef} />
         <MainNavigator />
         <ConnectionStatusBar
           useAbsolutePosition
           label="Lütfen internet bağlantınızı kontrol ediniz."
         />
       </NavigationContainer>
+      <Toast ref={toastRef} />
     </SafeAreaProvider>
   )
 }

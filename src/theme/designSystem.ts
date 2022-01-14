@@ -73,6 +73,18 @@ export const configureDesignSystem = (): void => {
     font22: {
       fontSize: 22,
     },
+    font17: {
+      fontSize: 17,
+    },
+    font12: {
+      fontSize: 12,
+    },
+    font13: {
+      fontSize: 13,
+    },
+    font15: {
+      fontSize: 15,
+    },
     fontSfProRegular: Platform.OS !== 'ios' && {
       fontFamily: 'SF-Pro-Display-Regular',
     },
@@ -85,16 +97,11 @@ export const configureDesignSystem = (): void => {
     fontSfProSemibol: Platform.OS !== 'ios' && {
       fontFamily: 'SF-Pro-Display-Semibold',
     },
+    fontGilroyBold: {
+      fontFamily: 'Gilroy-Bold',
+    },
   })
 
-  //@ts-ignore
-  ThemeManager.setComponentTheme('Text', props => {
-    if (!props.color || !props.textColor) {
-      return {
-        color: Colors.textColor,
-      }
-    }
-  })
   ThemeManager.setComponentTheme('Button', {
     'bg-primary': true,
     fontSfProMedium: true,

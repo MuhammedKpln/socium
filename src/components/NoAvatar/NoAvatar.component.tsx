@@ -3,7 +3,7 @@ import UIAvatar from 'react-native-ui-lib/avatar'
 
 interface IProps {
   username: string
-  size: number
+  size?: number
 }
 
 export function NoAvatar(props: IProps) {

@@ -63,9 +63,13 @@ const BottomTabBarNavigator = () => {
         options={{ ...applyTabIcon('fire'), ...applyRouteTitle('') }}
       />
       <Tab.Screen
-        name={Routes.Register}
-        component={HomeContainer}
-        options={{ ...applyTabIcon('chatcirlce') }}
+        name={Routes.Chat}
+        getComponent={RouteComponents.Chat}
+        options={{
+          ...applyTabIcon('chatcirlce'),
+          ...applyRouteTitle(RouteTitles.Chat),
+          headerRight: () => <HeaderRight />,
+        }}
       />
     </Tab.Navigator>
   )

@@ -1,3 +1,4 @@
+import PlusFilled from '@/assets/icons/PlusFilled'
 import { HeaderRight } from '@/components/Navigation/HeaderRight.component'
 import { HeaderTitle } from '@/components/Navigation/HeaderTitle.component'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
@@ -33,8 +34,8 @@ const BottomTabBarNavigator = () => {
         }}
       />
       <Tab.Screen
-        name={Routes.Discover}
-        getComponent={RouteComponents.Discover}
+        name={'qwe'}
+        getComponent={RouteComponents.PostDetails}
         options={{
           ...applyTabIcon('compass'),
           ...applyRouteTitle(RouteTitles.Discover),
@@ -44,14 +45,27 @@ const BottomTabBarNavigator = () => {
         }}
       />
       <Tab.Screen
-        name={Routes.Register}
-        component={HomeContainer}
-        options={{ ...applyTabIcon('Untitled') }}
+        name={Routes.Discover}
+        getComponent={RouteComponents.Discover}
+        options={{
+          tabBarIcon: () => (
+            <PlusFilled style={{ marginLeft: 40, marginTop: 10 }} />
+          ),
+          ...applyRouteTitle(RouteTitles.Discover),
+          ...{
+            headerRight: () => <HeaderRight />,
+          },
+        }}
       />
       <Tab.Screen
         name={Routes.Match}
         getComponent={RouteComponents.Match}
         options={{ ...applyTabIcon('fire'), ...applyRouteTitle('') }}
+      />
+      <Tab.Screen
+        name={Routes.Register}
+        component={HomeContainer}
+        options={{ ...applyTabIcon('chatcirlce') }}
       />
     </Tab.Navigator>
   )

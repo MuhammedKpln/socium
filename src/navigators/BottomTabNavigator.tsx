@@ -1,6 +1,5 @@
 import { HeaderRight } from '@/components/Navigation/HeaderRight.component'
 import { HeaderTitle } from '@/components/Navigation/HeaderTitle.component'
-import { SettingsContainer } from '@/containers/Settings/Settings.container'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React from 'react'
@@ -50,9 +49,9 @@ const BottomTabBarNavigator = () => {
         options={{ ...applyTabIcon('Untitled') }}
       />
       <Tab.Screen
-        name={Routes.EmailVerification}
-        component={SettingsContainer}
-        options={{ ...applyTabIcon('fire') }}
+        name={Routes.Match}
+        getComponent={RouteComponents.Match}
+        options={{ ...applyTabIcon('fire'), ...applyRouteTitle('') }}
       />
     </Tab.Navigator>
   )
@@ -65,7 +64,7 @@ const MainNavigator = () => {
       screenOptions={{
         headerBackTitle: '',
         headerTitleStyle: {
-          fontFamily: 'Gilroy-ExtraBold',
+          fontFamily: 'Gilroy-Semibold',
           fontWeight: '600',
         },
       }}

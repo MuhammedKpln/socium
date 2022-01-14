@@ -8,19 +8,21 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* sociumTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* sociumTests.m */; };
+		127C628227918FC000F14318 /* SF-Pro-Display-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 127C627E27918FC000F14318 /* SF-Pro-Display-Semibold.otf */; };
+		127C628327918FC000F14318 /* SF-Pro-Display-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 127C627F27918FC000F14318 /* SF-Pro-Display-Regular.otf */; };
+		127C628427918FC000F14318 /* SF-Pro-Display-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 127C628027918FC000F14318 /* SF-Pro-Display-Bold.otf */; };
+		127C628527918FC000F14318 /* SF-Pro-Display-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 127C628127918FC000F14318 /* SF-Pro-Display-Medium.otf */; };
 		12ACBB31277B771F00E3A695 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 12ACBB30277B771F00E3A695 /* GoogleService-Info.plist */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		238E4D07008D44E5BF24D5DD /* Gilroy-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 2BE7E276DBE8428D85DA0718 /* Gilroy-Bold.otf */; };
+		529C1C9CE9DB4C66AB37E8E5 /* Gilroy-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5B7F7728C937425386C56C65 /* Gilroy-Medium.otf */; };
 		54148581F83246C5AA0862C1 /* icomoon.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F8397DE4674C48B69849AE73 /* icomoon.ttf */; };
 		6172F2D35A4C3AA820D92908 /* libPods-socium.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6423831EA8574132BED9D8CC /* libPods-socium.a */; };
+		7E4DEA650FD447AB975CF681 /* Gilroy-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7929FAC948A943419AE985FC /* Gilroy-Semibold.otf */; };
 		7EF68E3733C33B6898317E18 /* libPods-socium-sociumTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ABFE59519B596E51CEFDCCC0 /* libPods-socium-sociumTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		8E73B8B1BCD64D4E9744F2FF /* SourceSansPro-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97892058D0CB49038F4E88DE /* SourceSansPro-SemiBold.ttf */; };
-		9BD8081E44C242BD8250664A /* SourceSansPro-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D3453981CB1C41FBBEC361EE /* SourceSansPro-Regular.ttf */; };
-		A757516C3ACF419BAC13D92B /* Gilroy-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = F27E4ED58D02413FABE0A451 /* Gilroy-ExtraBold.otf */; };
-		C848E17315564592B57C1E0A /* Gilroy-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 838104F7C1004B589F4E768A /* Gilroy-Light.otf */; };
-		DA9ADA4DBEC446F4869AE2B4 /* SourceSansPro-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5318A70D563D484C88859499 /* SourceSansPro-Bold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +39,10 @@
 		00E356EE1AD99517003FC87E /* sociumTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = sociumTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* sociumTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = sociumTests.m; sourceTree = "<group>"; };
+		127C627E27918FC000F14318 /* SF-Pro-Display-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-Pro-Display-Semibold.otf"; path = "../src/assets/fonts/SF-Pro-Display-Semibold.otf"; sourceTree = "<group>"; };
+		127C627F27918FC000F14318 /* SF-Pro-Display-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-Pro-Display-Regular.otf"; path = "../src/assets/fonts/SF-Pro-Display-Regular.otf"; sourceTree = "<group>"; };
+		127C628027918FC000F14318 /* SF-Pro-Display-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-Pro-Display-Bold.otf"; path = "../src/assets/fonts/SF-Pro-Display-Bold.otf"; sourceTree = "<group>"; };
+		127C628127918FC000F14318 /* SF-Pro-Display-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "SF-Pro-Display-Medium.otf"; path = "../src/assets/fonts/SF-Pro-Display-Medium.otf"; sourceTree = "<group>"; };
 		12ACBB30277B771F00E3A695 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* socium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = socium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = socium/AppDelegate.h; sourceTree = "<group>"; };
@@ -45,18 +51,16 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = socium/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = socium/main.m; sourceTree = "<group>"; };
 		1D0AE47A65C8663E3B452821 /* Pods-socium-sociumTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-socium-sociumTests.release.xcconfig"; path = "Target Support Files/Pods-socium-sociumTests/Pods-socium-sociumTests.release.xcconfig"; sourceTree = "<group>"; };
-		5318A70D563D484C88859499 /* SourceSansPro-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-Bold.ttf"; path = "../src/assets/fonts/SourceSansPro-Bold.ttf"; sourceTree = "<group>"; };
+		2BE7E276DBE8428D85DA0718 /* Gilroy-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gilroy-Bold.otf"; path = "../src/assets/fonts/Gilroy-Bold.otf"; sourceTree = "<group>"; };
+		5B7F7728C937425386C56C65 /* Gilroy-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gilroy-Medium.otf"; path = "../src/assets/fonts/Gilroy-Medium.otf"; sourceTree = "<group>"; };
 		6423831EA8574132BED9D8CC /* libPods-socium.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-socium.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C97AB639B58BBB4B15BBE30 /* Pods-socium-sociumTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-socium-sociumTests.debug.xcconfig"; path = "Target Support Files/Pods-socium-sociumTests/Pods-socium-sociumTests.debug.xcconfig"; sourceTree = "<group>"; };
+		7929FAC948A943419AE985FC /* Gilroy-Semibold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gilroy-Semibold.otf"; path = "../src/assets/fonts/Gilroy-Semibold.otf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = socium/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		838104F7C1004B589F4E768A /* Gilroy-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gilroy-Light.otf"; path = "../src/assets/fonts/Gilroy-Light.otf"; sourceTree = "<group>"; };
-		97892058D0CB49038F4E88DE /* SourceSansPro-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-SemiBold.ttf"; path = "../src/assets/fonts/SourceSansPro-SemiBold.ttf"; sourceTree = "<group>"; };
 		ABFE59519B596E51CEFDCCC0 /* libPods-socium-sociumTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-socium-sociumTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0A881CF5CF3F2B244570E2A /* Pods-socium.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-socium.debug.xcconfig"; path = "Target Support Files/Pods-socium/Pods-socium.debug.xcconfig"; sourceTree = "<group>"; };
 		D00AAFFCFCFDA5787532823F /* Pods-socium.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-socium.release.xcconfig"; path = "Target Support Files/Pods-socium/Pods-socium.release.xcconfig"; sourceTree = "<group>"; };
-		D3453981CB1C41FBBEC361EE /* SourceSansPro-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-Regular.ttf"; path = "../src/assets/fonts/SourceSansPro-Regular.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F27E4ED58D02413FABE0A451 /* Gilroy-ExtraBold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gilroy-ExtraBold.otf"; path = "../src/assets/fonts/Gilroy-ExtraBold.otf"; sourceTree = "<group>"; };
 		F8397DE4674C48B69849AE73 /* icomoon.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = icomoon.ttf; path = ../src/assets/fonts/icomoon.ttf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -114,12 +118,14 @@
 		29EBFF1A5C534A33BF5D1CA9 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				127C628027918FC000F14318 /* SF-Pro-Display-Bold.otf */,
+				127C628127918FC000F14318 /* SF-Pro-Display-Medium.otf */,
+				127C627F27918FC000F14318 /* SF-Pro-Display-Regular.otf */,
+				127C627E27918FC000F14318 /* SF-Pro-Display-Semibold.otf */,
 				F8397DE4674C48B69849AE73 /* icomoon.ttf */,
-				5318A70D563D484C88859499 /* SourceSansPro-Bold.ttf */,
-				D3453981CB1C41FBBEC361EE /* SourceSansPro-Regular.ttf */,
-				97892058D0CB49038F4E88DE /* SourceSansPro-SemiBold.ttf */,
-				F27E4ED58D02413FABE0A451 /* Gilroy-ExtraBold.otf */,
-				838104F7C1004B589F4E768A /* Gilroy-Light.otf */,
+				2BE7E276DBE8428D85DA0718 /* Gilroy-Bold.otf */,
+				5B7F7728C937425386C56C65 /* Gilroy-Medium.otf */,
+				7929FAC948A943419AE985FC /* Gilroy-Semibold.otf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -271,15 +277,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				127C628227918FC000F14318 /* SF-Pro-Display-Semibold.otf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				12ACBB31277B771F00E3A695 /* GoogleService-Info.plist in Resources */,
 				54148581F83246C5AA0862C1 /* icomoon.ttf in Resources */,
-				DA9ADA4DBEC446F4869AE2B4 /* SourceSansPro-Bold.ttf in Resources */,
-				9BD8081E44C242BD8250664A /* SourceSansPro-Regular.ttf in Resources */,
-				8E73B8B1BCD64D4E9744F2FF /* SourceSansPro-SemiBold.ttf in Resources */,
-				A757516C3ACF419BAC13D92B /* Gilroy-ExtraBold.otf in Resources */,
-				C848E17315564592B57C1E0A /* Gilroy-Light.otf in Resources */,
+				238E4D07008D44E5BF24D5DD /* Gilroy-Bold.otf in Resources */,
+				127C628527918FC000F14318 /* SF-Pro-Display-Medium.otf in Resources */,
+				127C628427918FC000F14318 /* SF-Pro-Display-Bold.otf in Resources */,
+				529C1C9CE9DB4C66AB37E8E5 /* Gilroy-Medium.otf in Resources */,
+				127C628327918FC000F14318 /* SF-Pro-Display-Regular.otf in Resources */,
+				7E4DEA650FD447AB975CF681 /* Gilroy-Semibold.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

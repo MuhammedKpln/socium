@@ -50,11 +50,12 @@ export function navigateBack() {
   if (navigationRef.current?.canGoBack()) {
     navigationRef.current?.goBack()
   } else {
+    //@ts-ignore
     navigationRef.current?.navigate(Routes.App, {})
   }
 }
 
-export const applyRouteTitle = (title: RouteTitles): object => {
+export const applyRouteTitle = (title: RouteTitles | ''): object => {
   return {
     title: title,
   }

@@ -10,6 +10,7 @@ export enum Routes {
   MyProfile = 'profile',
   Settings = 'app-settings',
   Discover = 'discover',
+  Match = 'pair',
 }
 export enum RouteTitles {
   Login = 'Giriş yap',
@@ -31,6 +32,7 @@ export const RouteComponents = {
     require('@/containers/Discover/Discover.container').DiscoverContainer,
   MyProfile: () =>
     require('@/containers/Profile/Profile.container').ProfileContainer,
+  Match: () => require('@/containers/Match/Match.container').MatchContainer,
 }
 
 export interface INavigatorParamsList extends ParamListBase {
@@ -41,4 +43,5 @@ export interface INavigatorParamsList extends ParamListBase {
   [Routes.EmailVerification]: undefined
   [Routes.MyProfile]: { username: string }
   [Routes.PostDetails]: { postId: number }
+  [Routes.Match]: undefined
 }

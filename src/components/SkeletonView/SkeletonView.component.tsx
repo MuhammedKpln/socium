@@ -1,8 +1,7 @@
+import { wait } from '@/utils/utils'
 import React, { useEffect, useState } from 'react'
 import { SkeletonViewProps } from 'react-native-ui-lib'
 import SKView from 'react-native-ui-lib/skeletonView'
-
-const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 export function SkeletonView(props: SkeletonViewProps) {
   const { showContent } = props

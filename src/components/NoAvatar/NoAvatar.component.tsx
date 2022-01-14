@@ -3,6 +3,7 @@ import UIAvatar from 'react-native-ui-lib/avatar'
 
 interface IProps {
   username: string
+  size: number
 }
 
 export function NoAvatar(props: IProps) {
@@ -12,10 +13,10 @@ export function NoAvatar(props: IProps) {
         source={{
           uri: `https://avatars.dicebear.com/api/micah/${props.username}.png`,
         }}
-        size={30}
+        size={props.size || 30}
       />
     ),
-    [props.username],
+    [props.username, props.size],
   )
 
   return svg

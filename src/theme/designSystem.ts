@@ -6,7 +6,7 @@ const colors = {
   surfaceDark: '#1C1C1C',
   surfaceLight: '#F8F8F8',
   textDark: '#fff',
-  textLight: '#000',
+  textLight: '#020D06',
   greyText: '#999999',
 }
 
@@ -68,7 +68,22 @@ export const configureDesignSystem = (): void => {
       fontWeight: 'bold',
     },
     fontGilroy: {
-      fontFamily: 'Gilroy-ExtraBold',
+      fontFamily: 'Gilroy-Semibold',
+    },
+    font22: {
+      fontSize: 22,
+    },
+    fontSfProRegular: Platform.OS !== 'ios' && {
+      fontFamily: 'SF-Pro-Display-Regular',
+    },
+    fontSfProMedium: Platform.OS !== 'ios' && {
+      fontFamily: 'SF-Pro-Display-Medium',
+    },
+    fontSfProBold: Platform.OS !== 'ios' && {
+      fontFamily: 'SF-Pro-Display-Bold',
+    },
+    fontSfProSemibol: Platform.OS !== 'ios' && {
+      fontFamily: 'SF-Pro-Display-Semibold',
     },
   })
 
@@ -76,11 +91,12 @@ export const configureDesignSystem = (): void => {
   ThemeManager.setComponentTheme('Text', props => {
     if (!props.color || !props.textColor) {
       return {
-        color: Colors.textcolor,
+        color: Colors.textColor,
       }
     }
   })
   ThemeManager.setComponentTheme('Button', {
     'bg-primary': true,
+    fontSfProMedium: true,
   })
 }

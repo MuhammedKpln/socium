@@ -13,6 +13,7 @@ export enum Routes {
   Match = 'pair',
   Chat = 'chat',
   EarnStar = 'earn-star',
+  NewPost = 'new-post',
 }
 export enum RouteTitles {
   Login = 'Giriş yap',
@@ -22,6 +23,7 @@ export enum RouteTitles {
   MyProfile = 'Profilim',
   Chat = 'Sohbet',
   EarnStar = 'Puan kazan',
+  NewPost = 'Yeni gönderi',
 }
 
 export const RouteComponents = {
@@ -40,6 +42,8 @@ export const RouteComponents = {
   Chat: () => require('@/containers/Chat/Chat.container').ChatContainer,
   EarnStar: () =>
     require('@/containers/EarnStar/EarnStar.container').EarnStarContainer,
+  NewPost: () =>
+    require('@/containers/NewPost/NewPost.container').NewPostContainer,
 }
 
 export interface INavigatorParamsList extends ParamListBase {
@@ -53,4 +57,5 @@ export interface INavigatorParamsList extends ParamListBase {
   [Routes.Match]: undefined
   [Routes.Chat]: undefined
   [Routes.EarnStar]: undefined
+  [Routes.NewPost]: undefined
 }

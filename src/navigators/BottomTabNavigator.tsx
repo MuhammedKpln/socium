@@ -34,8 +34,8 @@ const BottomTabBarNavigator = () => {
         }}
       />
       <Tab.Screen
-        name={'qwe'}
-        getComponent={RouteComponents.PostDetails}
+        name={Routes.Discover}
+        getComponent={RouteComponents.Discover}
         options={{
           ...applyTabIcon('compass'),
           ...applyRouteTitle(RouteTitles.Discover),
@@ -45,17 +45,19 @@ const BottomTabBarNavigator = () => {
         }}
       />
       <Tab.Screen
-        name={Routes.Discover}
-        getComponent={RouteComponents.Discover}
+        name={'s'}
+        component={() => <></>}
         options={{
           tabBarIcon: () => (
             <PlusFilled style={{ marginLeft: 40, marginTop: 10 }} />
           ),
-          ...applyRouteTitle(RouteTitles.Discover),
-          ...{
-            headerRight: () => <HeaderRight />,
-          },
         }}
+        listeners={({ navigation }) => ({
+          tabPress: e => {
+            e.preventDefault()
+            navigation.navigate(Routes.NewPost)
+          },
+        })}
       />
       <Tab.Screen
         name={Routes.Match}
@@ -133,6 +135,11 @@ const MainNavigator = () => {
           name={Routes.EarnStar}
           options={{ ...applyRouteTitle(RouteTitles.EarnStar) }}
           getComponent={RouteComponents.EarnStar}
+        />
+        <Stack.Screen
+          name={Routes.NewPost}
+          options={{ ...applyRouteTitle(RouteTitles.NewPost) }}
+          getComponent={RouteComponents.NewPost}
         />
       </Stack.Group>
     </Stack.Navigator>

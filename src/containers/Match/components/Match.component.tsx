@@ -1,8 +1,10 @@
 import MatchBackground from '@/assets/images/MatchBackground'
 import AnimatedLottieView from 'lottie-react-native'
 import React from 'react'
-import { TouchableHighlight } from 'react-native'
-import { Colors, Text, TouchableOpacity, View } from 'react-native-ui-lib'
+import { Colors } from 'react-native-ui-lib'
+import Text from 'react-native-ui-lib/text'
+import TouchableOpacity from 'react-native-ui-lib/touchableOpacity'
+import View from 'react-native-ui-lib/view'
 
 interface IProps {
   onPressMatch: () => void

@@ -1,6 +1,7 @@
 import { NoAvatar } from '@/components/NoAvatar/NoAvatar.component'
 import React from 'react'
-import { Text, View } from 'react-native-ui-lib'
+import Text from 'react-native-ui-lib/text'
+import View from 'react-native-ui-lib/view'
 
 export function ChatBox() {
   return (

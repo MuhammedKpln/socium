@@ -1,7 +1,8 @@
 import { Page } from '@/components/Page/Page.component'
 import { wait } from '@/utils/utils'
 import React, { useEffect, useState } from 'react'
-import { Text, View } from 'react-native-ui-lib'
+import Text from 'react-native-ui-lib/text'
+import View from 'react-native-ui-lib/view'
 import { MatchComponent } from './components/Match.component'
 import { MatchingFoundComponent } from './components/MatchingFound.component'
 

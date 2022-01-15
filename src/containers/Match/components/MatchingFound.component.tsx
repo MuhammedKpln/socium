@@ -4,7 +4,10 @@ import { NoAvatar } from '@/components/NoAvatar/NoAvatar.component'
 import AnimatedLottieView from 'lottie-react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Colors, Modal, Text, View } from 'react-native-ui-lib'
+import { Colors } from 'react-native-ui-lib'
+import Modal from 'react-native-ui-lib/modal'
+import Text from 'react-native-ui-lib/text'
+import View from 'react-native-ui-lib/view'
 
 interface IProps {
   onPressClose: () => void

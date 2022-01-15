@@ -8,6 +8,7 @@ const colors = {
   textDark: '#fff',
   textLight: '#020D06',
   greyText: '#999999',
+  yellow: '#FEB200',
 }
 
 const themes = {
@@ -31,9 +32,7 @@ const themes = {
 export const configureDesignSystem = (): void => {
   Colors.loadColors(colors)
   Colors.loadSchemes(themes)
-  Assets.loadAssetsGroup('app', {
-    logo: require('@/assets/images/logo.png'),
-  })
+  Assets.loadAssetsGroup('app', {})
 
   Typography.loadTypographies({
     header: Platform.select({
@@ -84,6 +83,12 @@ export const configureDesignSystem = (): void => {
     },
     font15: {
       fontSize: 15,
+    },
+    font16: {
+      fontSize: 16,
+    },
+    font28: {
+      fontSize: 28,
     },
     fontSfProRegular: Platform.OS !== 'ios' && {
       fontFamily: 'SF-Pro-Display-Regular',

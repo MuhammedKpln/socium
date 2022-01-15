@@ -4,7 +4,9 @@ import { useAppSelector } from '@/store'
 import { authRequiredFunction } from '@/utils/auth'
 import React, { useCallback, useMemo } from 'react'
 import { TouchableOpacity } from 'react-native'
+import { View } from 'react-native-ui-lib'
 import { Avatar } from '../Avatar/Avatar.component'
+import { Icon } from '../Icon/Icon.component'
 import { NoAvatar } from '../NoAvatar/NoAvatar.component'
 
 export const HeaderRight = React.memo(function HeaderRight() {
@@ -24,12 +26,23 @@ export const HeaderRight = React.memo(function HeaderRight() {
     })
   }, [user])
 
+  const onPressStar = useCallback(() => {
+    navigate(Routes.EarnStar, {})
+  }, [])
+
   if (isLoggedIn) {
     if (user?.avatar) {
       return (
-        <TouchableOpacity onPress={() => authRequiredFunction(onPressAvatar)}>
-          <Avatar userAvatar={user?.avatar} />
-        </TouchableOpacity>
+        <View row>
+          <View marginR-10>
+            <TouchableOpacity onPress={() => authRequiredFunction(onPressStar)}>
+              <Icon name="sparkles" color="#FEB200" size={25} />
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity onPress={() => authRequiredFunction(onPressAvatar)}>
+            <Avatar userAvatar={user?.avatar} />
+          </TouchableOpacity>
+        </View>
       )
     } else {
       if (user) {
@@ -39,8 +52,15 @@ export const HeaderRight = React.memo(function HeaderRight() {
   }
 
   return (
-    <TouchableOpacity onPress={() => authRequiredFunction(onPressAvatar)}>
-      <NoAvatar username={randomUsername} />
-    </TouchableOpacity>
+    <View row>
+      <View marginR-10>
+        <TouchableOpacity onPress={() => authRequiredFunction(onPressStar)}>
+          <Icon name="sparkles" color="#FEB200" size={25} />
+        </TouchableOpacity>
+      </View>
+      <TouchableOpacity onPress={() => authRequiredFunction(onPressAvatar)}>
+        <NoAvatar username={randomUsername} />
+      </TouchableOpacity>
+    </View>
   )
 })

@@ -123,6 +123,18 @@ const MainNavigator = () => {
           options={applyRouteTitle(RouteTitles.MyProfile)}
         />
       </Stack.Group>
+
+      <Stack.Group
+        screenOptions={{
+          presentation: 'modal',
+        }}
+      >
+        <Stack.Screen
+          name={Routes.EarnStar}
+          options={{ ...applyRouteTitle(RouteTitles.EarnStar) }}
+          getComponent={RouteComponents.EarnStar}
+        />
+      </Stack.Group>
     </Stack.Navigator>
   )
 }

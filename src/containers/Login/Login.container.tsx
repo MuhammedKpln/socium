@@ -1,3 +1,4 @@
+import Logo from '@/assets/icons/Logo'
 import Button from '@/components/Button/Button.component'
 import { Page } from '@/components/Page/Page.component'
 import { TextInput } from '@/components/TextInput/TextInput.component'
@@ -16,7 +17,6 @@ import { showToast, ToastStatus } from '@/utils/toast'
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
 import React, { useMemo } from 'react'
-import Image from 'react-native-ui-lib/image'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
 import { useDispatch } from 'react-redux'
@@ -93,7 +93,7 @@ export function LoginContainer() {
 
   return (
     <Page flex center>
-      <Image assetName="logo" assetGroup="app" />
+      <Logo width={147} height={40} />
       <View marginV-100 width="100%">
         <Formik
           initialValues={initialValues}

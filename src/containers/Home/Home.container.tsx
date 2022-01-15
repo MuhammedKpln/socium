@@ -192,7 +192,7 @@ const HomeContainer = () => {
         renderContent={renderContent}
         times={8}
       />
-      <Button onPress={() => dispatch(logout())} label="qwelqwekl" />
+      {/* <Button onPress={() => dispatch(logout())} label="qwelqwekl" /> */}
     </Page>
   )
 }

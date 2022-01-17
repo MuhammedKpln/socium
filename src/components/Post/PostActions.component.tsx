@@ -28,7 +28,7 @@ export function PostActions(props: IPostActionsProps) {
 
   return (
     <View row spread marginT-10 width="100%">
-      <View row left>
+      <View row>
         <Button
           iconSource={() =>
             !isLiked ? (
@@ -57,7 +57,7 @@ export function PostActions(props: IPostActionsProps) {
           labelStyle={{ color: '#7F8386', marginLeft: 10 }}
         />
       </View>
-      <View right row marginT-5>
+      <View row marginT-5>
         {!showDate ? (
           <Button
             iconSource={() => <Icon name="bookmark" size={16} />}

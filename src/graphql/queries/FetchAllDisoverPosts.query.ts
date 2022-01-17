@@ -13,7 +13,7 @@ export const FETCH_ALL_DISCOVER_POSTS = gql`
   query FETCH_ALL_DISCOVER_POSTS($limit: Float! = 15, $offset: Float! = 0) {
     postsWithoutBlog(pagination: { limit: $limit, offset: $offset }) {
       id
-      title
+
       content
       type
       _count {
@@ -40,7 +40,7 @@ export const FETCH_ALL_DISCOVER_BLOG_POSTS = gql`
   query FETCH_ALL_DISCOVER_POSTS($limit: Float! = 15, $offset: Float! = 0) {
     postsOnlyBlog(pagination: { limit: $limit, offset: $offset }) {
       id
-      title
+
       content
       type
       slug

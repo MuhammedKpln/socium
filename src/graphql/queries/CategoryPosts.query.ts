@@ -19,7 +19,7 @@ export const FETCH_CATEGORY_POSTS = gql`
       pagination: { limit: $limit, offset: $offset }
     ) {
       id
-      title
+
       content
       type
       slug

@@ -40,7 +40,7 @@ export const HeaderRight = React.memo(function HeaderRight() {
             </TouchableOpacity>
           </View>
           <TouchableOpacity onPress={() => authRequiredFunction(onPressAvatar)}>
-            <Avatar userAvatar={user?.avatar} />
+            <Avatar userAvatar={user?.avatar} size={30} />
           </TouchableOpacity>
         </View>
       )

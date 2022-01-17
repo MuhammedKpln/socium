@@ -15,7 +15,6 @@ export const FETCH_POST = gql`
 
   query FETCH_POST($id: Float!) {
     post(id: $id) {
-      title
       content
       id
       type

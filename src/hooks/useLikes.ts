@@ -11,7 +11,11 @@ import { ERROR_CODES, ERROR_CODES_RAW } from '@/types/error_codes'
 import { IUserlike } from '@/Types/post.types'
 import { handleApolloErrors } from '@/utils/apollo'
 import { showToast, ToastStatus } from '@/utils/toast'
-import { useMutation } from '@apollo/client'
+import {
+  ApolloCache,
+  MutationUpdaterFunction,
+  useMutation,
+} from '@apollo/client'
 import { useCallback } from 'react'
 
 export enum IUseLikesEntity {
@@ -23,6 +27,12 @@ export interface IUseLikesProps {
   entityType: IUseLikesEntity
   isLiked: boolean
   entityId: number
+  update: MutationUpdaterFunction<
+    { likeEntry: IUserlike },
+    any,
+    any,
+    ApolloCache<any>
+  >
 }
 
 export interface ILikedEntityResponse {
@@ -101,6 +111,7 @@ export function useLikes() {
             variables: {
               postId: entityId,
             },
+            update: (cache, result) => props.update(cache, result, {}),
           })
 
           return Promise.resolve({
@@ -113,6 +124,7 @@ export function useLikes() {
           variables: {
             postId: entityId,
           },
+          update: (cache, result) => props.update(cache, result, {}),
         })
 
         return Promise.resolve({
@@ -139,6 +151,7 @@ export function useLikes() {
           variables: {
             commentId: entityId,
           },
+          update: (cache, result) => props.update(cache, result, {}),
         })
 
         return Promise.resolve({

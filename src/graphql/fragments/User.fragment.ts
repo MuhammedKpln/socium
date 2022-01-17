@@ -1,4 +1,4 @@
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client'
 
 export const UserFragment = gql`
   fragment UserFields on User {
@@ -11,8 +11,5 @@ export const UserFragment = gql`
     isEmailConfirmed
     birthday
     blockIncomingCalls
-    userAvatarMeta {
-      avatar
-    }
   }
-`;
+`

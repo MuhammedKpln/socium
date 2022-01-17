@@ -2,10 +2,9 @@ import { Routes } from '@/navigators/navigator.props'
 import { navigate } from '@/navigators/utils/navigation'
 import { useAppSelector } from '@/store'
 import { PostType } from '@/types/post.types'
-import { IInstagramMeta } from '@/types/socialMedia.types'
 import * as dayjs from 'dayjs'
 import 'dayjs/locale/tr'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Colors } from 'react-native-ui-lib'
 import Image from 'react-native-ui-lib/image'
 import Text from 'react-native-ui-lib/text'
@@ -39,24 +38,23 @@ export const Post = React.memo((props: IPostProps) => {
     onPressPost,
     onPressSave,
     postType,
-    title,
     user,
   } = props
   const isLoggedIn = useAppSelector(state => state.userReducer.isLoggedIn)
 
-  const fetchInstagramPost = useCallback(async () => {
-    const url = `https://api.instagram.com/oembed/?url=${title}`
-    const response = await fetch(url)
-    const data: IInstagramMeta = await response.json()
+  // const fetchInstagramPost = useCallback(async () => {
+  //   const url = `https://api.instagram.com/oembed/?url=${title}`
+  //   const response = await fetch(url)
+  //   const data: IInstagramMeta = await response.json()
 
-    setInstagramThumbnailUrl(data.thumbnail_url)
-  }, [title])
+  //   setInstagramThumbnailUrl(data.thumbnail_url)
+  // }, [title])
 
-  useEffect(() => {
-    if (postType === PostType.Instagram) {
-      fetchInstagramPost()
-    }
-  }, [fetchInstagramPost, postType])
+  // useEffect(() => {
+  //   if (postType === PostType.Instagram) {
+  //     fetchInstagramPost()
+  //   }
+  // }, [fetchInstagramPost, postType])
 
   const _onPressPost = () => {
     if (isLoggedIn) {
@@ -83,7 +81,7 @@ export const Post = React.memo((props: IPostProps) => {
   }
 
   const onPressUsername = () => {
-    navigate(Routes.Profile, {
+    navigate(Routes.MyProfile, {
       username: user.username,
       userId: user.id,
     })
@@ -118,15 +116,17 @@ export const Post = React.memo((props: IPostProps) => {
         marginVertical: 10,
       }}
     >
-      <>
-        <Surface padding-20 width="100%" br20>
-          <View row spread>
-            <View row left>
-              {user.avatar ? (
-                <Avatar userAvatar={user?.avatar} />
-              ) : (
-                <NoAvatar username={user.username} />
-              )}
+      <View row>
+        <View marginR-10>
+          {user.avatar ? (
+            <Avatar userAvatar={user?.avatar} size={40} />
+          ) : (
+            <NoAvatar username={user.username} size={32} />
+          )}
+        </View>
+        <Surface padding-10 br20 width="100%">
+          <View row spread width="85%">
+            <View row>
               <TouchableOpacity onPress={onPressUsername}>
                 <View row marginL-10>
                   <Text text50R text textColor>
@@ -138,20 +138,20 @@ export const Post = React.memo((props: IPostProps) => {
                 </View>
               </TouchableOpacity>
             </View>
-            <View row right style={{ marginTop: 7 }}>
+            <View row style={{ marginTop: 7 }}>
               <Icon
                 name="clock"
                 color={Colors.greyText}
                 style={{ color: '#fff', marginRight: 10 }}
               />
-              <Text greyText text marginL-5 style={{ marginTop: -2 }}>
+              <Text greyText text style={{ marginTop: -2 }}>
                 {/* @ts-ignore */}
                 {dayjs.default(date).fromNow()}
               </Text>
             </View>
           </View>
 
-          <View margin-5>
+          <View margin-10>
             <Text document textColor style={{ lineHeight: 17 }}>
               {postType === PostType.Content ? (
                 <MarkdownRenderer>{content}</MarkdownRenderer>
@@ -180,16 +180,18 @@ export const Post = React.memo((props: IPostProps) => {
               <View>{renderYoutubeIframe(content)}</View>
             ) : null}
           </View>
-          <PostActions
-            commentsCount={commentsCount.toString()}
-            isLiked={isLiked}
-            likesCount={likesCount.toString()}
-            onPressComment={_onPressComment}
-            onPressLike={_onPressLike}
-            onPressSave={_onPressSave}
-          />
+          <View width="85%">
+            <PostActions
+              commentsCount={commentsCount.toString()}
+              isLiked={isLiked}
+              likesCount={likesCount.toString()}
+              onPressComment={_onPressComment}
+              onPressLike={_onPressLike}
+              onPressSave={_onPressSave}
+            />
+          </View>
         </Surface>
-      </>
+      </View>
     </TouchableOpacity>
   )
 })

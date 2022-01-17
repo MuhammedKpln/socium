@@ -1,6 +1,5 @@
 import { IUser } from '@/Types/login.types'
 import { PostType } from '@/Types/post.types'
-import React from 'react'
 
 interface IDefaultProps {
   showTitle?: boolean
@@ -16,7 +15,6 @@ export type IPostProps = {
   onPressPost: () => void
   onPressRemove?: () => null
   onPressSave: () => void
-  title: string | React.ReactElement
   content: string
   date: Date
   commentsCount: number

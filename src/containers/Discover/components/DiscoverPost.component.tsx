@@ -4,10 +4,11 @@ import { PostActions } from '@/components/Post/PostActions.component'
 import { IUser } from '@/types/login.types'
 import { IPost } from '@/types/post.types'
 import React from 'react'
+import { Colors, Typography } from 'react-native-ui-lib'
 import Button from 'react-native-ui-lib/button'
-import View from 'react-native-ui-lib/view'
-import TouchableOpacity from 'react-native-ui-lib/touchableOpacity'
 import Text from 'react-native-ui-lib/text'
+import TouchableOpacity from 'react-native-ui-lib/touchableOpacity'
+import View from 'react-native-ui-lib/view'
 
 export interface IDiscoverPostProps
   extends Pick<
@@ -26,7 +27,7 @@ export function DiscoverPost(props: IDiscoverPostProps) {
     <View>
       <View row spread>
         <View row>
-          <Avatar userAvatar={user.avatar} />
+          <Avatar userAvatar={user?.avatar} />
           <TouchableOpacity onPress={() => null}>
             <View marginL-10>
               <Text text50R text textColor>
@@ -40,10 +41,13 @@ export function DiscoverPost(props: IDiscoverPostProps) {
         </View>
 
         <Button
+          primary
           outline
+          outlineColor={Colors.primary}
           label="Takip et"
-          style={{ height: 30 }}
+          style={{ height: 26, width: 120 }}
           avoidInnerPadding
+          labelStyle={{ ...Typography.font12 }}
         />
       </View>
 

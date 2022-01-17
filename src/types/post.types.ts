@@ -10,7 +10,6 @@ interface IPostCount {
 }
 
 export interface IPost {
-  title: string
   type: number
   color: string
   user: IUser
@@ -53,7 +52,6 @@ export interface IUserlike {
 }
 
 export interface INewPostArgs {
-  title: string
   content: string
   type: number
   categoryId: number

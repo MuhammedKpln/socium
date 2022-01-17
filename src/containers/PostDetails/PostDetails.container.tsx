@@ -7,34 +7,26 @@ import {
   SkeletonView,
   SkeletonViewTemplates,
 } from '@/components/SkeletonView/SkeletonView.component'
-import { LIKE_POST, UNLIKE_POST } from '@/graphql/mutations/LikePost.mutation'
 import {
   FETCH_POST,
   IFetchPostResponse,
   IFetchPostVariables,
 } from '@/graphql/queries/FetchPost.query'
+import { IUseLikesEntity, IUseLikesProps, useLikes } from '@/hooks/useLikes'
 import { INavigatorParamsList, Routes } from '@/navigators/navigator.props'
-import {
-  updatePostLiked,
-  updatePostUnLiked,
-} from '@/store/reducers/post.reducer'
-import { ERROR_CODES, ERROR_CODES_RAW } from '@/types/error_codes'
-import { IUserlike, PostType } from '@/types/post.types'
+import { PostType } from '@/types/post.types'
 import { IInstagramMeta } from '@/types/socialMedia.types'
-import { handleApolloErrors } from '@/utils/apollo'
-import { showToast, ToastStatus } from '@/utils/toast'
-import { useMutation, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useCallback, useLayoutEffect, useState } from 'react'
 import Image from 'react-native-ui-lib/image'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
-import { useDispatch } from 'react-redux'
 import { PostComments } from './components/Comments.component'
 
 export function PostDetails() {
   const navigation = useNavigation()
-  const dispatch = useDispatch()
+  const { toggleLikeButton } = useLikes()
   const [instagramMeta, setInstagramMeta] = useState<
     IInstagramMeta | undefined
   >()
@@ -43,6 +35,7 @@ export function PostDetails() {
     variables: {
       id: route.params.postId,
     },
+
     onCompleted: async data => {
       if (data.post.type === PostType.Instagram) {
         await fetchInstagramPost()
@@ -65,61 +58,20 @@ export function PostDetails() {
     setInstagramMeta(responseJson)
   }, [post?.content])
 
-  const [likePost] = useMutation<{ likeEntry: IUserlike }, { postId: number }>(
-    LIKE_POST,
-    {
-      onCompleted: () => {
-        showToast(ToastStatus.Success, 'Beğendiniz!')
-      },
-      onError: err => {
-        const errorCode = handleApolloErrors(err, ERROR_CODES_RAW.ALREADY_LIKED)
+  const onPressLike = useCallback(
+    async (props: IUseLikesProps) => {
+      await toggleLikeButton(props)
 
-        if (errorCode) {
-          showToast(ToastStatus.Error, ERROR_CODES[errorCode])
-        }
-      },
+      _post.client.cache.modify({
+        fields: {
+          post: (s, {}) => {
+            console.log(s)
+          },
+        },
+      })
     },
+    [_post, toggleLikeButton],
   )
-
-  const toggleLikeButton = async () => {
-    if (post && post?.userLike?.liked) {
-      await unlikePost({
-        variables: {
-          postId: post.id,
-        },
-      })
-
-      dispatch(
-        updatePostUnLiked({
-          post,
-        }),
-      )
-
-      return
-    }
-
-    if (post) {
-      await likePost({
-        variables: {
-          postId: post.id,
-        },
-      })
-      dispatch(
-        updatePostLiked({
-          post,
-        }),
-      )
-    }
-  }
-
-  const [unlikePost] = useMutation<
-    { likeEntry: IUserlike },
-    { postId: number }
-  >(UNLIKE_POST, {
-    onCompleted: () => {
-      showToast(ToastStatus.Success, 'Beğendiniyi geri çektiniz!')
-    },
-  })
 
   function renderContent() {
     if (!post) return
@@ -153,13 +105,19 @@ export function PostDetails() {
             />
           ) : null}
         </View>
-        <View marginH-5>
+        <View marginR-30>
           <PostActions
             commentsCount={post?._count?.comment.toString()}
             likesCount={post?.postLike?.likeCount.toString()}
             isLiked={post?.userLike?.liked}
             onPressComment={() => null}
-            onPressLike={toggleLikeButton}
+            onPressLike={() =>
+              onPressLike({
+                entityId: post?.id,
+                entityType: IUseLikesEntity.POST,
+                isLiked: post?.userLike?.liked,
+              })
+            }
             onPressSave={() => null}
             showDate
             date={post.created_at}

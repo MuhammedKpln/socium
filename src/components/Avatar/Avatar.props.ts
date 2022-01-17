@@ -1,4 +1,5 @@
-export interface IAvatarProps {
-  userAvatar: string | null | undefined
-  size?: number
+import { AvatarProps } from 'react-native-ui-lib'
+
+export interface IAvatarProps extends AvatarProps {
+  userAvatar: string
 }

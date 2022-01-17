@@ -14,7 +14,6 @@ export const FETCH_POSTS = gql`
   query FETCH_POSTS($limit: Float = 15, $offset: Float = 0) {
     posts(pagination: { limit: $limit, offset: $offset }) {
       id
-      title
       content
       type
       slug

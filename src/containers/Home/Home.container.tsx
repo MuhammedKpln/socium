@@ -1,29 +1,22 @@
-import Button from '@/components/Button/Button.component'
+import { client } from '@/App'
 import { Page } from '@/components/Page/Page.component'
 import { Post } from '@/components/Post/Post.component'
 import {
   SkeletonView,
   SkeletonViewTemplates,
 } from '@/components/SkeletonView/SkeletonView.component'
-import { LIKE_POST, UNLIKE_POST } from '@/graphql/mutations/LikePost.mutation'
 import {
   FETCH_POSTS,
   IFetchPostsVariables,
 } from '@/graphql/queries/FetchPosts.query'
+import { IUseLikesEntity, IUseLikesProps, useLikes } from '@/hooks/useLikes'
 import { Routes } from '@/navigators/navigator.props'
 import { navigate } from '@/navigators/utils/navigation'
 import { useAppSelector } from '@/store'
-import {
-  setPosts,
-  updatePostLiked,
-  updatePostUnLiked,
-} from '@/store/reducers/post.reducer'
-import { logout } from '@/store/reducers/user.reducer'
-import { ERROR_CODES, ERROR_CODES_RAW } from '@/types/error_codes'
-import { IPost, IUserlike } from '@/types/post.types'
-import { handleApolloErrors } from '@/utils/apollo'
+import { setPosts } from '@/store/reducers/post.reducer'
+import { IPost } from '@/types/post.types'
 import { showToast, ToastStatus } from '@/utils/toast'
-import { useMutation, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import React, { useCallback } from 'react'
 import { FlatList, RefreshControl } from 'react-native'
 import Text from 'react-native-ui-lib/text'
@@ -32,6 +25,7 @@ import { useDispatch } from 'react-redux'
 const HomeContainer = () => {
   const posts = useAppSelector(state => state.postReducer.posts)
   const dispatch = useDispatch()
+  const { toggleLikeButton } = useLikes()
   const fetchPosts = useQuery<{ posts: IPost[] }, IFetchPostsVariables>(
     FETCH_POSTS,
     {
@@ -43,66 +37,12 @@ const HomeContainer = () => {
     },
   )
 
-  const [likePost] = useMutation<{ likeEntry: IUserlike }, { postId: number }>(
-    LIKE_POST,
-    {
-      onCompleted: () => {
-        showToast(ToastStatus.Success, 'Beğendiniz!')
-      },
-      onError: err => {
-        const errorCode = handleApolloErrors(err, ERROR_CODES_RAW.ALREADY_LIKED)
-
-        if (errorCode) {
-          showToast(ToastStatus.Error, ERROR_CODES[errorCode])
-        }
-      },
+  const likePost = useCallback(
+    async (props: IUseLikesProps) => {
+      await toggleLikeButton(props)
     },
+    [toggleLikeButton],
   )
-
-  const [unlikePost] = useMutation<
-    { likeEntry: IUserlike },
-    { postId: number }
-  >(UNLIKE_POST, {
-    onCompleted: () => {
-      showToast(ToastStatus.Success, 'Beğendiniyi geri çektiniz!')
-    },
-  })
-
-  const toggleLikeButton = async (
-    isLiked: boolean,
-    id: { likeId?: number; postId: number },
-  ) => {
-    const postIndex = posts.findIndex(e => e.id === id.postId)
-    const currentPost = posts[postIndex]
-
-    if (isLiked) {
-      await unlikePost({
-        variables: {
-          postId: id.postId,
-        },
-      })
-
-      dispatch(
-        updatePostUnLiked({
-          post: currentPost,
-        }),
-      )
-
-      return
-    }
-
-    await likePost({
-      variables: {
-        postId: id.postId,
-      },
-    })
-
-    dispatch(
-      updatePostLiked({
-        post: currentPost,
-      }),
-    )
-  }
 
   function onPressSave() {
     showToast(ToastStatus.Success, 'Kaydedilenlerinize ekleni.')
@@ -141,9 +81,39 @@ const HomeContainer = () => {
         onPressComment={() => null}
         onPressSave={onPressSave}
         onPressLike={() =>
-          toggleLikeButton(item.userLike?.liked, {
-            postId: item.id,
-            likeId: item.userLike?.id,
+          likePost({
+            entityId: item.id,
+            entityType: IUseLikesEntity.POST,
+            isLiked: item.userLike?.liked,
+            update: (cache, result) => {
+              const prevResults = cache.readQuery({
+                query: FETCH_POSTS,
+              })
+              console.log(result)
+              const newPosts = [...prevResults.posts]
+
+              if (prevResults) {
+                const index = newPosts.findIndex(v => v.id === item.id)
+                console.log(newPosts[index])
+
+                if (item.userLike?.liked) {
+                  newPosts[index].userLike.liked = false
+                } else {
+                  console.warn('#QWEQE')
+                  newPosts[index].userLike = result.data?.likeEntry
+                }
+
+                cache.writeQuery({
+                  query: FETCH_POSTS,
+                  data: {
+                    posts: newPosts,
+                  },
+                  broadcast: true,
+                  overwrite: true,
+                })
+                console.log(newPosts[index])
+              }
+            },
           })
         }
       />
@@ -167,7 +137,7 @@ const HomeContainer = () => {
   function renderContent() {
     return (
       <FlatList
-        data={posts}
+        data={fetchPosts.data?.posts}
         renderItem={renderItem}
         maxToRenderPerBatch={10}
         ListHeaderComponent={

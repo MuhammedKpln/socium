@@ -1,4 +1,3 @@
-import { client } from '@/App'
 import { Page } from '@/components/Page/Page.component'
 import { Post } from '@/components/Post/Post.component'
 import {
@@ -7,6 +6,7 @@ import {
 } from '@/components/SkeletonView/SkeletonView.component'
 import {
   FETCH_POSTS,
+  IFetchPostsResponse,
   IFetchPostsVariables,
 } from '@/graphql/queries/FetchPosts.query'
 import { IUseLikesEntity, IUseLikesProps, useLikes } from '@/hooks/useLikes'
@@ -16,8 +16,8 @@ import { useAppSelector } from '@/store'
 import { setPosts } from '@/store/reducers/post.reducer'
 import { IPost } from '@/types/post.types'
 import { showToast, ToastStatus } from '@/utils/toast'
-import { useQuery } from '@apollo/client'
-import React, { useCallback } from 'react'
+import { ApolloCache, useQuery } from '@apollo/client'
+import React, { useCallback, useEffect } from 'react'
 import { FlatList, RefreshControl } from 'react-native'
 import Text from 'react-native-ui-lib/text'
 import { useDispatch } from 'react-redux'
@@ -44,6 +44,38 @@ const HomeContainer = () => {
     [toggleLikeButton],
   )
 
+  const updateLikedCache = useCallback(
+    (cache: ApolloCache<any>, result, item: IPost) => {
+      const prevResults: IFetchPostsResponse | null = cache.readQuery({
+        query: FETCH_POSTS,
+      })
+
+      if (prevResults) {
+        const index = prevResults.posts.findIndex(v => v.id === item.id)
+
+        if (item.userLike?.liked) {
+          prevResults.posts[index].userLike.liked = false
+        } else {
+          if (!result.data?.likeEntry) {
+            return null
+          }
+
+          prevResults.posts[index].userLike = result.data.likeEntry
+        }
+
+        cache.modify({
+          fields: {
+            posts() {
+              return prevResults.posts
+            },
+          },
+          broadcast: true,
+        })
+      }
+    },
+    [],
+  )
+
   function onPressSave() {
     showToast(ToastStatus.Success, 'Kaydedilenlerinize ekleni.')
   }
@@ -53,19 +85,20 @@ const HomeContainer = () => {
       return
     }
 
-    fetchPosts
-      .fetchMore({
-        variables: {
-          offset: posts.length + 15,
-        },
-      })
-      .then(data => dispatch(setPosts([...posts, ...data.data?.posts])))
-  }, [fetchPosts, posts, dispatch])
+    fetchPosts.fetchMore({
+      variables: {
+        offset: posts.length,
+      },
+    })
+  }, [fetchPosts, posts])
+
+  useEffect(() => {
+    console.log('IM CHANGED WALLAHSS')
+  }, [fetchPosts])
 
   function renderItem({ item }: { item: IPost }) {
     return (
       <Post
-        title={item.title}
         commentsCount={item._count.comment}
         date={item.created_at}
         likesCount={item.postLike.likeCount}
@@ -85,35 +118,7 @@ const HomeContainer = () => {
             entityId: item.id,
             entityType: IUseLikesEntity.POST,
             isLiked: item.userLike?.liked,
-            update: (cache, result) => {
-              const prevResults = cache.readQuery({
-                query: FETCH_POSTS,
-              })
-              console.log(result)
-              const newPosts = [...prevResults.posts]
-
-              if (prevResults) {
-                const index = newPosts.findIndex(v => v.id === item.id)
-                console.log(newPosts[index])
-
-                if (item.userLike?.liked) {
-                  newPosts[index].userLike.liked = false
-                } else {
-                  console.warn('#QWEQE')
-                  newPosts[index].userLike = result.data?.likeEntry
-                }
-
-                cache.writeQuery({
-                  query: FETCH_POSTS,
-                  data: {
-                    posts: newPosts,
-                  },
-                  broadcast: true,
-                  overwrite: true,
-                })
-                console.log(newPosts[index])
-              }
-            },
+            update: (cache, result) => updateLikedCache(cache, result, item),
           })
         }
       />

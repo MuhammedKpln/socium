@@ -2,6 +2,7 @@ import { Routes } from '@/navigators/navigator.props'
 import { navigate } from '@/navigators/utils/navigation'
 import { useAppSelector } from '@/store'
 import { PostType } from '@/types/post.types'
+import { authRequiredFunction } from '@/utils/auth'
 import * as dayjs from 'dayjs'
 import 'dayjs/locale/tr'
 import React, { useState } from 'react'
@@ -64,34 +65,11 @@ export const Post = React.memo((props: IPostProps) => {
     return navigate(Routes.Login, {})
   }
 
-  const _onPressLike = () => {
-    if (isLoggedIn) {
-      return onPressLike()
-    }
-
-    return navigate(Routes.Login, {})
-  }
-
-  const _onPressComment = () => {
-    if (isLoggedIn) {
-      return onPressComment()
-    }
-
-    return navigate(Routes.Login, {})
-  }
-
   const onPressUsername = () => {
     navigate(Routes.MyProfile, {
       username: user.username,
       userId: user.id,
     })
-  }
-  const _onPressSave = () => {
-    if (isLoggedIn) {
-      return onPressSave()
-    }
-
-    return navigate(Routes.Login, {})
   }
 
   const renderYoutubeIframe = (postContent: string) => {
@@ -127,7 +105,9 @@ export const Post = React.memo((props: IPostProps) => {
         <Surface padding-10 br20 width="100%">
           <View row spread width="85%">
             <View row>
-              <TouchableOpacity onPress={onPressUsername}>
+              <TouchableOpacity
+                onPress={() => authRequiredFunction(onPressUsername)}
+              >
                 <View row marginL-10>
                   <Text text50R text textColor>
                     {user.username}
@@ -185,9 +165,9 @@ export const Post = React.memo((props: IPostProps) => {
               commentsCount={commentsCount.toString()}
               isLiked={isLiked}
               likesCount={likesCount.toString()}
-              onPressComment={_onPressComment}
-              onPressLike={_onPressLike}
-              onPressSave={_onPressSave}
+              onPressComment={() => authRequiredFunction(onPressComment)}
+              onPressLike={() => authRequiredFunction(onPressLike)}
+              onPressSave={() => authRequiredFunction(onPressSave)}
             />
           </View>
         </Surface>

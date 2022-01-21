@@ -1,5 +1,6 @@
 import { Avatar } from '@/components/Avatar/Avatar.component'
 import { Icon } from '@/components/Icon/Icon.component'
+import { InstagramPost } from '@/components/InstagramPost/InstagramPost.component'
 import { MarkdownRenderer } from '@/components/MarkdownRenderer/MarkdownRenderer.component'
 import { Page } from '@/components/Page/Page.component'
 import { PostActions } from '@/components/Post/PostActions.component'
@@ -7,6 +8,7 @@ import {
   SkeletonView,
   SkeletonViewTemplates,
 } from '@/components/SkeletonView/SkeletonView.component'
+import { TwitterPost } from '@/components/TwitterPost/TwitterPost.component'
 import {
   FETCH_POST,
   IFetchPostResponse,
@@ -19,10 +21,10 @@ import { IInstagramMeta } from '@/types/socialMedia.types'
 import { useQuery } from '@apollo/client'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useCallback, useLayoutEffect, useState } from 'react'
-import Image from 'react-native-ui-lib/image'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
 import { PostComments } from './components/Comments.component'
+import { PostTypeWrapper } from './components/PostTypeWrapper.component'
 
 export function PostDetails() {
   const navigation = useNavigation()
@@ -52,11 +54,11 @@ export function PostDetails() {
 
   const fetchInstagramPost = useCallback(async () => {
     const response = await fetch(
-      `https://api.instagram.com/oembed/?url=${post?.content}`,
+      `https://api.instagram.com/oembed/?url=${post?.additional}`,
     )
     const responseJson = await response.json()
     setInstagramMeta(responseJson)
-  }, [post?.content])
+  }, [post?.additional])
 
   const onPressLike = useCallback(
     async (props: IUseLikesProps) => {
@@ -72,6 +74,21 @@ export function PostDetails() {
     },
     [_post, toggleLikeButton],
   )
+
+  const renderYoutubeIframe = (additional: string) => {
+    const YoutubePlayer =
+      require('@/components/YoutubePlayer/YoutubePlayer.component').YTPlayer
+    let videoId: string = ''
+
+    if (additional.includes('youtu.be')) {
+      videoId = additional.split('https://youtu.be/')[1]
+    }
+    if (additional.includes('watch?v=')) {
+      videoId = additional.split('watch?v=')[1]
+    }
+
+    return <YoutubePlayer videoId={videoId} />
+  }
 
   function renderContent() {
     if (!post) return
@@ -91,19 +108,35 @@ export function PostDetails() {
         </View>
 
         <View marginV-10>
-          {post?.type !== PostType.Instagram ? <></> : null}
-          {post?.type == PostType.Content ? (
-            <MarkdownRenderer>{post?.content}</MarkdownRenderer>
+          {post?.type === PostType.Instagram && instagramMeta ? (
+            <PostTypeWrapper postType={post.type}>
+              <View>
+                <InstagramPost
+                  authorName={instagramMeta?.author_name}
+                  thumbnailUrl={instagramMeta?.thumbnail_url}
+                  title={instagramMeta?.title}
+                />
+              </View>
+            </PostTypeWrapper>
+          ) : null}
+          {post?.type === PostType.Youtube ? (
+            <PostTypeWrapper postType={post.type}>
+              <View>
+                {renderYoutubeIframe(post.additional ? post.additional : '')}
+              </View>
+            </PostTypeWrapper>
+          ) : null}
+          {post?.type === PostType.Twitter ? (
+            <PostTypeWrapper postType={post.type}>
+              <View>
+                <TwitterPost
+                  twitterUrl={post.additional ? post.additional : ''}
+                />
+              </View>
+            </PostTypeWrapper>
           ) : null}
 
-          {post?.type === PostType.Instagram ? (
-            <Image
-              source={{ uri: instagramMeta?.thumbnail_url }}
-              height={238}
-              borderRadius={16}
-              marginT-20
-            />
-          ) : null}
+          <MarkdownRenderer>{post.content}</MarkdownRenderer>
         </View>
         <View marginR-30>
           <PostActions

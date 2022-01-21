@@ -19,6 +19,7 @@ export const FETCH_POST = gql`
       id
       type
       slug
+      additional
       postLike {
         likeCount
       }

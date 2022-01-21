@@ -22,6 +22,7 @@ export type IPostProps = {
   isLiked: boolean
   user: IUser
   postType: PostType
+  additional?: string
 } & typeof defaultProps
 
 export interface IPostActionsProps {

@@ -19,6 +19,7 @@ export const FETCH_POSTS = gql`
       slug
       created_at
       postFromFollowers
+      additional
       userLike {
         liked
       }

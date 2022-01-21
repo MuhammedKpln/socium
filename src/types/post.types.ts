@@ -23,6 +23,7 @@ export interface IPost {
   _count: IPostCount
   postFromFollowers?: boolean
   category?: ICategory
+  additional?: string
 }
 
 export interface ICategory {

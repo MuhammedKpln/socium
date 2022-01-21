@@ -2,10 +2,13 @@ import { Routes } from '@/navigators/navigator.props'
 import { navigate } from '@/navigators/utils/navigation'
 import { useAppSelector } from '@/store'
 import { PostType } from '@/types/post.types'
+import { IInstagramMeta } from '@/types/socialMedia.types'
 import { authRequiredFunction } from '@/utils/auth'
+import { useLazyQuery } from '@apollo/client'
 import * as dayjs from 'dayjs'
 import 'dayjs/locale/tr'
-import React, { useState } from 'react'
+import { map } from 'lodash'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Colors } from 'react-native-ui-lib'
 import Image from 'react-native-ui-lib/image'
 import Text from 'react-native-ui-lib/text'
@@ -16,6 +19,11 @@ import { Icon } from '../Icon/Icon.component'
 import { MarkdownRenderer } from '../MarkdownRenderer/MarkdownRenderer.component'
 import { NoAvatar } from '../NoAvatar/NoAvatar.component'
 import { Surface } from '../Surface/Surface.component'
+import {
+  FETCH_TWITTER_POST,
+  IFetchTwitterPostResponse,
+  IFetchTwitterPostVariables,
+} from '../TwitterPost/queries/GetTwitterPost.query'
 import { IPostProps } from './Post.props'
 import { PostActions } from './PostActions.component'
 
@@ -40,22 +48,45 @@ export const Post = React.memo((props: IPostProps) => {
     onPressSave,
     postType,
     user,
+    additional,
   } = props
   const isLoggedIn = useAppSelector(state => state.userReducer.isLoggedIn)
+  const [fetchTwitter, fetchTwitterMeta] = useLazyQuery<
+    IFetchTwitterPostResponse,
+    IFetchTwitterPostVariables
+  >(FETCH_TWITTER_POST)
+  const fetchInstagramPost = useCallback(async () => {
+    const url = `https://api.instagram.com/oembed/?url=${additional}`
+    const response = await fetch(url)
+    const data: IInstagramMeta = await response.json()
 
-  // const fetchInstagramPost = useCallback(async () => {
-  //   const url = `https://api.instagram.com/oembed/?url=${title}`
-  //   const response = await fetch(url)
-  //   const data: IInstagramMeta = await response.json()
+    setInstagramThumbnailUrl(data.thumbnail_url)
+  }, [additional])
 
-  //   setInstagramThumbnailUrl(data.thumbnail_url)
-  // }, [title])
+  const fetchTwitterPost = useCallback(async () => {
+    const url = additional
+    const regex = /twitter\.com\/(?:[^\/]+\/status\/)?(\d+)/
 
-  // useEffect(() => {
-  //   if (postType === PostType.Instagram) {
-  //     fetchInstagramPost()
-  //   }
-  // }, [fetchInstagramPost, postType])
+    if (!url) return
+    const match = url.match(regex)
+
+    if (match) {
+      fetchTwitter({
+        variables: {
+          twitterId: match[1],
+        },
+      })
+    }
+  }, [additional, fetchTwitter])
+
+  useEffect(() => {
+    if (postType === PostType.Instagram) {
+      fetchInstagramPost()
+    }
+    if (postType === PostType.Twitter) {
+      fetchTwitterPost()
+    }
+  }, [fetchInstagramPost, postType, fetchTwitterPost])
 
   const _onPressPost = () => {
     if (isLoggedIn) {
@@ -156,8 +187,32 @@ export const Post = React.memo((props: IPostProps) => {
                 />
               </View>
             ) : null}
+            {postType === PostType.Twitter ? (
+              <View row>
+                {map(
+                  fetchTwitterMeta.data?.getTwitterPost?.includes.media,
+                  media => (
+                    <Image
+                      source={{
+                        uri: media.url,
+                      }}
+                      overlayColor="#000"
+                      overlayType={Image.overlayTypes.BOTTOM}
+                      overlayIntensity={Image.overlayIntensityType.MEDIUM}
+                      style={{
+                        width: 150,
+                        height: 100,
+                        borderRadius: 4,
+                        marginTop: 20,
+                        marginRight: 10,
+                      }}
+                    />
+                  ),
+                )}
+              </View>
+            ) : null}
             {postType === PostType.Youtube ? (
-              <View>{renderYoutubeIframe(content)}</View>
+              <View>{renderYoutubeIframe(additional ? additional : '')}</View>
             ) : null}
           </View>
           <View width="85%">

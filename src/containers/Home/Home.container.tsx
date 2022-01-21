@@ -106,6 +106,7 @@ const HomeContainer = () => {
           navigate(Routes.PostDetails, { postId: item.id })
         }}
         postType={item.type}
+        additional={item.additional}
         isLiked={item.userLike?.liked}
         key={item.slug}
         user={item.user}

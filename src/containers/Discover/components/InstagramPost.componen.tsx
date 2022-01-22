@@ -40,9 +40,7 @@ export function InstagramPost(props: IInstagramPostProps) {
         source={{ uri: instagramMeta?.thumbnail_url }}
         style={YoutubePostComponentStyles.imageBackground}
         imageStyle={YoutubePostComponentStyles.imageBackgroundImage}
-      >
-        <Icon name="play-circle" size={45} color="#fff" />
-      </ImageBackground>
+      ></ImageBackground>
 
       <View row bg-surfaceBG style={{ padding: 10, width: '100%' }}>
         <Icon name="instagram" color="#7232bd" size={25} />

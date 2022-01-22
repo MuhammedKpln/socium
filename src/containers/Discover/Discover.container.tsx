@@ -17,6 +17,7 @@ import View from 'react-native-ui-lib/view'
 import { Categories } from './components/Categories.component'
 import { DiscoverPost } from './components/DiscoverPost.component'
 import { InstagramPost } from './components/InstagramPost.componen'
+import { TwitterPost } from './components/TwitterPost.component'
 import { YoutubePost } from './components/YoutubePost.component'
 
 export function DiscoverContainer() {
@@ -106,6 +107,22 @@ export function DiscoverContainer() {
         case PostType.Instagram:
           return (
             <InstagramPost
+              post={item}
+              user={item.user}
+              onPressLike={() => onPressLike(item)}
+              onPressComment={() =>
+                navigate(Routes.PostDetails, {
+                  postId: item.id,
+                })
+              }
+              onPressSave={() => null}
+              key={item.id}
+              isLiked={item.userLike?.liked}
+            />
+          )
+        case PostType.Twitter:
+          return (
+            <TwitterPost
               post={item}
               user={item.user}
               onPressLike={() => onPressLike(item)}

@@ -1,4 +1,5 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
+import { Keyboard } from 'react-native'
 import { Colors } from 'react-native-ui-lib'
 import UIDialog from 'react-native-ui-lib/dialog'
 import Text from 'react-native-ui-lib/text'
@@ -15,6 +16,21 @@ interface IProps {
 
 export function Dialog(props: IProps) {
   const { visible, title, children, onDismiss, actions } = props
+  const [padding, setPadding] = useState(0)
+
+  useEffect(() => {
+    const showEvent = Keyboard.addListener('keyboardWillShow', e => {
+      setPadding(e.endCoordinates.height)
+    })
+    const hideEvent = Keyboard.addListener('keyboardWillHide', () => {
+      setPadding(0)
+    })
+
+    return () => {
+      showEvent.remove()
+      hideEvent.remove()
+    }
+  }, [])
 
   const renderHeader = useCallback(() => {
     return (
@@ -32,13 +48,17 @@ export function Dialog(props: IProps) {
       visible={visible}
       containerStyle={{
         backgroundColor: Colors.white,
+        paddingBottom: padding,
       }}
-      bottom
-      centerH
       onDismiss={onDismiss}
       useSafeArea
+      modalProps={{
+        useGestureHandlerRootView: true,
+      }}
+      renderPannableHeader={renderHeader}
+      bottom
+      centerH
     >
-      {renderHeader()}
       <View padding-20>
         {children}
         {actions ? (

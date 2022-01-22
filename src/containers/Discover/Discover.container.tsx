@@ -16,6 +16,7 @@ import { FlatList, RefreshControl } from 'react-native'
 import View from 'react-native-ui-lib/view'
 import { Categories } from './components/Categories.component'
 import { DiscoverPost } from './components/DiscoverPost.component'
+import { InstagramPost } from './components/InstagramPost.componen'
 import { YoutubePost } from './components/YoutubePost.component'
 
 export function DiscoverContainer() {
@@ -82,11 +83,11 @@ export function DiscoverContainer() {
     [toggleLikeButton],
   )
 
-  const renderItem = useCallback(
-    ({ item }: { item: IPost }) => {
-      return (
-        <View marginV-20>
-          {item.type === PostType.Youtube ? (
+  const renderItemComponent = useCallback(
+    (item: IPost) => {
+      switch (item.type) {
+        case PostType.Youtube:
+          return (
             <YoutubePost
               post={item}
               user={item.user}
@@ -100,7 +101,27 @@ export function DiscoverContainer() {
               key={item.id}
               isLiked={item.userLike?.liked}
             />
-          ) : (
+          )
+
+        case PostType.Instagram:
+          return (
+            <InstagramPost
+              post={item}
+              user={item.user}
+              onPressLike={() => onPressLike(item)}
+              onPressComment={() =>
+                navigate(Routes.PostDetails, {
+                  postId: item.id,
+                })
+              }
+              onPressSave={() => null}
+              key={item.id}
+              isLiked={item.userLike?.liked}
+            />
+          )
+
+        default:
+          return (
             <DiscoverPost
               post={item}
               user={item.user}
@@ -114,11 +135,17 @@ export function DiscoverContainer() {
               key={item.id}
               isLiked={item.userLike?.liked}
             />
-          )}
-        </View>
-      )
+          )
+      }
     },
     [onPressLike],
+  )
+
+  const renderItem = useCallback(
+    ({ item }: { item: IPost }) => {
+      return <View marginV-20>{renderItemComponent(item)}</View>
+    },
+    [renderItemComponent],
   )
 
   const fetchMorePosts = useCallback(() => {

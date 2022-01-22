@@ -16,6 +16,7 @@ export const FETCH_ALL_DISCOVER_POSTS = gql`
 
       content
       type
+      additional
       _count {
         comment
       }

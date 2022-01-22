@@ -143,6 +143,17 @@ const MainNavigator = () => {
           getComponent={RouteComponents.NewPost}
         />
       </Stack.Group>
+      <Stack.Group
+        screenOptions={{
+          presentation: 'transparentModal',
+        }}
+      >
+        <Stack.Screen
+          name={Routes.ImageGallery}
+          getComponent={RouteComponents.ImageGallery}
+          options={{ headerShown: false }}
+        />
+      </Stack.Group>
     </Stack.Navigator>
   )
 }

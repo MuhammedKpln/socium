@@ -5,7 +5,7 @@ import View from 'react-native-ui-lib/view'
 
 export function ChatBox() {
   return (
-    <View marginV-5 marginR-15>
+    <View marginV-10 marginR-15>
       <View spread row>
         <View row left>
           <NoAvatar username="qwe" size={53} />

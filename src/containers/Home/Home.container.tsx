@@ -19,6 +19,7 @@ import { showToast, ToastStatus } from '@/utils/toast'
 import { ApolloCache, useQuery } from '@apollo/client'
 import React, { useCallback, useEffect } from 'react'
 import { FlatList, RefreshControl } from 'react-native'
+import { View } from 'react-native-ui-lib'
 import Text from 'react-native-ui-lib/text'
 import { useDispatch } from 'react-redux'
 
@@ -98,31 +99,32 @@ const HomeContainer = () => {
 
   function renderItem({ item }: { item: IPost }) {
     return (
-      <Post
-        commentsCount={item._count.comment}
-        date={item.created_at}
-        likesCount={item.postLike.likeCount}
-        onPressPost={() => {
-          navigate(Routes.PostDetails, { postId: item.id })
-        }}
-        postType={item.type}
-        additional={item.additional}
-        isLiked={item.userLike?.liked}
-        key={item.slug}
-        user={item.user}
-        onPressRemove={() => null}
-        content={item.content}
-        onPressComment={() => null}
-        onPressSave={onPressSave}
-        onPressLike={() =>
-          likePost({
-            entityId: item.id,
-            entityType: IUseLikesEntity.POST,
-            isLiked: item.userLike?.liked,
-            update: (cache, result) => updateLikedCache(cache, result, item),
-          })
-        }
-      />
+      <View key={item.slug}>
+        <Post
+          commentsCount={item._count.comment}
+          date={item.created_at}
+          likesCount={item.postLike.likeCount}
+          onPressPost={() => {
+            navigate(Routes.PostDetails, { postId: item.id })
+          }}
+          postType={item.type}
+          additional={item.additional}
+          isLiked={item.userLike?.liked}
+          user={item.user}
+          onPressRemove={() => null}
+          content={item.content}
+          onPressComment={() => null}
+          onPressSave={onPressSave}
+          onPressLike={() =>
+            likePost({
+              entityId: item.id,
+              entityType: IUseLikesEntity.POST,
+              isLiked: item.userLike?.liked,
+              update: (cache, result) => updateLikedCache(cache, result, item),
+            })
+          }
+        />
+      </View>
     )
   }
   const getItemLayout = (data: any, index: any) => ({

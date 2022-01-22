@@ -1,7 +1,6 @@
 import { Avatar } from '@/components/Avatar/Avatar.component'
 import { Icon } from '@/components/Icon/Icon.component'
 import { InstagramPost } from '@/components/InstagramPost/InstagramPost.component'
-import { MarkdownRenderer } from '@/components/MarkdownRenderer/MarkdownRenderer.component'
 import { Page } from '@/components/Page/Page.component'
 import { PostActions } from '@/components/Post/PostActions.component'
 import {
@@ -136,7 +135,7 @@ export function PostDetails() {
             </PostTypeWrapper>
           ) : null}
 
-          <MarkdownRenderer>{post.content}</MarkdownRenderer>
+          <Text>{post.content}</Text>
         </View>
         <View marginR-30>
           <PostActions

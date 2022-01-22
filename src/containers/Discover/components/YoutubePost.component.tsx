@@ -45,9 +45,11 @@ export function YoutubePost(props: IYoutubePostProps) {
   }, [youtubeMeta])
 
   useEffect(() => {
-    const videoId = getVideoId(post.content)
+    if (post.additional) {
+      const videoId = getVideoId(post.additional)
 
-    if (videoId) fetchYoutubeMeta(videoId)
+      if (videoId) fetchYoutubeMeta(videoId)
+    }
   }, [fetchYoutubeMeta, getVideoId, post])
 
   return (

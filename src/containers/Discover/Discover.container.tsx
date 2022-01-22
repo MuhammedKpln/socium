@@ -63,7 +63,6 @@ export function DiscoverContainer() {
             newPosts[index].postLike.likeCount =
               newPosts[index].postLike.likeCount + 1
           } else {
-            console.warn('#SElam')
             newPosts[index].userLike.liked = false
             newPosts[index].postLike.likeCount =
               newPosts[index].postLike.likeCount - 1

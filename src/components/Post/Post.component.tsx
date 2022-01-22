@@ -8,7 +8,8 @@ import { useLazyQuery } from '@apollo/client'
 import * as dayjs from 'dayjs'
 import 'dayjs/locale/tr'
 import { map } from 'lodash'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { ImageBackground, StyleSheet } from 'react-native'
 import { Colors } from 'react-native-ui-lib'
 import Image from 'react-native-ui-lib/image'
 import Text from 'react-native-ui-lib/text'
@@ -16,7 +17,6 @@ import TouchableOpacity from 'react-native-ui-lib/touchableOpacity'
 import View from 'react-native-ui-lib/view'
 import { Avatar } from '../Avatar/Avatar.component'
 import { Icon } from '../Icon/Icon.component'
-import { MarkdownRenderer } from '../MarkdownRenderer/MarkdownRenderer.component'
 import { NoAvatar } from '../NoAvatar/NoAvatar.component'
 import { Surface } from '../Surface/Surface.component'
 import {
@@ -55,6 +55,14 @@ export const Post = React.memo((props: IPostProps) => {
     IFetchTwitterPostResponse,
     IFetchTwitterPostVariables
   >(FETCH_TWITTER_POST)
+  const twitterImages = useMemo(() => {
+    if (fetchTwitterMeta.data?.getTwitterPost?.includes.media) {
+      return fetchTwitterMeta.data?.getTwitterPost?.includes.media
+    }
+
+    return []
+  }, [fetchTwitterMeta])
+
   const fetchInstagramPost = useCallback(async () => {
     const url = `https://api.instagram.com/oembed/?url=${additional}`
     const response = await fetch(url)
@@ -164,10 +172,7 @@ export const Post = React.memo((props: IPostProps) => {
 
           <View margin-10>
             <Text document textColor style={{ lineHeight: 17 }}>
-              {postType === PostType.Content ? (
-                <MarkdownRenderer>{content}</MarkdownRenderer>
-              ) : null}
-              {postType !== PostType.Content ? content : null}
+              {content}
             </Text>
 
             {postType === PostType.Instagram ? (
@@ -189,26 +194,64 @@ export const Post = React.memo((props: IPostProps) => {
             ) : null}
             {postType === PostType.Twitter ? (
               <View row>
-                {map(
-                  fetchTwitterMeta.data?.getTwitterPost?.includes.media,
-                  media => (
+                {map(twitterImages.slice(0, 2), (media, index) => {
+                  if (index === 1) {
+                    return (
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigate(Routes.ImageGallery, {
+                            imageSet: [...map(twitterImages, _ => _.url)],
+                          })
+                        }
+                        key={index}
+                      >
+                        <ImageBackground
+                          source={{ uri: media.url }}
+                          style={{
+                            width: 100,
+                            height: 50,
+                            borderRadius: 4,
+                            marginTop: 20,
+                            marginRight: 10,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <Text fontGilroyBold white>
+                            {twitterImages.length !== 2
+                              ? twitterImages.length - 2
+                              : ''}
+                          </Text>
+                          <View
+                            style={{
+                              ...StyleSheet.absoluteFillObject,
+                              backgroundColor: 'rgba(0,0,0,0.2)',
+                            }}
+                          ></View>
+                        </ImageBackground>
+                      </TouchableOpacity>
+                    )
+                  }
+
+                  return (
                     <Image
                       source={{
                         uri: media.url,
                       }}
+                      key={index}
                       overlayColor="#000"
                       overlayType={Image.overlayTypes.BOTTOM}
                       overlayIntensity={Image.overlayIntensityType.MEDIUM}
                       style={{
-                        width: 150,
-                        height: 100,
+                        width: 100,
+                        height: 50,
                         borderRadius: 4,
                         marginTop: 20,
                         marginRight: 10,
                       }}
                     />
-                  ),
-                )}
+                  )
+                })}
               </View>
             ) : null}
             {postType === PostType.Youtube ? (

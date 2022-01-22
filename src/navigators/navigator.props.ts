@@ -14,6 +14,7 @@ export enum Routes {
   Chat = 'chat',
   EarnStar = 'earn-star',
   NewPost = 'new-post',
+  ImageGallery = 'image-gallery',
 }
 export enum RouteTitles {
   Login = 'Giriş yap',
@@ -44,6 +45,9 @@ export const RouteComponents = {
     require('@/containers/EarnStar/EarnStar.container').EarnStarContainer,
   NewPost: () =>
     require('@/containers/NewPost/NewPost.container').NewPostContainer,
+  ImageGallery: () =>
+    require('@/containers/ImageGallery/ImageGallery.container')
+      .ImageGalleryContainer,
 }
 
 export interface INavigatorParamsList extends ParamListBase {
@@ -58,4 +62,5 @@ export interface INavigatorParamsList extends ParamListBase {
   [Routes.Chat]: undefined
   [Routes.EarnStar]: undefined
   [Routes.NewPost]: undefined
+  [Routes.ImageGallery]: { imageSet: string[] }
 }

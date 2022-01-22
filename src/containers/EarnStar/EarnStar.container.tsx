@@ -1,9 +1,10 @@
 import Button from '@/components/Button/Button.component'
 import { Icon } from '@/components/Icon/Icon.component'
 import { Page } from '@/components/Page/Page.component'
+import { wait } from '@/utils/utils'
 import { useNavigation } from '@react-navigation/native'
 import AnimatedLottieView from 'lottie-react-native'
-import React, { useLayoutEffect } from 'react'
+import React, { useEffect, useLayoutEffect, useRef } from 'react'
 import { useCallback } from 'react'
 import { Colors } from 'react-native-ui-lib'
 import Text from 'react-native-ui-lib/text'
@@ -11,6 +12,11 @@ import View from 'react-native-ui-lib/view'
 
 export function EarnStarContainer() {
   const navigation = useNavigation()
+  const animationRef = useRef<AnimatedLottieView>(null)
+
+  useEffect(() => {
+    wait(250).then(() => animationRef.current?.play())
+  }, [])
 
   const headerRight = useCallback(() => {
     return (
@@ -36,6 +42,7 @@ export function EarnStarContainer() {
         autoPlay
         loop
         style={{ width: 375, height: 375 }}
+        ref={animationRef}
       />
 
       <Text fontGilroyBold font28>

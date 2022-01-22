@@ -1,6 +1,7 @@
 import PlusFilled from '@/assets/icons/PlusFilled'
 import { HeaderRight } from '@/components/Navigation/HeaderRight.component'
 import { HeaderTitle } from '@/components/Navigation/HeaderTitle.component'
+import { authRequiredFunction } from '@/utils/auth'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React from 'react'
@@ -55,7 +56,7 @@ const BottomTabBarNavigator = () => {
         listeners={({ navigation }) => ({
           tabPress: e => {
             e.preventDefault()
-            navigation.navigate(Routes.NewPost)
+            authRequiredFunction(() => navigation.navigate(Routes.NewPost))
           },
         })}
       />

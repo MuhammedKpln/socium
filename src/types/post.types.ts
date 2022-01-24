@@ -18,7 +18,7 @@ export interface IPost {
   updated_at: Date
   content: string
   slug: string
-  userLike: IUserlike
+  userLike: IUserlike | null
   postLike: IPostLike
   _count: IPostCount
   postFromFollowers?: boolean
@@ -40,6 +40,7 @@ export interface IPostLike {
   created_at: Date
   updated_at: Date
   likeCount: number
+  userLike?: IUserlike
 }
 
 export interface IUserlike {

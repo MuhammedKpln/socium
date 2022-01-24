@@ -8,14 +8,10 @@ import {
   UNLIKE_POST,
 } from '@/graphql/mutations/LikePost.mutation'
 import { ERROR_CODES, ERROR_CODES_RAW } from '@/types/error_codes'
-import { IUserlike } from '@/Types/post.types'
+import { IPostLike, IUserlike } from '@/Types/post.types'
 import { handleApolloErrors } from '@/utils/apollo'
 import { showToast, ToastStatus } from '@/utils/toast'
-import {
-  ApolloCache,
-  MutationUpdaterFunction,
-  useMutation,
-} from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import { useCallback } from 'react'
 
 export enum IUseLikesEntity {
@@ -27,25 +23,16 @@ export interface IUseLikesProps {
   entityType: IUseLikesEntity
   isLiked: boolean
   entityId: number
-  update: MutationUpdaterFunction<
-    { likeEntry: IUserlike },
-    any,
-    any,
-    ApolloCache<any>
-  >
 }
 
 export interface ILikedEntityResponse {
   entityType: IUseLikesEntity
   isLiked: boolean
-}
-export interface ILikedEntityResponse {
-  entityType: IUseLikesEntity
-  isLiked: boolean
+  result: IPostLike
 }
 
 export function useLikes() {
-  const [likePost] = useMutation<{ likeEntry: IUserlike }, { postId: number }>(
+  const [likePost] = useMutation<{ likeEntry: IPostLike }, { postId: number }>(
     LIKE_POST,
     {
       onCompleted: () => {
@@ -62,7 +49,7 @@ export function useLikes() {
   )
 
   const [unlikePost] = useMutation<
-    { likeEntry: IUserlike },
+    { unlikeEntry: IPostLike },
     { postId: number }
   >(UNLIKE_POST, {
     onCompleted: () => {
@@ -107,57 +94,65 @@ export function useLikes() {
 
       if (entityType === IUseLikesEntity.POST) {
         if (isLiked) {
-          await unlikePost({
+          const { data } = await unlikePost({
             variables: {
               postId: entityId,
             },
-            update: (cache, result) => props.update(cache, result, {}),
           })
 
-          return Promise.resolve({
-            entityType,
-            isLiked: false,
-          })
+          if (data?.unlikeEntry) {
+            return Promise.resolve({
+              entityType,
+              isLiked: false,
+              result: data?.unlikeEntry,
+            })
+          }
         }
 
-        await likePost({
+        const { data } = await likePost({
           variables: {
             postId: entityId,
           },
-          update: (cache, result) => props.update(cache, result, {}),
         })
 
-        return Promise.resolve({
-          entityType,
-          isLiked: true,
-        })
+        if (data?.likeEntry) {
+          return Promise.resolve({
+            entityType,
+            isLiked: true,
+            result: data.likeEntry,
+          })
+        }
       }
 
       if (entityType === IUseLikesEntity.COMMENT) {
         if (isLiked) {
-          await unlikeComment({
+          const { data } = await unlikeComment({
             variables: {
               commentId: entityId,
             },
           })
 
-          return Promise.resolve({
-            entityType,
-            isLiked: false,
-          })
+          if (data?.unlikeEntry) {
+            return Promise.resolve({
+              entityType,
+              isLiked: false,
+              result: data.unlikeEntry,
+            })
+          }
         }
 
-        await likeComment({
+        const { data } = await likeComment({
           variables: {
             commentId: entityId,
           },
-          update: (cache, result) => props.update(cache, result, {}),
         })
-
-        return Promise.resolve({
-          entityType,
-          isLiked: true,
-        })
+        if (data?.likeEntry) {
+          return Promise.resolve({
+            entityType,
+            isLiked: true,
+            result: data.likeEntry,
+          })
+        }
       }
 
       return Promise.reject()

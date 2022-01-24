@@ -61,17 +61,41 @@ export function PostDetails() {
 
   const onPressLike = useCallback(
     async (props: IUseLikesProps) => {
-      await toggleLikeButton(props)
+      const { result } = await toggleLikeButton(props)
 
-      _post.client.cache.modify({
-        fields: {
-          post: (s, {}) => {
-            console.log(s)
-          },
+      const data = _post.client.cache.readQuery<IFetchPostResponse>({
+        query: FETCH_POST,
+        variables: {
+          id: post?.id,
         },
       })
+
+      let postLike: any
+      let userLike: any
+
+      postLike = {
+        ...data?.post.postLike,
+        ...result,
+      }
+      userLike = result.userLike
+
+      if (data) {
+        _post.client.cache.writeQuery({
+          query: FETCH_POST,
+          variables: {
+            id: post?.id,
+          },
+          data: {
+            post: {
+              ...data.post,
+              postLike: postLike,
+              userLike: userLike,
+            },
+          },
+        })
+      }
     },
-    [_post, toggleLikeButton],
+    [toggleLikeButton, post?.id, _post.client.cache],
   )
 
   const renderYoutubeIframe = (additional: string) => {
@@ -141,13 +165,13 @@ export function PostDetails() {
           <PostActions
             commentsCount={post?._count?.comment.toString()}
             likesCount={post?.postLike?.likeCount.toString()}
-            isLiked={post?.userLike?.liked}
+            isLiked={post?.userLike?.liked ?? false}
             onPressComment={() => null}
             onPressLike={() =>
               onPressLike({
                 entityId: post?.id,
                 entityType: IUseLikesEntity.POST,
-                isLiked: post?.userLike?.liked,
+                isLiked: post?.userLike?.liked ?? false,
               })
             }
             onPressSave={() => null}

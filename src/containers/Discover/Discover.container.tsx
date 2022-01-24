@@ -23,7 +23,7 @@ import { YoutubePost } from './components/YoutubePost.component'
 export function DiscoverContainer() {
   const navigation = useNavigation()
   const { toggleLikeButton } = useLikes()
-  const { data, fetchMore, refetch, loading } =
+  const { data, fetchMore, refetch, loading, client } =
     useQuery<IFetchallDiscoverPostsResponse>(FETCH_ALL_DISCOVER_POSTS, {})
   const { fetchMoreData } = usePagination<
     IFetchallDiscoverPostsVariables,
@@ -44,44 +44,43 @@ export function DiscoverContainer() {
 
   const onPressLike = useCallback(
     async (post: IPost) => {
-      await toggleLikeButton({
+      const { result } = await toggleLikeButton({
         entityId: post.id,
         entityType: IUseLikesEntity.POST,
-        isLiked: post.userLike?.liked,
-        update: (cache, result) => {
-          const query: IFetchallDiscoverPostsResponse | null = cache.readQuery({
-            query: FETCH_ALL_DISCOVER_POSTS,
-          })
-
-          if (!query || !result.data?.likeEntry) {
-            return
-          }
-
-          const newPosts = query.postsWithoutBlog
-          const index = newPosts.findIndex(p => p.id === post.id)
-
-          if (!post.userLike.liked) {
-            newPosts[index].userLike = result.data?.likeEntry
-            newPosts[index].postLike.likeCount =
-              newPosts[index].postLike.likeCount + 1
-          } else {
-            newPosts[index].userLike.liked = false
-            newPosts[index].postLike.likeCount =
-              newPosts[index].postLike.likeCount - 1
-          }
-
-          cache.modify({
-            fields: {
-              postsWithoutBlog() {
-                return newPosts
-              },
-            },
-            broadcast: true,
-          })
-        },
+        isLiked: post.userLike?.liked ?? false,
       })
+
+      const prevResults: IFetchallDiscoverPostsResponse | null =
+        client.cache.readQuery({
+          query: FETCH_ALL_DISCOVER_POSTS,
+        })
+
+      if (prevResults) {
+        const newPost = [...prevResults.postsWithoutBlog]
+        const index = newPost.findIndex(v => v.id === post.id)
+
+        const postLike = {
+          ...newPost[index].postLike,
+          ...result,
+        }
+
+        newPost[index] = {
+          ...prevResults.postsWithoutBlog[index],
+          postLike,
+          userLike: result?.userLike ? result.userLike : null,
+        }
+
+        client.cache.writeQuery({
+          data: {
+            postsWithoutBlog: newPost,
+          },
+          overwrite: true,
+          query: FETCH_ALL_DISCOVER_POSTS,
+          broadcast: true,
+        })
+      }
     },
-    [toggleLikeButton],
+    [toggleLikeButton, client],
   )
 
   const renderItemComponent = useCallback(
@@ -100,7 +99,7 @@ export function DiscoverContainer() {
               }
               onPressSave={() => null}
               key={item.id}
-              isLiked={item.userLike?.liked}
+              isLiked={item.userLike?.liked ?? false}
             />
           )
 
@@ -117,7 +116,7 @@ export function DiscoverContainer() {
               }
               onPressSave={() => null}
               key={item.id}
-              isLiked={item.userLike?.liked}
+              isLiked={item.userLike?.liked ?? false}
             />
           )
         case PostType.Twitter:
@@ -133,7 +132,7 @@ export function DiscoverContainer() {
               }
               onPressSave={() => null}
               key={item.id}
-              isLiked={item.userLike?.liked}
+              isLiked={item.userLike?.liked ?? false}
             />
           )
 
@@ -150,7 +149,7 @@ export function DiscoverContainer() {
               }
               onPressSave={() => null}
               key={item.id}
-              isLiked={item.userLike?.liked}
+              isLiked={item.userLike?.liked ?? false}
             />
           )
       }

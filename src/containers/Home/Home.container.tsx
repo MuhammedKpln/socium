@@ -12,20 +12,15 @@ import {
 import { IUseLikesEntity, IUseLikesProps, useLikes } from '@/hooks/useLikes'
 import { Routes } from '@/navigators/navigator.props'
 import { navigate } from '@/navigators/utils/navigation'
-import { useAppSelector } from '@/store'
-import { setPosts } from '@/store/reducers/post.reducer'
 import { IPost } from '@/types/post.types'
 import { showToast, ToastStatus } from '@/utils/toast'
-import { ApolloCache, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import React, { useCallback, useEffect } from 'react'
 import { FlatList, RefreshControl } from 'react-native'
 import { View } from 'react-native-ui-lib'
 import Text from 'react-native-ui-lib/text'
-import { useDispatch } from 'react-redux'
 
 const HomeContainer = () => {
-  const posts = useAppSelector(state => state.postReducer.posts)
-  const dispatch = useDispatch()
   const { toggleLikeButton } = useLikes()
   const fetchPosts = useQuery<{ posts: IPost[] }, IFetchPostsVariables>(
     FETCH_POSTS,
@@ -34,47 +29,46 @@ const HomeContainer = () => {
         offset: 0,
         limit: 15,
       },
-      onCompleted: data => dispatch(setPosts(data.posts)),
     },
   )
 
   const likePost = useCallback(
     async (props: IUseLikesProps) => {
-      await toggleLikeButton(props)
-    },
-    [toggleLikeButton],
-  )
+      const { result } = await toggleLikeButton(props)
 
-  const updateLikedCache = useCallback(
-    (cache: ApolloCache<any>, result, item: IPost) => {
-      const prevResults: IFetchPostsResponse | null = cache.readQuery({
-        query: FETCH_POSTS,
-      })
+      const prevResults: IFetchPostsResponse | null =
+        fetchPosts.client.cache.readQuery({
+          query: FETCH_POSTS,
+        })
 
       if (prevResults) {
-        const index = prevResults.posts.findIndex(v => v.id === item.id)
+        const newPost = [...prevResults.posts]
+        const index = newPost.findIndex(v => v.id === props.entityId)
 
-        if (item.userLike?.liked) {
-          prevResults.posts[index].userLike.liked = false
-        } else {
-          if (!result.data?.likeEntry) {
-            return null
-          }
-
-          prevResults.posts[index].userLike = result.data.likeEntry
+        const postLike = {
+          ...newPost[index].postLike,
+          ...result,
         }
 
-        cache.modify({
-          fields: {
-            posts() {
-              return prevResults.posts
-            },
+        newPost[index] = {
+          ...prevResults.posts[index],
+          postLike,
+          userLike: result?.userLike ? result.userLike : null,
+        }
+
+        console.log('qweqweq', prevResults?.posts[index])
+
+        fetchPosts.client.cache.writeQuery({
+          data: {
+            posts: newPost,
           },
+          overwrite: true,
+          query: FETCH_POSTS,
           broadcast: true,
         })
       }
     },
-    [],
+    [toggleLikeButton, fetchPosts.client.cache],
   )
 
   function onPressSave() {
@@ -82,16 +76,14 @@ const HomeContainer = () => {
   }
 
   const fetchMorePosts = useCallback(() => {
-    if (posts.length < 15) {
-      return
-    }
+    if (!fetchPosts.data?.posts) return
 
     fetchPosts.fetchMore({
       variables: {
-        offset: posts.length,
+        offset: fetchPosts.data.posts.length,
       },
     })
-  }, [fetchPosts, posts])
+  }, [fetchPosts])
 
   useEffect(() => {
     console.log('IM CHANGED WALLAHSS')
@@ -109,7 +101,7 @@ const HomeContainer = () => {
           }}
           postType={item.type}
           additional={item.additional}
-          isLiked={item.userLike?.liked}
+          isLiked={item.userLike?.liked || false}
           user={item.user}
           onPressRemove={() => null}
           content={item.content}
@@ -119,8 +111,7 @@ const HomeContainer = () => {
             likePost({
               entityId: item.id,
               entityType: IUseLikesEntity.POST,
-              isLiked: item.userLike?.liked,
-              update: (cache, result) => updateLikedCache(cache, result, item),
+              isLiked: item.userLike?.liked || false,
             })
           }
         />

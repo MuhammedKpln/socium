@@ -165,8 +165,7 @@ export function DiscoverContainer() {
   )
 
   const fetchMorePosts = useCallback(() => {
-    console.warn(data?.postsWithoutBlog?.length)
-    if (data?.postsWithoutBlog?.length) {
+    if (data?.postsWithoutBlog && data.postsWithoutBlog.length > 15) {
       fetchMoreData({
         offset: data.postsWithoutBlog.length,
         additionalVariables: {},

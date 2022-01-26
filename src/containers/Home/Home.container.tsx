@@ -76,11 +76,11 @@ const HomeContainer = () => {
   }
 
   const fetchMorePosts = useCallback(() => {
-    if (!fetchPosts.data?.posts) return
+    if (fetchPosts.data?.posts && fetchPosts.data.posts.length <= 15) return
 
     fetchPosts.fetchMore({
       variables: {
-        offset: fetchPosts.data.posts.length,
+        offset: fetchPosts.data?.posts.length,
       },
     })
   }, [fetchPosts])

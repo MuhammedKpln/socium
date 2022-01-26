@@ -1,10 +1,12 @@
 import Button from '@/components/Button/Button.component'
 import { Icon } from '@/components/Icon/Icon.component'
 import { Page } from '@/components/Page/Page.component'
+import { Surface } from '@/components/Surface/Surface.component'
+import { useAppSelector } from '@/store'
 import { wait } from '@/utils/utils'
 import { useNavigation } from '@react-navigation/native'
 import AnimatedLottieView from 'lottie-react-native'
-import React, { useEffect, useLayoutEffect, useRef } from 'react'
+import React, { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import { useCallback } from 'react'
 import { Colors } from 'react-native-ui-lib'
 import Text from 'react-native-ui-lib/text'
@@ -13,7 +15,11 @@ import View from 'react-native-ui-lib/view'
 export function EarnStarContainer() {
   const navigation = useNavigation()
   const animationRef = useRef<AnimatedLottieView>(null)
-
+  const theme = useAppSelector(state => state.themeReducer.theme)
+  const animationBgTheme = useMemo(
+    () => (theme === 'dark' ? Colors.black : Colors.white),
+    [theme],
+  )
   useEffect(() => {
     wait(250).then(() => animationRef.current?.play())
   }, [])
@@ -42,6 +48,12 @@ export function EarnStarContainer() {
         autoPlay
         loop
         style={{ width: 375, height: 375 }}
+        colorFilters={[
+          {
+            keypath: '**',
+            color: animationBgTheme,
+          },
+        ]}
         ref={animationRef}
       />
 
@@ -53,11 +65,10 @@ export function EarnStarContainer() {
         işine yara.
       </Text>
 
-      <View
+      <Surface
         row
         padding-20
         marginT-30
-        backgroundColor="#fff"
         br50
         width="100%"
         height={113}
@@ -74,7 +85,7 @@ export function EarnStarContainer() {
           style={{ marginTop: 20 }}
         />
         <View marginL-80>
-          <Text center fontSfProRegular font16>
+          <Text center fontSfProRegular font16 textColor>
             Hemen izle, kazan!
           </Text>
           <Button
@@ -91,7 +102,7 @@ export function EarnStarContainer() {
             )}
           />
         </View>
-      </View>
+      </Surface>
     </Page>
   )
 }

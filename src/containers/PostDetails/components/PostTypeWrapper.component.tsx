@@ -14,10 +14,10 @@ export function PostTypeWrapper(props: IProps) {
   console.log(postType)
   if (postType === PostType.Instagram) {
     return (
-      <View br40 backgroundColor={Colors.surfaceBG} padding-20 width="90%">
+      <View br40 backgroundColor={Colors.surfaceBG} padding-20 width="100%">
         <View row>
           <Icon name="instagram" color="#7232bd" size={25} />
-          <Text fontGilroy marginT-5 marginL-10>
+          <Text fontGilroy marginT-5 marginL-10 textColor>
             Instagram
           </Text>
         </View>
@@ -31,10 +31,10 @@ export function PostTypeWrapper(props: IProps) {
 
   if (postType === PostType.Youtube) {
     return (
-      <View br40 backgroundColor={Colors.surfaceBG} padding-20 width="90%">
+      <View br40 backgroundColor={Colors.surfaceBG} padding-20 width="100%">
         <View row>
           <Icon name="youtube" color="#FF0000" size={25} />
-          <Text fontGilroy marginT-5 marginL-10>
+          <Text fontGilroy marginT-5 marginL-10 textColor>
             YouTube
           </Text>
         </View>
@@ -47,10 +47,10 @@ export function PostTypeWrapper(props: IProps) {
   }
   if (postType === PostType.Twitter) {
     return (
-      <View br40 backgroundColor={Colors.surfaceBG} padding-20 width="90%">
+      <View br40 backgroundColor={Colors.surfaceBG} padding-20 width="100%">
         <View row>
           <Icon name="twitter" color="#1DA1F2" size={25} />
-          <Text fontGilroy marginT-5 marginL-10>
+          <Text fontGilroy marginT-5 marginL-10 textColor>
             Twitter
           </Text>
         </View>

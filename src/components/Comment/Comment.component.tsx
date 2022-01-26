@@ -1,3 +1,4 @@
+import { updateAnsweringParent } from '@/store/reducers/comment.reducer'
 import { IComment } from '@/Types/comment.types'
 import * as dayjs from 'dayjs'
 import 'dayjs/locale/tr'
@@ -6,8 +7,9 @@ import React, { useCallback, useState } from 'react'
 import Text from 'react-native-ui-lib/text'
 import TouchableOpacity from 'react-native-ui-lib/touchableOpacity'
 import View from 'react-native-ui-lib/view'
+import { useDispatch } from 'react-redux'
+import { Avatar } from '../Avatar/Avatar.component'
 import { Icon } from '../Icon/Icon.component'
-import { NoAvatar } from '../NoAvatar/NoAvatar.component'
 
 export interface ICommentProps {
   parentComments?: IComment[]
@@ -15,6 +17,8 @@ export interface ICommentProps {
   username: string
   likeCount: number
   date: Date
+  avatar: string
+  onPressAnswer: () => void
 }
 
 var customParseFormat = require('dayjs/plugin/customParseFormat')
@@ -25,9 +29,17 @@ dayjs.extend(customParseFormat)
 dayjs.extend(relativeTime)
 
 export function Comment(props: ICommentProps) {
-  const { content, date, likeCount, username, parentComments } = props
+  const {
+    content,
+    date,
+    likeCount,
+    username,
+    parentComments,
+    onPressAnswer,
+    avatar,
+  } = props
   const [showParentComments, setShowParentComments] = useState<number[]>([])
-
+  const dispatch = useDispatch()
   const _showParentComments = useCallback(
     (commentId: number) => {
       setShowParentComments([...showParentComments, commentId])
@@ -35,19 +47,29 @@ export function Comment(props: ICommentProps) {
     [showParentComments],
   )
 
+  const parentOnPressAnswer = useCallback(
+    (commentId: number) => {
+      dispatch(updateAnsweringParent(commentId))
+    },
+    [dispatch],
+  )
+
   const renderParentComments = useCallback(() => {
     if (parentComments) {
-      const mostLikedComment = parentComments.reduce(
-        (previousValue, currentValue) => {
-          if (
-            currentValue.postLike.likeCount > previousValue.postLike.likeCount
-          ) {
-            return currentValue
-          }
+      let mostLikedComment: IComment
+      if (parentComments.length > 1) {
+        mostLikedComment = parentComments.reduce(
+          (previousValue, currentValue) => {
+            if (
+              currentValue.postLike.likeCount > previousValue.postLike.likeCount
+            ) {
+              return currentValue
+            }
 
-          return previousValue
-        },
-      )
+            return previousValue
+          },
+        )
+      }
 
       if (
         parentComments.length > 2 &&
@@ -70,44 +92,70 @@ export function Comment(props: ICommentProps) {
               date={mostLikedComment.created_at}
               likeCount={mostLikedComment.postLike.likeCount}
               username={mostLikedComment.user.username}
+              onPressAnswer={() => parentOnPressAnswer(mostLikedComment.id)}
+              avatar={mostLikedComment.user.avatar}
             />
           </View>
         )
       } else {
-        return map(parentComments, comment => {
-          return (
-            <View marginL-30>
+        return (
+          <View marginL-30>
+            {parentComments.length > 2 ? (
+              <TouchableOpacity onPress={() => setShowParentComments([])}>
+                <View row marginL-15 marginT-10>
+                  <Text greyText>_____</Text>
+                  <Text paddingT-10 greyText bold marginT-5 marginL-10>
+                    Yanıtları gizle
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            ) : null}
+
+            {map(parentComments, comment => (
               <Comment
                 content={comment.content}
                 date={comment.created_at}
                 likeCount={comment.postLike.likeCount}
                 username={comment.user.username}
-                parentComments={comment?.parentUser?.userParentComments}
+                parentComments={comment?.parentComments}
+                avatar={comment.user.avatar}
+                onPressAnswer={() => parentOnPressAnswer(comment.id)}
               />
-            </View>
-          )
-        })
+            ))}
+          </View>
+        )
       }
     }
 
     return null
-  }, [parentComments, _showParentComments, showParentComments])
+  }, [
+    parentComments,
+    _showParentComments,
+    showParentComments,
+    parentOnPressAnswer,
+  ])
 
   return (
     <>
-      <View marginV-5 marginR-15>
-        <View spread row marginT-20>
-          <View row left>
-            <NoAvatar username="qwe" />
-            <Text bold marginR-10 marginL-10 textColor>
-              @{username}
-            </Text>
-            <Text textColor>{content}</Text>
+      <View marginV-5>
+        <View row marginT-20 style={{ justifyContent: 'space-between' }}>
+          <View row>
+            <Avatar userAvatar={avatar} />
+            <View marginL-10 row>
+              <Text bold textColor>
+                @{username}{' '}
+              </Text>
+              <Text textColor style={{ fontWeight: '400', maxWidth: '65%' }}>
+                {content}
+              </Text>
+            </View>
           </View>
-          <View right row>
+
+          <View>
             <Icon name="heart" />
           </View>
         </View>
+
         <View row spread marginL-45>
           <Text greyText bold>
             {/* @ts-ignore */}
@@ -117,9 +165,11 @@ export function Comment(props: ICommentProps) {
           <Text greyText bold>
             {likeCount} beğenme
           </Text>
-          <Text greyText bold>
-            Yanitla
-          </Text>
+          <TouchableOpacity onPress={onPressAnswer}>
+            <Text greyText bold>
+              Yanıtla
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
 

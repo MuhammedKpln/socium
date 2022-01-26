@@ -1,10 +1,11 @@
 import React from 'react'
 import {
   KeyboardAvoidingView as RNKeyboardAvoidingView,
+  KeyboardAvoidingViewProps,
   Platform,
 } from 'react-native'
 
-interface IProps {
+interface IProps extends KeyboardAvoidingViewProps {
   children: React.ReactNode
 }
 
@@ -12,10 +13,10 @@ export function KeyboardAvoidingView(props: IProps) {
   return (
     <RNKeyboardAvoidingView
       behavior={Platform.select({
-        android: 'height',
-        ios: 'padding',
+        android: undefined,
+        ios: 'height',
       })}
-      enabled
+      {...props}
     >
       {props.children}
     </RNKeyboardAvoidingView>

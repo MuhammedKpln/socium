@@ -12,7 +12,11 @@ export const TextInput = (
 ) => {
   return (
     <TextField
-      fieldStyle={[TextInputStyle.input, props?.fieldStyle]}
+      fieldStyle={[
+        TextInputStyle.input,
+        props?.fieldStyle,
+        { backgroundColor: Colors.surfaceBG },
+      ]}
       color={Colors.textColor}
       {...props}
     />

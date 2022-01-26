@@ -12,8 +12,8 @@ import { useQuery } from '@apollo/client'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useLayoutEffect, useMemo } from 'react'
 import TabController from 'react-native-ui-lib/tabController'
-import View from 'react-native-ui-lib/view'
 import Text from 'react-native-ui-lib/text'
+import View from 'react-native-ui-lib/view'
 import { CommentsTab } from './components/CommentsTab.component'
 import { PostsTab } from './components/PostsTab.component'
 
@@ -54,7 +54,7 @@ export function ProfileContainer() {
   }, [navigation])
 
   return (
-    <Page margin-20>
+    <Page flex>
       <View row spread>
         <View row>
           <Avatar userAvatar={user.data?.getUser.avatar} size={88} />
@@ -92,18 +92,19 @@ export function ProfileContainer() {
           </Text>
         </View>
       </View>
+
       <View flex>
         <TabController items={tabItems}>
-          <TabController.TabBar />
+          <TabController.TabBar containerWidth={350} centerSelected />
           <TabController.TabPage index={0}>
-            <View paddingT-30>
+            <View flex marginT-50>
               <PostsTab
                 posts={user.data?.userPosts ? user.data.userPosts : []}
               />
             </View>
           </TabController.TabPage>
           <TabController.TabPage index={1} lazy>
-            <View paddingT-30>
+            <View marginT-30 flex>
               {user.data?.getUser && (
                 <CommentsTab userId={user.data?.getUser.id} />
               )}

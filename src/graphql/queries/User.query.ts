@@ -32,6 +32,7 @@ export const FETCH_USER_PRFOFILE = gql`
     userPosts(username: $username) {
       id
       content
+      additional
       postLike {
         likeCount
       }

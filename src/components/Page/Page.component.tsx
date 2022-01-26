@@ -1,17 +1,15 @@
-import React, { Component, forwardRef, Ref } from 'react'
+import React, { forwardRef, Ref } from 'react'
+import { SafeAreaView } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
-import { ViewProps } from 'react-native-ui-lib'
-import View from 'react-native-ui-lib/view'
+import { View } from 'react-native-ui-lib'
 import { IPageProps } from './Page.props'
 
-export const Page = forwardRef(
-  (props: IPageProps, ref: Ref<Component<ViewProps>>) => {
-    const { scrollable, children } = props
+export const Page = forwardRef((props: IPageProps, ref: Ref<SafeAreaView>) => {
+  const { scrollable, children } = props
 
-    return (
-      <View flex margin-20 bg-screenBG useSafeArea {...props} ref={ref}>
-        {scrollable ? <ScrollView>{children}</ScrollView> : children}
-      </View>
-    )
-  },
-)
+  return (
+    <View flex style={{ padding: 20 }} {...props} ref={ref}>
+      {scrollable ? <ScrollView>{children}</ScrollView> : children}
+    </View>
+  )
+})

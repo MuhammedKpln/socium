@@ -20,7 +20,7 @@ export interface IUser {
   username: string
   email: string
   gender: 0 | 1
-  avatar: string | null
+  avatar: string
   bio: string | null
   isEmailConfirmed: boolean
   created_at: Date

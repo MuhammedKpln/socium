@@ -15,7 +15,6 @@ export const apolloCache = new InMemoryCache({
   typePolicies: {
     Query: {
       fields: {
-        getPostComments: concatPagination(),
         postsWithoutBlog: concatPagination(),
         posts: concatPagination(),
       },

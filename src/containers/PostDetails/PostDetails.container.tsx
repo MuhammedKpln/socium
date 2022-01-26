@@ -1,6 +1,7 @@
 import { Avatar } from '@/components/Avatar/Avatar.component'
 import { Icon } from '@/components/Icon/Icon.component'
 import { InstagramPost } from '@/components/InstagramPost/InstagramPost.component'
+import { KeyboardAvoidingView } from '@/components/KeyboardAvoidingView/KeyboardAvoidingView.component'
 import { Page } from '@/components/Page/Page.component'
 import { PostActions } from '@/components/Post/PostActions.component'
 import {
@@ -15,19 +16,30 @@ import {
 } from '@/graphql/queries/FetchPost.query'
 import { IUseLikesEntity, IUseLikesProps, useLikes } from '@/hooks/useLikes'
 import { INavigatorParamsList, Routes } from '@/navigators/navigator.props'
+import { useAppSelector } from '@/store'
+import { updateAnsweringParent } from '@/store/reducers/comment.reducer'
 import { PostType } from '@/types/post.types'
 import { IInstagramMeta } from '@/types/socialMedia.types'
 import { useQuery } from '@apollo/client'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useCallback, useLayoutEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { ScrollView } from 'react-native'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
+import { useDispatch } from 'react-redux'
 import { PostComments } from './components/Comments.component'
+import { NewComment } from './components/NewComment.component'
 import { PostTypeWrapper } from './components/PostTypeWrapper.component'
 
 export function PostDetails() {
   const navigation = useNavigation()
+  const dispatch = useDispatch()
   const { toggleLikeButton } = useLikes()
+  const isAnsweringParent = useAppSelector(
+    state => state.commentReducer.isAnsweringParent,
+  )
+
   const [instagramMeta, setInstagramMeta] = useState<
     IInstagramMeta | undefined
   >()
@@ -50,6 +62,12 @@ export function PostDetails() {
       headerRight: () => <Icon name="bookmark" size={20} />,
     })
   })
+
+  useEffect(() => {
+    return () => {
+      dispatch(updateAnsweringParent(null))
+    }
+  }, [dispatch])
 
   const fetchInstagramPost = useCallback(async () => {
     const response = await fetch(
@@ -117,72 +135,87 @@ export function PostDetails() {
     if (!post) return
 
     return (
-      <Page width="100%">
-        <View row>
-          <Avatar userAvatar={post?.user?.avatar} />
-          <View marginL-5>
-            <Text textColor text text90BL>
-              {post?.user.username}
-            </Text>
-            <Text text greyText>
-              @{post?.user.username}
-            </Text>
+      <Page>
+        <KeyboardAvoidingView keyboardVerticalOffset={115}>
+          <ScrollView style={{ height: !isAnsweringParent ? '90%' : '70%' }}>
+            <View>
+              <View row>
+                <Avatar userAvatar={post?.user?.avatar} />
+                <View marginL-5>
+                  <Text textColor text text90BL>
+                    {post?.user.username}
+                  </Text>
+                  <Text text greyText>
+                    @{post?.user.username}
+                  </Text>
+                </View>
+              </View>
+
+              <View marginV-10>
+                {post?.type === PostType.Instagram && instagramMeta ? (
+                  <PostTypeWrapper postType={post.type}>
+                    <View>
+                      <InstagramPost
+                        authorName={instagramMeta?.author_name}
+                        thumbnailUrl={instagramMeta?.thumbnail_url}
+                        title={instagramMeta?.title}
+                      />
+                    </View>
+                  </PostTypeWrapper>
+                ) : null}
+                {post?.type === PostType.Youtube ? (
+                  <PostTypeWrapper postType={post.type}>
+                    <View>
+                      {renderYoutubeIframe(
+                        post.additional ? post.additional : '',
+                      )}
+                    </View>
+                  </PostTypeWrapper>
+                ) : null}
+                {post?.type === PostType.Twitter ? (
+                  <PostTypeWrapper postType={post.type}>
+                    <View>
+                      <TwitterPost
+                        twitterUrl={post.additional ? post.additional : ''}
+                      />
+                    </View>
+                  </PostTypeWrapper>
+                ) : null}
+
+                <Text marginT-10>{post.content}</Text>
+              </View>
+              <View marginR-30>
+                <PostActions
+                  commentsCount={post?._count?.comment.toString()}
+                  likesCount={post?.postLike?.likeCount.toString()}
+                  isLiked={post?.userLike?.liked ?? false}
+                  onPressComment={() => null}
+                  onPressLike={() =>
+                    onPressLike({
+                      entityId: post?.id,
+                      entityType: IUseLikesEntity.POST,
+                      isLiked: post?.userLike?.liked ?? false,
+                    })
+                  }
+                  onPressSave={() => null}
+                  showDate
+                  date={post.created_at}
+                />
+              </View>
+            </View>
+
+            <View marginT-10>
+              <PostComments postId={post.id} />
+            </View>
+          </ScrollView>
+          <View marginT-10>
+            <NewComment
+              postId={post.id}
+              parentId={isAnsweringParent ?? undefined}
+              post={post}
+            />
           </View>
-        </View>
-
-        <View marginV-10>
-          {post?.type === PostType.Instagram && instagramMeta ? (
-            <PostTypeWrapper postType={post.type}>
-              <View>
-                <InstagramPost
-                  authorName={instagramMeta?.author_name}
-                  thumbnailUrl={instagramMeta?.thumbnail_url}
-                  title={instagramMeta?.title}
-                />
-              </View>
-            </PostTypeWrapper>
-          ) : null}
-          {post?.type === PostType.Youtube ? (
-            <PostTypeWrapper postType={post.type}>
-              <View>
-                {renderYoutubeIframe(post.additional ? post.additional : '')}
-              </View>
-            </PostTypeWrapper>
-          ) : null}
-          {post?.type === PostType.Twitter ? (
-            <PostTypeWrapper postType={post.type}>
-              <View>
-                <TwitterPost
-                  twitterUrl={post.additional ? post.additional : ''}
-                />
-              </View>
-            </PostTypeWrapper>
-          ) : null}
-
-          <Text>{post.content}</Text>
-        </View>
-        <View marginR-30>
-          <PostActions
-            commentsCount={post?._count?.comment.toString()}
-            likesCount={post?.postLike?.likeCount.toString()}
-            isLiked={post?.userLike?.liked ?? false}
-            onPressComment={() => null}
-            onPressLike={() =>
-              onPressLike({
-                entityId: post?.id,
-                entityType: IUseLikesEntity.POST,
-                isLiked: post?.userLike?.liked ?? false,
-              })
-            }
-            onPressSave={() => null}
-            showDate
-            date={post.created_at}
-          />
-        </View>
-
-        <View marginT-10>
-          <PostComments postId={post.id} />
-        </View>
+        </KeyboardAvoidingView>
       </Page>
     )
   }

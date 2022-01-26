@@ -1,4 +1,5 @@
 import { Comment } from '@/components/Comment/Comment.component'
+import { NotFound } from '@/components/NotFound/NotFound.component'
 import {
   SkeletonView,
   SkeletonViewContentTypes,
@@ -12,7 +13,7 @@ import {
 import { IComment } from '@/Types/comment.types'
 import { useQuery } from '@apollo/client'
 import React, { useCallback } from 'react'
-import { FlatList } from 'react-native'
+import { FlatList, View } from 'react-native'
 import { ICommentsTabProps } from '../Profile.props'
 
 export function CommentsTab({ userId }: ICommentsTabProps) {
@@ -38,11 +39,20 @@ export function CommentsTab({ userId }: ICommentsTabProps) {
 
   const renderData = useCallback(() => {
     return (
-      <FlatList
-        data={data?.getUserComments}
-        renderItem={renderItem}
-        style={{ height: '100%', width: '100%' }}
-      />
+      <View style={{ flex: 1 }}>
+        <FlatList
+          data={data?.getUserComments}
+          ListEmptyComponent={
+            <NotFound
+              size={100}
+              title="Kullanıcının herhangi bir yorumu bulunmamakta."
+              subtitle="Yorumlarınızı yazabilir, yorumlarınızı beğenip beğenmeyeceğinizi tahmin edebilirsiniz!"
+            />
+          }
+          renderItem={renderItem}
+          style={{ height: '100%', width: '100%', flex: 1 }}
+        />
+      </View>
     )
   }, [data, renderItem])
 

@@ -36,6 +36,7 @@ export const FETCH_COMMENTS = gql`
         id
         bio
         username
+        avatar
       }
       userLike {
         liked
@@ -43,20 +44,19 @@ export const FETCH_COMMENTS = gql`
       postLike {
         likeCount
       }
-      parentUser {
-        userParentComments {
-          id
-          content
-          created_at
+      parentComments {
+        id
+        content
+        created_at
 
-          postLike {
-            likeCount
-          }
-          user {
-            id
-            bio
-            username
-          }
+        postLike {
+          likeCount
+        }
+        user {
+          id
+          bio
+          username
+          avatar
         }
       }
     }

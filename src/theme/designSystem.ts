@@ -32,7 +32,11 @@ const themes = {
 export const configureDesignSystem = (): void => {
   Colors.loadColors(colors)
   Colors.loadSchemes(themes)
-  Assets.loadAssetsGroup('app', {})
+  Assets.loadAssetsGroup('app', {
+    get NoData() {
+      return require('../assets/images/NoData.webp')
+    },
+  })
 
   Typography.loadTypographies({
     header: Platform.select({

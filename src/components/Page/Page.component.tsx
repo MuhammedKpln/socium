@@ -8,7 +8,7 @@ export const Page = forwardRef((props: IPageProps, ref: Ref<SafeAreaView>) => {
   const { scrollable, children } = props
 
   return (
-    <View flex style={{ padding: 20 }} {...props} ref={ref}>
+    <View flex bg-screenBG style={{ padding: 20 }} {...props} ref={ref}>
       {scrollable ? <ScrollView>{children}</ScrollView> : children}
     </View>
   )

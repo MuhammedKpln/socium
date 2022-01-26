@@ -56,3 +56,16 @@ export const FETCH_USER_PRFOFILE = gql`
     }
   }
 `
+
+export interface IFetchUserStarsResponse {
+  getUserStars: {
+    starCount: number
+  }
+}
+export const FETCH_USER_STARS = gql`
+  query FETCH_USER_STARS {
+    getUserStars {
+      starCount
+    }
+  }
+`

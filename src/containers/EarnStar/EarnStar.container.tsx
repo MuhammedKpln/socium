@@ -2,8 +2,13 @@ import Button from '@/components/Button/Button.component'
 import { Icon } from '@/components/Icon/Icon.component'
 import { Page } from '@/components/Page/Page.component'
 import { Surface } from '@/components/Surface/Surface.component'
+import {
+  FETCH_USER_STARS,
+  IFetchUserStarsResponse,
+} from '@/graphql/queries/User.query'
 import { useAppSelector } from '@/store'
 import { wait } from '@/utils/utils'
+import { useQuery } from '@apollo/client'
 import { useNavigation } from '@react-navigation/native'
 import AnimatedLottieView from 'lottie-react-native'
 import React, { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
@@ -20,6 +25,10 @@ export function EarnStarContainer() {
     () => (theme === 'dark' ? Colors.black : Colors.white),
     [theme],
   )
+  const { data } = useQuery<IFetchUserStarsResponse>(FETCH_USER_STARS, {
+    fetchPolicy: 'network-only',
+  })
+
   useEffect(() => {
     wait(250).then(() => animationRef.current?.play())
   }, [])
@@ -29,11 +38,11 @@ export function EarnStarContainer() {
       <View row>
         <Icon name="sparkles" color="#FEB200" size={25} />
         <Text yellow fontGilroy font17 marginL-10 marginT-6>
-          100
+          {data?.getUserStars.starCount}
         </Text>
       </View>
     )
-  }, [])
+  }, [data])
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -90,7 +99,7 @@ export function EarnStarContainer() {
           </Text>
           <Button
             marginT-10
-            label="100"
+            label="1"
             backgroundColor={Colors.yellow}
             iconSource={() => (
               <Icon

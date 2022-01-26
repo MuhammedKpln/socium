@@ -1,4 +1,5 @@
 import { Icon } from '@/components/Icon/Icon.component'
+import { NotFound } from '@/components/NotFound/NotFound.component'
 import { Page } from '@/components/Page/Page.component'
 import {
   SkeletonView,
@@ -28,10 +29,10 @@ import { Colors } from 'react-native-ui-lib'
 import Drawer from 'react-native-ui-lib/drawer'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
+import { findBestMatch } from 'string-similarity'
 import { ChatBox } from './components/Chatbox.component'
 import { RecentlyMatched } from './components/RecentlyMatched.component'
 import { Search } from './components/Search.component'
-
 export function ChatContainer() {
   const localUser = useAppSelector(state => state.userReducer.user)
   const messages = useQuery<IFetchMessagesResponse, IFetchMessagesVariables>(
@@ -149,14 +150,58 @@ export function ChatContainer() {
         renderItem={renderChatBox}
         style={{ height: '100%' }}
         refreshControl={refreshControl()}
+        ListEmptyComponent={
+          <NotFound
+            size={100}
+            title="Hiç bir mesajınız yok."
+            subtitle="Eşleşme sayfasına giderek yeni arkadaşlar elde edinebilirsiniz!"
+          />
+        }
       />
     )
   }, [renderChatBox, messages, refreshControl])
 
+  const onSearch = useCallback(
+    (text: string) => {
+      const prevResults = messages.previousData
+
+      if (prevResults) {
+        const updatedResults = prevResults.messages.filter(e => {
+          const compare = findBestMatch(text.toLowerCase(), [
+            e.sender.username.toLowerCase(),
+            e.receiver.username.toLowerCase(),
+          ])
+          console.log(compare.bestMatch)
+
+          if (compare.bestMatch.rating > 0.5) {
+            return e
+          }
+        })
+
+        if (text.length < 1) {
+          messages.client.cache.writeQuery<IFetchMessagesResponse>({
+            query: FETCH_MESSAGES,
+            data: {
+              messages: messages.previousData?.messages ?? [],
+            },
+          })
+        } else {
+          messages.client.cache.writeQuery<IFetchMessagesResponse>({
+            query: FETCH_MESSAGES,
+            data: {
+              messages: updatedResults,
+            },
+          })
+        }
+      }
+    },
+    [messages],
+  )
+
   return (
     <Page>
       <View margin-10>
-        <Search />
+        <Search onChangeText={onSearch} />
       </View>
 
       {!messageRequests.loading &&

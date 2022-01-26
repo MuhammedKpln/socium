@@ -73,6 +73,12 @@ const BottomTabBarNavigator = () => {
           ...applyRouteTitle(RouteTitles.Chat),
           headerRight: () => <HeaderRight />,
         }}
+        listeners={({ navigation }) => ({
+          tabPress: e => {
+            e.preventDefault()
+            authRequiredFunction(() => navigation.navigate(Routes.Chat))
+          },
+        })}
       />
     </Tab.Navigator>
   )

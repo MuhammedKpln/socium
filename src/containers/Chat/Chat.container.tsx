@@ -1,12 +1,31 @@
+import { Icon } from '@/components/Icon/Icon.component'
 import { Page } from '@/components/Page/Page.component'
 import {
   SkeletonView,
   SkeletonViewContentTypes,
   SkeletonViewTemplates,
 } from '@/components/SkeletonView/SkeletonView.component'
-import { wait } from '@/utils/utils'
-import React, { useCallback, useEffect, useState } from 'react'
-import { FlatList } from 'react-native'
+import {
+  DELETE_ROOM,
+  IDeleteRoomResponse,
+  IDeleteRoomVariables,
+} from '@/graphql/mutations/DeleteRoom.mutation'
+import {
+  FETCH_MESSAGES,
+  FETCH_MESSAGE_REQUESTS,
+  IFetchMessageRequestResponse,
+  IFetchMessageRequestVariables,
+  IFetchMessagesResponse,
+  IFetchMessagesVariables,
+} from '@/graphql/queries/FetchMessages.query'
+import { useAppSelector } from '@/store'
+import { IMessage } from '@/types/messages.types'
+import { showToast, ToastStatus } from '@/utils/toast'
+import { useMutation, useQuery } from '@apollo/client'
+import React, { useCallback } from 'react'
+import { FlatList, RefreshControl } from 'react-native'
+import { Colors } from 'react-native-ui-lib'
+import Drawer from 'react-native-ui-lib/drawer'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
 import { ChatBox } from './components/Chatbox.component'
@@ -14,19 +33,125 @@ import { RecentlyMatched } from './components/RecentlyMatched.component'
 import { Search } from './components/Search.component'
 
 export function ChatContainer() {
-  const [showContent, setShowContent] = useState<boolean>(false)
+  const localUser = useAppSelector(state => state.userReducer.user)
+  const messages = useQuery<IFetchMessagesResponse, IFetchMessagesVariables>(
+    FETCH_MESSAGES,
+    {
+      fetchPolicy: 'network-only',
+    },
+  )
+  const messageRequests = useQuery<
+    IFetchMessageRequestResponse,
+    IFetchMessageRequestVariables
+  >(FETCH_MESSAGE_REQUESTS, {
+    fetchPolicy: 'network-only',
+  })
 
-  useEffect(() => {
-    wait(2000).then(() => setShowContent(true))
-  }, [])
+  const [deleteRoom] = useMutation<IDeleteRoomResponse, IDeleteRoomVariables>(
+    DELETE_ROOM,
+    {
+      update: (cache, { data: deletedRoom }) => {
+        const prevResults = cache.readQuery<IFetchMessagesResponse>({
+          query: FETCH_MESSAGES,
+        })
 
-  const renderChatBox = useCallback(() => {
-    return <ChatBox />
-  }, [])
+        if (prevResults) {
+          const updatedResults = prevResults.messages.filter(
+            room => room.room.id !== deletedRoom?.deleteRoom.id,
+          )
+
+          cache.writeQuery<IFetchMessagesResponse>({
+            query: FETCH_MESSAGES,
+            data: {
+              messages: updatedResults,
+            },
+          })
+        }
+      },
+      onCompleted: () => {
+        showToast(ToastStatus.Success, 'Mesaj silindi')
+      },
+    },
+  )
+
+  const onPressDelete = useCallback(
+    (roomId: number) => {
+      console.log('EEE', roomId)
+
+      deleteRoom({
+        variables: {
+          roomId,
+        },
+      })
+    },
+    [deleteRoom],
+  )
+
+  const renderChatBox = useCallback(
+    ({ item }: { item: IMessage }) => {
+      let username: string = ''
+      let avatar: string = ''
+
+      if (item.sender.id !== localUser?.id) {
+        username = item.sender.username
+        avatar = item.sender.avatar
+      }
+      if (item.receiver.id !== localUser?.id) {
+        username = item.receiver.username
+        avatar = item.receiver.avatar
+      }
+
+      return (
+        <View marginV-10 marginR-15>
+          <Drawer
+            bounciness={2}
+            rightItems={[
+              {
+                customElement: (
+                  <Icon name="trash" size={20} color={Colors.white} />
+                ),
+                background: Colors.backgroundDangerHeavy,
+                onPress: () => onPressDelete(item.room.id ?? 0),
+              },
+            ]}
+            useNativeAnimations
+          >
+            <ChatBox
+              name={username}
+              avatar={avatar}
+              lastMessage={item.message}
+              date={item.created_at}
+            />
+          </Drawer>
+        </View>
+      )
+    },
+    [localUser, onPressDelete],
+  )
+
+  const refreshControl = useCallback(
+    () => (
+      <RefreshControl
+        onRefresh={() => {
+          messageRequests.refetch()
+          messages.refetch()
+        }}
+        refreshing={messages.loading || messageRequests.loading}
+      />
+    ),
+    [messages, messageRequests],
+  )
 
   const renderData = useCallback(() => {
-    return <FlatList data={Array(5)} renderItem={renderChatBox} />
-  }, [renderChatBox])
+    return (
+      <FlatList
+        data={messages.data?.messages}
+        renderItem={renderChatBox}
+        style={{ height: '100%' }}
+        refreshControl={refreshControl()}
+      />
+    )
+  }, [renderChatBox, messages, refreshControl])
 
   return (
     <Page>
@@ -34,12 +159,19 @@ export function ChatContainer() {
         <Search />
       </View>
 
-      <Text fontGilroyBold font17>
-        Eşleşilenler
-      </Text>
-      <View marginT-20>
-        <RecentlyMatched />
-      </View>
+      {!messageRequests.loading &&
+      messageRequests.data?.messageRequests &&
+      messageRequests.data?.messageRequests.length > 0 ? (
+        <View marginT-20>
+          <Text fontGilroyBold font17>
+            Eşleşme istekleri
+          </Text>
+          <RecentlyMatched
+            messageRequests={messageRequests.data.messageRequests}
+            loading={messageRequests.loading}
+          />
+        </View>
+      ) : null}
 
       <View marginV-30>
         <Text fontGilroyBold font17>
@@ -49,9 +181,9 @@ export function ChatContainer() {
 
       <View>
         <SkeletonView
-          showContent={showContent}
+          showContent={!messages.loading}
           renderContent={renderData}
-          times={6}
+          times={messages.data?.messages.length}
           template={SkeletonViewTemplates.LIST_ITEM}
           listProps={{
             contentType: SkeletonViewContentTypes.AVATAR,

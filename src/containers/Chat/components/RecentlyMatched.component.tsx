@@ -1,41 +1,47 @@
-import { NoAvatar } from '@/components/NoAvatar/NoAvatar.component'
+import { Avatar } from '@/components/Avatar/Avatar.component'
 import { SkeletonView } from '@/components/SkeletonView/SkeletonView.component'
-import { wait } from '@/utils/utils'
-import React, { useCallback, useEffect, useState } from 'react'
+import { IMessageRequests } from '@/types/messages.types'
+import React, { useCallback } from 'react'
 import { FlatList } from 'react-native'
-import { Text, View } from 'react-native-ui-lib'
+import Text from 'react-native-ui-lib/text'
+import View from 'react-native-ui-lib/view'
 
-export function RecentlyMatched() {
-  const [showContent, setShowContent] = useState<boolean>(false)
+interface IProps {
+  messageRequests: IMessageRequests[]
+  loading: boolean
+}
 
-  useEffect(() => {
-    wait(2000).then(() => setShowContent(true))
-  }, [])
+export function RecentlyMatched(props: IProps) {
+  const { messageRequests, loading } = props
 
-  const renderItem = useCallback(() => {
+  const renderItem = useCallback(({ item }: { item: IMessageRequests }) => {
     return (
       <View marginR-20>
-        <NoAvatar username="saieqw" size={75} />
-        <Text fontSfProRegular font12 marginT-10>
-          Cansu Yılmaz
+        <Avatar userAvatar={item.requestFrom.avatar} size={75} />
+        <Text fontSfProRegular font12 marginT-10 center>
+          @{item.requestFrom.username}
         </Text>
       </View>
     )
   }, [])
 
   const renderData = useCallback(() => {
-    return <FlatList horizontal renderItem={renderItem} data={Array(5)} />
-  }, [renderItem])
+    return (
+      <View marginT-10>
+        <FlatList horizontal renderItem={renderItem} data={messageRequests} />
+      </View>
+    )
+  }, [renderItem, messageRequests])
 
   return (
     <View row>
       <SkeletonView
         renderContent={renderData}
-        showContent={showContent}
+        showContent={!loading}
         circle
         width={75}
         height={75}
-        times={5}
+        times={messageRequests.length}
         style={{ marginRight: 20 }}
       />
     </View>

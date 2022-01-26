@@ -1,27 +1,36 @@
-import { NoAvatar } from '@/components/NoAvatar/NoAvatar.component'
+import { Avatar } from '@/components/Avatar/Avatar.component'
 import React from 'react'
+import { Colors } from 'react-native-ui-lib'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
 
-export function ChatBox() {
+interface IProps {
+  name: string
+  lastMessage: string
+  date: Date
+  avatar: string
+}
+
+export function ChatBox(props: IProps) {
+  const { name, lastMessage, date, avatar } = props
   return (
-    <View marginV-10 marginR-15>
+    <View backgroundColor={Colors.white}>
       <View spread row>
         <View row left>
-          <NoAvatar username="qwe" size={53} />
+          <Avatar userAvatar={avatar} size={53} />
           <View marginL-10>
             <Text textColor fontSfProMedium font15>
-              Cansu Yılmaz
+              {name}
             </Text>
             <Text textColor fontSfProRegular font13 greyText marginT-5>
-              Certe, inquam, pertinazo non emolu...
+              {lastMessage}
             </Text>
           </View>
         </View>
 
         <View right row>
           <Text fontGilroyBold greyText>
-            14:23
+            {date}
           </Text>
         </View>
       </View>

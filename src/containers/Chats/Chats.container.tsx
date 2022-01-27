@@ -33,7 +33,7 @@ import { findBestMatch } from 'string-similarity'
 import { ChatBox } from './components/Chatbox.component'
 import { RecentlyMatched } from './components/RecentlyMatched.component'
 import { Search } from './components/Search.component'
-export function ChatContainer() {
+export function ChatsContainer() {
   const localUser = useAppSelector(state => state.userReducer.user)
   const messages = useQuery<IFetchMessagesResponse, IFetchMessagesVariables>(
     FETCH_MESSAGES,

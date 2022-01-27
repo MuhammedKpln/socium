@@ -40,7 +40,7 @@ export const RouteComponents = {
   MyProfile: () =>
     require('@/containers/Profile/Profile.container').ProfileContainer,
   Match: () => require('@/containers/Match/Match.container').MatchContainer,
-  Chat: () => require('@/containers/Chat/Chat.container').ChatContainer,
+  Chat: () => require('@/containers/Chats/Chats.container').ChatsContainer,
   EarnStar: () =>
     require('@/containers/EarnStar/EarnStar.container').EarnStarContainer,
   NewPost: () =>

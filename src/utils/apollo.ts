@@ -17,6 +17,7 @@ export const apolloCache = new InMemoryCache({
       fields: {
         postsWithoutBlog: concatPagination(),
         posts: concatPagination(),
+        messagesFromRoom: concatPagination(),
       },
     },
   },

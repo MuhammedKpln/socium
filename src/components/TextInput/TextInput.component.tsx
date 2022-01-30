@@ -4,18 +4,23 @@ import TextInputStyle from './TextInput.style'
 
 const { TextField } = Incubator
 
+interface IProps {
+  backgroundColor: string
+}
+
 export const TextInput = (
-  props: Incubator.TextFieldProps & {
-    useCustomTheme?: boolean | undefined
-  },
+  props: IProps & Incubator.TextFieldProps,
+
   //@ts-ignore
 ) => {
   return (
     <TextField
+      padding-20
       fieldStyle={[
         TextInputStyle.input,
-        props?.fieldStyle,
-        { backgroundColor: Colors.surfaceBG },
+        props?.backgroundColor
+          ? { backgroundColor: props.backgroundColor }
+          : { backgroundColor: Colors.surfaceBG },
       ]}
       color={Colors.textColor}
       {...props}

@@ -66,17 +66,17 @@ const BottomTabBarNavigator = () => {
         options={{ ...applyTabIcon('fire'), ...applyRouteTitle('') }}
       />
       <Tab.Screen
-        name={Routes.Chat}
-        getComponent={RouteComponents.Chat}
+        name={Routes.Chats}
+        getComponent={RouteComponents.Chats}
         options={{
           ...applyTabIcon('chatcirlce'),
-          ...applyRouteTitle(RouteTitles.Chat),
+          ...applyRouteTitle(RouteTitles.Chats),
           headerRight: () => <HeaderRight />,
         }}
         listeners={({ navigation }) => ({
           tabPress: e => {
             e.preventDefault()
-            authRequiredFunction(() => navigation.navigate(Routes.Chat))
+            authRequiredFunction(() => navigation.navigate(Routes.Chats))
           },
         })}
       />
@@ -131,6 +131,7 @@ const MainNavigator = () => {
           getComponent={RouteComponents.MyProfile}
           options={applyRouteTitle(RouteTitles.MyProfile)}
         />
+        <Stack.Screen name={Routes.Chat} getComponent={RouteComponents.Chat} />
       </Stack.Group>
 
       <Stack.Group

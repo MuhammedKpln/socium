@@ -19,7 +19,10 @@ import {
   IFetchMessagesResponse,
   IFetchMessagesVariables,
 } from '@/graphql/queries/FetchMessages.query'
+import { Routes } from '@/navigators/navigator.props'
+import { navigate } from '@/navigators/utils/navigation'
 import { useAppSelector } from '@/store'
+import { IUser } from '@/Types/login.types'
 import { IMessage } from '@/types/messages.types'
 import { showToast, ToastStatus } from '@/utils/toast'
 import { useMutation, useQuery } from '@apollo/client'
@@ -77,8 +80,6 @@ export function ChatsContainer() {
 
   const onPressDelete = useCallback(
     (roomId: number) => {
-      console.log('EEE', roomId)
-
       deleteRoom({
         variables: {
           roomId,
@@ -86,6 +87,21 @@ export function ChatsContainer() {
       })
     },
     [deleteRoom],
+  )
+
+  const onPressChat = useCallback(
+    (item: IMessage) => {
+      let user: IUser
+      if (item.sender.id !== localUser?.id) {
+        user = item.sender
+        navigate(Routes.Chat, { room: item.room, user })
+      }
+      if (item.receiver.id !== localUser?.id) {
+        user = item.receiver
+        navigate(Routes.Chat, { room: item.room, user })
+      }
+    },
+    [localUser],
   )
 
   const renderChatBox = useCallback(
@@ -122,12 +138,13 @@ export function ChatsContainer() {
               avatar={avatar}
               lastMessage={item.message}
               date={item.created_at}
+              onPress={() => onPressChat(item)}
             />
           </Drawer>
         </View>
       )
     },
-    [localUser, onPressDelete],
+    [localUser, onPressDelete, onPressChat],
   )
 
   const refreshControl = useCallback(

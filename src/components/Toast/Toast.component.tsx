@@ -1,4 +1,4 @@
-import { ToastStatus } from '@/utils/toast'
+import { IToastAdditionalOptions, ToastStatus } from '@/utils/toast'
 import React, {
   useCallback,
   useImperativeHandle,
@@ -14,15 +14,22 @@ const _Toast = (_: any, ref: any) => {
   const [message, setMessage] = useState<string>('')
   const [visible, setVisible] = useState<boolean>(false)
   const [toastStatus, setToastStatus] = useState<ToastStatus>(ToastStatus.Info)
+  const [additionalOptions, setAdditionalOptions] =
+    useState<IToastAdditionalOptions>()
 
   useImperativeHandle(
     ref,
     useCallback(
       () => ({
-        fire: (_toastStatus: ToastStatus, _message: string) => {
+        fire: (
+          _toastStatus: ToastStatus,
+          _message: string,
+          _additionalOptions?: IToastAdditionalOptions,
+        ) => {
           setMessage(_message)
           setToastStatus(_toastStatus)
           setVisible(true)
+          setAdditionalOptions(_additionalOptions)
         },
       }),
       [setMessage, setVisible, setToastStatus],
@@ -52,6 +59,7 @@ const _Toast = (_: any, ref: any) => {
       swipeable
       centerMessage
       position="top"
+      {...additionalOptions}
     />
   )
 }

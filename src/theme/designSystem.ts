@@ -9,6 +9,8 @@ const colors = {
   textLight: '#020D06',
   greyText: '#999999',
   yellow: '#FEB200',
+  green: '#05DC20',
+  red: '#DD0606',
 }
 
 const themes = {
@@ -35,6 +37,11 @@ export const configureDesignSystem = (): void => {
   Assets.loadAssetsGroup('app', {
     get NoData() {
       return require('../assets/images/NoData.webp')
+    },
+  })
+  Assets.loadAssetsGroup('animations', {
+    get typing() {
+      return require('@/assets/animations/typing.json')
     },
   })
 
@@ -103,7 +110,7 @@ export const configureDesignSystem = (): void => {
     fontSfProBold: Platform.OS !== 'ios' && {
       fontFamily: 'SF-Pro-Display-Bold',
     },
-    fontSfProSemibol: Platform.OS !== 'ios' && {
+    fontSfProSemibold: Platform.OS !== 'ios' && {
       fontFamily: 'SF-Pro-Display-Semibold',
     },
     fontGilroyBold: {

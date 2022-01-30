@@ -1,5 +1,6 @@
 import { IMessage, IMessageRequests } from '@/types/messages.types'
 import gql from 'graphql-tag'
+import { UserFragment } from '../fragments/User.fragment'
 
 export interface IFetchMessagesResponse {
   messages: IMessage[]
@@ -54,6 +55,45 @@ export const FETCH_MESSAGE_REQUESTS = gql`
       }
 
       request
+      id
+    }
+  }
+`
+
+export interface IFetchRoomMessagesResponse {
+  messagesFromRoom: IMessage[]
+}
+
+export interface IFetchRoomMessagesVariables {
+  roomId: number
+  offset?: number
+  limit?: number
+}
+
+export const FETCH_ROOM_MESSAGES = gql`
+  ${UserFragment}
+  query FETCH_ROOM_MESSAGE(
+    $roomId: Float!
+    $offset: Float = 0
+    $limit: Float = 15
+  ) {
+    messagesFromRoom(
+      roomId: $roomId
+      pagination: { offset: $offset, limit: $limit }
+    ) {
+      sender {
+        ...UserFields
+      }
+      receiver {
+        ...UserFields
+      }
+      room {
+        id
+        roomAdress
+      }
+      seen
+      message
+      created_at
       id
     }
   }

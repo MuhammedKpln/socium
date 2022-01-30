@@ -1,3 +1,5 @@
+import { IUser } from '@/Types/login.types'
+import { IRoom } from '@/types/messages.types'
 import { ParamListBase } from '@react-navigation/native'
 
 export enum Routes {
@@ -11,10 +13,11 @@ export enum Routes {
   Settings = 'app-settings',
   Discover = 'discover',
   Match = 'pair',
-  Chat = 'chat',
+  Chats = 'chats',
   EarnStar = 'earn-star',
   NewPost = 'new-post',
   ImageGallery = 'image-gallery',
+  Chat = 'chat',
 }
 export enum RouteTitles {
   Login = 'Giriş yap',
@@ -22,7 +25,7 @@ export enum RouteTitles {
   Settings = 'Ayarlar',
   Discover = 'Keşfet',
   MyProfile = 'Profilim',
-  Chat = 'Sohbet',
+  Chats = 'Sohbet',
   EarnStar = 'Puan kazan',
   NewPost = 'Yeni gönderi',
 }
@@ -40,7 +43,7 @@ export const RouteComponents = {
   MyProfile: () =>
     require('@/containers/Profile/Profile.container').ProfileContainer,
   Match: () => require('@/containers/Match/Match.container').MatchContainer,
-  Chat: () => require('@/containers/Chats/Chats.container').ChatsContainer,
+  Chats: () => require('@/containers/Chats/Chats.container').ChatsContainer,
   EarnStar: () =>
     require('@/containers/EarnStar/EarnStar.container').EarnStarContainer,
   NewPost: () =>
@@ -48,6 +51,7 @@ export const RouteComponents = {
   ImageGallery: () =>
     require('@/containers/ImageGallery/ImageGallery.container')
       .ImageGalleryContainer,
+  Chat: () => require('@/containers/Chat/Chat.container').ChatContainer,
 }
 
 export interface INavigatorParamsList extends ParamListBase {
@@ -59,8 +63,9 @@ export interface INavigatorParamsList extends ParamListBase {
   [Routes.MyProfile]: { username: string }
   [Routes.PostDetails]: { postId: number }
   [Routes.Match]: undefined
-  [Routes.Chat]: undefined
+  [Routes.Chats]: undefined
   [Routes.EarnStar]: undefined
   [Routes.NewPost]: undefined
   [Routes.ImageGallery]: { imageSet: string[] }
+  [Routes.Chat]: { room: IRoom; user: IUser }
 }

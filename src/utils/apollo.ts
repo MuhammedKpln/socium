@@ -17,7 +17,14 @@ export const apolloCache = new InMemoryCache({
       fields: {
         postsWithoutBlog: concatPagination(),
         posts: concatPagination(),
-        messagesFromRoom: concatPagination(),
+        messagesFromRoom: {
+          merge(existing: any, incoming: any) {
+            if (!existing) {
+              return incoming
+            }
+            return [...incoming, ...existing]
+          },
+        },
       },
     },
   },

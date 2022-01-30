@@ -225,7 +225,7 @@ export function ChatsContainer() {
       messageRequests.data?.messageRequests &&
       messageRequests.data?.messageRequests.length > 0 ? (
         <View marginT-20>
-          <Text fontGilroyBold font17>
+          <Text fontGilroyBold font17 textColor>
             Eşleşme istekleri
           </Text>
           <RecentlyMatched
@@ -236,7 +236,7 @@ export function ChatsContainer() {
       ) : null}
 
       <View marginV-30>
-        <Text fontGilroyBold font17>
+        <Text fontGilroyBold font17 textColor>
           Sohbetler
         </Text>
       </View>

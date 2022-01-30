@@ -1,6 +1,7 @@
 import { Avatar } from '@/components/Avatar/Avatar.component'
 import { Icon } from '@/components/Icon/Icon.component'
 import { Page } from '@/components/Page/Page.component'
+import { SkeletonView } from '@/components/SkeletonView/SkeletonView.component'
 import {
   FETCH_USER_PRFOFILE,
   IFetchUserProfileResponse,
@@ -11,6 +12,7 @@ import { navigate } from '@/navigators/utils/navigation'
 import { useQuery } from '@apollo/client'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useLayoutEffect, useMemo } from 'react'
+import { Colors } from 'react-native-ui-lib'
 import TabController from 'react-native-ui-lib/tabController'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
@@ -57,14 +59,32 @@ export function ProfileContainer() {
     <Page flex>
       <View row spread>
         <View row>
-          <Avatar userAvatar={user.data?.getUser.avatar} size={88} />
+          {user.loading ? (
+            <SkeletonView circle width={88} height={88} />
+          ) : (
+            <Avatar userAvatar={user.data?.getUser?.avatar ?? ''} size={88} />
+          )}
           <View marginL-20 marginT-20>
-            <Text textColor header fontGilroy>
-              {user.data?.getUser.username}
-            </Text>
-            <Text document greyText marginT-10>
-              @{user.data?.getUser.username}
-            </Text>
+            {user.loading ? (
+              <>
+                <SkeletonView width={100} height={20} />
+
+                <View marginT-10>
+                  <SkeletonView width={100} height={15} />
+                </View>
+              </>
+            ) : (
+              <>
+                <Text textColor header fontGilroy>
+                  {user.data?.getUser.username}
+                </Text>
+                <View marginT-10>
+                  <Text document greyText>
+                    @{user.data?.getUser.username}
+                  </Text>
+                </View>
+              </>
+            )}
           </View>
         </View>
         <View marginT-35>
@@ -95,7 +115,13 @@ export function ProfileContainer() {
 
       <View flex>
         <TabController items={tabItems}>
-          <TabController.TabBar containerWidth={350} centerSelected />
+          <TabController.TabBar
+            activeBackgroundColor={Colors.surfaceBG}
+            backgroundColor={Colors.trueSurfaceBG}
+            labelColor={Colors.textColor}
+            containerWidth={350}
+            centerSelected
+          />
           <TabController.TabPage index={0}>
             <View flex marginT-50>
               <PostsTab

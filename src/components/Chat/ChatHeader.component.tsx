@@ -2,7 +2,7 @@ import { Routes } from '@/navigators/navigator.props'
 import { navigate } from '@/navigators/utils/navigation'
 import React, { useCallback } from 'react'
 import { TouchableOpacity } from 'react-native'
-import { Colors, Text, View } from 'react-native-ui-lib'
+import { Text, View } from 'react-native-ui-lib'
 import { Avatar } from '../Avatar/Avatar.component'
 import { Icon } from '../Icon/Icon.component'
 
@@ -23,7 +23,7 @@ export const ChatHeader = React.memo((props: IProps) => {
   }, [username])
 
   return (
-    <View backgroundColor={Colors.white}>
+    <View bg-trueSurfaceBG>
       <View row spread padding-20>
         <View row>
           <View marginR-50 marginT-10>
@@ -32,7 +32,7 @@ export const ChatHeader = React.memo((props: IProps) => {
           <Avatar userAvatar={avatar} />
           <TouchableOpacity onPress={() => onPressProfile()}>
             <View marginL-15>
-              <Text fontSfProSemibold font15>
+              <Text fontSfProSemibold font15 textColor>
                 {username}
               </Text>
               <Text

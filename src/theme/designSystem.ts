@@ -20,6 +20,7 @@ const themes = {
     surfaceBG: colors.surfaceLight,
     navigationSurfaceBG: Colors.white,
     bottomTabIcon: '#A3BDCB',
+    trueSurfaceBG: Colors.white,
   },
   dark: {
     textColor: colors.textDark,
@@ -27,6 +28,7 @@ const themes = {
     surfaceBG: colors.surfaceDark,
     navigationSurfaceBG: Colors.black,
     bottomTabIcon: '#6B6B6B',
+    trueSurfaceBG: Colors.black,
   },
 }
 

@@ -103,8 +103,10 @@ function _ChatComponent(props: IChatProps, ref: any) {
           padding: 10,
         }}
         fieldStyle={{
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.surfaceBG,
           borderRadius: 100,
+          borderColor: Colors.getScheme() === 'dark' ? '#ADADAD' : '#FAFAFC',
+          borderWidth: 1,
         }}
         onChangeText={props.onChangeInputText}
         placeholderTextColor="#ADADAD"
@@ -153,7 +155,7 @@ function _ChatComponent(props: IChatProps, ref: any) {
   }, [props.typing])
 
   return (
-    <View backgroundColor="#FAFAFC">
+    <View bg-surfaceBG>
       <ChatHeader status={props.isOnline} {...props} />
 
       <View>
@@ -166,7 +168,7 @@ function _ChatComponent(props: IChatProps, ref: any) {
           renderFooter={onTyping}
           style={{
             height: '79%',
-            backgroundColor: '#FAFAFC',
+            backgroundColor: Colors.surfaceBG,
           }}
           ref={ref}
         />

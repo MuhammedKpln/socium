@@ -4,7 +4,7 @@ import { showToast, ToastStatus } from '@/utils/toast'
 import { wait } from '@/utils/utils'
 import AnimatedLottieView from 'lottie-react-native'
 import React, { useCallback, useEffect, useState } from 'react'
-import { Dimensions } from 'react-native'
+import { Dimensions, Keyboard } from 'react-native'
 import { Assets, Colors, Incubator, View } from 'react-native-ui-lib'
 import {
   DataProvider,
@@ -13,6 +13,7 @@ import {
 } from 'recyclerlistview'
 import { ScrollEvent } from 'recyclerlistview/dist/reactnative/core/scrollcomponent/BaseScrollView'
 import { Icon } from '../Icon/Icon.component'
+import { KeyboardAvoidingView } from '../KeyboardAvoidingView/KeyboardAvoidingView.component'
 import { IChatProps } from './Chat.props'
 import { ChatBubble } from './ChatBubble.component'
 import { ChatHeader } from './ChatHeader.component'
@@ -31,6 +32,17 @@ function _ChatComponent(props: IChatProps, ref: any) {
 
   useEffect(() => {
     wait(250).then(() => ref.current?.scrollToEnd())
+    const keyboardListener = Keyboard.addListener('keyboardDidShow', () => {
+      if (ref.current.scrollToEnd) {
+        ref.current.scrollToEnd({
+          animated: true,
+        })
+      }
+    })
+
+    return () => {
+      keyboardListener.remove()
+    }
   }, [ref])
 
   useEffect(() => {
@@ -157,23 +169,25 @@ function _ChatComponent(props: IChatProps, ref: any) {
   return (
     <View bg-surfaceBG>
       <ChatHeader status={props.isOnline} {...props} />
-
-      <View>
+      <KeyboardAvoidingView keyboardVerticalOffset={90}>
         <RecyclerListView
           rowRenderer={rowRenderer}
           layoutProvider={layoutProvider()}
           dataProvider={dataProvider().cloneWithRows(props.messages)}
           onItemLayout={e => console.log(e)}
+          scrollViewProps={{
+            invertStickyHeaders: true,
+          }}
           onScroll={onTopReached}
-          renderFooter={onTyping}
           style={{
-            height: '79%',
+            height: '80%',
             backgroundColor: Colors.surfaceBG,
           }}
+          renderFooter={onTyping}
           ref={ref}
         />
-      </View>
-      <Footer />
+        <Footer />
+      </KeyboardAvoidingView>
     </View>
   )
 }

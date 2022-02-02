@@ -7,6 +7,7 @@ export interface IEditProfileVariables {
   biography?: string
   blockIncomingCalls?: boolean
   birthday?: Date
+  avatar?: string
 }
 
 export interface IEditProfileResponse {
@@ -20,6 +21,7 @@ export const EDIT_PROFILE = gql`
     $username: String
     $blockIncomingCalls: Boolean
     $birthday: DateTime
+    $avatar: String
   ) {
     editProfile(
       profile: {
@@ -27,6 +29,7 @@ export const EDIT_PROFILE = gql`
         username: $username
         blockIncomingCalls: $blockIncomingCalls
         birthday: $birthday
+        avatar: $avatar
       }
     ) {
       ...UserFields

@@ -39,9 +39,11 @@ export const HeaderRight = React.memo(function HeaderRight() {
               <Icon name="sparkles" color="#FEB200" size={25} />
             </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={() => authRequiredFunction(onPressAvatar)}>
-            <Avatar userAvatar={user?.avatar} size={30} />
-          </TouchableOpacity>
+          <Avatar
+            userAvatar={user?.avatar}
+            size={30}
+            onPress={() => authRequiredFunction(onPressAvatar)}
+          />
         </View>
       )
     } else {

@@ -1,7 +1,8 @@
 import { avatarStatic } from '@/utils/static'
 import React, { useMemo } from 'react'
 import FastImage from 'react-native-fast-image'
-import { View } from 'react-native-ui-lib'
+import { TouchableOpacity, View } from 'react-native-ui-lib'
+import { Badge } from '../Badge/Badge.component'
 import { IAvatarProps } from './Avatar.props'
 
 export function Avatar(props: IAvatarProps) {
@@ -11,41 +12,35 @@ export function Avatar(props: IAvatarProps) {
   const userAvatarUrl = useMemo(() => avatarStatic(userAvatar), [userAvatar])
 
   return (
-    <View
-      style={{
-        backgroundColor: '#F3F5F7',
-        justifyContent: 'center',
-        alignContent: 'center',
-        alignItems: 'center',
-        alignSelf: 'center',
-        width: size,
-        height: size,
-        overflow: 'hidden',
-        borderRadius: size,
-      }}
-    >
-      <FastImage
-        source={{ uri: userAvatarUrl }}
-        fallback
-        resizeMode="contain"
-        style={{
-          width: size - 5,
-          height: size - 5,
-          marginTop: 8,
-        }}
-
-        // imageStyle={{
-        //   width: props.size - 10,
-        //   height: props.size - 10,
-        //   marginTop: 13,
-        //   marginLeft: 5,
-        // }}
-        // imageProps={{
-        //   source: { uri: userAvatarUrl },
-        //   resizeMode: 'contain',
-        //   resizeMethod: 'scale',
-        // }}
-      />
-    </View>
+    <TouchableOpacity onPress={props?.onPress}>
+      <View row>
+        <View
+          style={{
+            backgroundColor: '#F3F5F7',
+            justifyContent: 'center',
+            alignContent: 'center',
+            alignItems: 'center',
+            alignSelf: 'center',
+            width: size,
+            height: size,
+            overflow: 'hidden',
+            borderRadius: size,
+          }}
+        >
+          <FastImage
+            source={{ uri: userAvatarUrl }}
+            resizeMode="contain"
+            style={{
+              width: size - 5,
+              height: size - 5,
+              marginTop: 8,
+            }}
+          />
+        </View>
+        {props.showBadge && (
+          <Badge {...props?.badgeProps} containerStyle={{ marginLeft: -15 }} />
+        )}
+      </View>
+    </TouchableOpacity>
   )
 }

@@ -1,6 +1,9 @@
-import { AvatarProps } from 'react-native-ui-lib'
+import { IBadgeProps } from '../Badge/Badge.props'
 
-export interface IAvatarProps extends Omit<AvatarProps, 'size'> {
+export interface IAvatarProps {
   userAvatar: string
   size?: number
+  showBadge?: boolean
+  badgeProps?: IBadgeProps
+  onPress?: () => void
 }

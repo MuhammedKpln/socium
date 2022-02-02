@@ -20,10 +20,9 @@ import { updateUser } from '@/store/reducers/user.reducer'
 import { showToast, ToastStatus } from '@/utils/toast'
 import { useMutation, useQuery } from '@apollo/client'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
-import React, { useLayoutEffect, useMemo } from 'react'
-import { useCallback } from 'react'
-import { useState } from 'react'
-import { Colors, TouchableOpacity } from 'react-native-ui-lib'
+import React, { useCallback, useLayoutEffect, useMemo, useState } from 'react'
+import { Platform } from 'react-native'
+import { Colors, DateTimePicker, TouchableOpacity } from 'react-native-ui-lib'
 import TabController from 'react-native-ui-lib/tabController'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
@@ -38,6 +37,14 @@ export function ProfileContainer() {
   const navigation = useNavigation()
   const dispatch = useDispatch()
   const route = useRoute<RouteProp<INavigatorParamsList, Routes.MyProfile>>()
+  const [showDate, setShowDate] = useState(true)
+  const todayDate = new Date()
+  const maximumDate = todayDate
+  maximumDate.setFullYear(todayDate.getFullYear() - 17, 11)
+  const [date, setDate] = useState(
+    localUser?.birthday ? new Date(localUser?.birthday) : new Date(),
+  )
+
   const tabItems = useMemo(
     () => [
       {
@@ -85,6 +92,7 @@ export function ProfileContainer() {
       await editProfile({
         variables: {
           username,
+          birthday: date,
         },
         update: (cache, { data }) => {
           cache.writeQuery({
@@ -98,6 +106,7 @@ export function ProfileContainer() {
             },
           })
 
+          //@ts-ignore
           dispatch(updateUser(data?.editProfile))
         },
         onCompleted: () => {
@@ -107,7 +116,7 @@ export function ProfileContainer() {
         onError: err => console.log(err),
       })
     }
-  }, [editProfile, username, user, dispatch, localUser])
+  }, [editProfile, username, user, dispatch, localUser, date])
 
   return (
     <Page flex>
@@ -116,7 +125,26 @@ export function ProfileContainer() {
           {user.loading ? (
             <SkeletonView circle width={88} height={88} />
           ) : (
-            <Avatar userAvatar={user.data?.getUser?.avatar ?? ''} size={88} />
+            <Avatar
+              userAvatar={user.data?.getUser?.avatar ?? ''}
+              size={88}
+              showBadge={enableEdit}
+              onPress={
+                enableEdit ? () => navigate(Routes.ChangeAvatar, {}) : undefined
+              }
+              badgeProps={
+                enableEdit
+                  ? {
+                      size: 25,
+                      iconName: 'pencil',
+                      iconProps: {
+                        size: 15,
+                        color: '#fff',
+                      },
+                    }
+                  : undefined
+              }
+            />
           )}
           <View marginL-20 marginT-20>
             {user.loading ? (
@@ -138,6 +166,7 @@ export function ProfileContainer() {
                     containerStyle={{ width: 150 }}
                     onChangeText={setUsername}
                     onSubmitEditing={onSubmitEditing}
+                    onBlur={onSubmitEditing}
                   />
                 ) : (
                   <Text textColor header fontGilroy>
@@ -150,6 +179,31 @@ export function ProfileContainer() {
                     @{user.data?.getUser.username}
                   </Text>
                 </View>
+
+                {enableEdit ? (
+                  <View marginT-20>
+                    {showDate && (
+                      <DateTimePicker
+                        value={date}
+                        mode="date"
+                        is24Hour={true}
+                        maximumDate={maximumDate}
+                        onChange={_date => {
+                          if (_date) {
+                            setDate(_date)
+                            onSubmitEditing()
+
+                            if (Platform.OS === 'android') {
+                              setShowDate(false)
+                            }
+                          } else {
+                            setShowDate(false)
+                          }
+                        }}
+                      />
+                    )}
+                  </View>
+                ) : null}
               </>
             )}
           </View>

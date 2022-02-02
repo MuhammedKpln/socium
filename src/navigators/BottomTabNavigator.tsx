@@ -153,6 +153,11 @@ const MainNavigator = () => {
           options={{ ...applyRouteTitle(RouteTitles.NewPost) }}
           getComponent={RouteComponents.NewPost}
         />
+        <Stack.Screen
+          name={Routes.ChangeAvatar}
+          options={{ ...applyRouteTitle(RouteTitles.ChangeAvatar) }}
+          getComponent={RouteComponents.ChangeAvatar}
+        />
       </Stack.Group>
       <Stack.Group
         screenOptions={{

@@ -5,7 +5,7 @@ import TextInputStyle from './TextInput.style'
 const { TextField } = Incubator
 
 interface IProps {
-  backgroundColor: string
+  backgroundColor?: string
 }
 
 export const TextInput = (

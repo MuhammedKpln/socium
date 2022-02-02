@@ -6,19 +6,21 @@ import {
   fromPromise,
   split,
 } from '@apollo/client'
+import { setContext } from '@apollo/client/link/context'
+import { onError } from '@apollo/client/link/error'
+import { getMainDefinition } from '@apollo/client/utilities'
 import React from 'react'
 import { ActivityIndicator } from 'react-native'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { Config } from './config'
 import ApplicationNavigator from './navigators/ApplicationNavigator'
-import { persistedStore, store } from './store'
-import { onError } from '@apollo/client/link/error'
-import { setContext } from '@apollo/client/link/context'
-import { EncryptedStorageKeys, storage } from './storage'
-import { getMainDefinition } from '@apollo/client/utilities'
-import { apolloCache, WebSocketLink } from './utils/apollo'
 import { getNewToken } from './services/token.service'
+import { EncryptedStorageKeys, storage } from './storage'
+import { persistedStore, store } from './store'
+import { logout } from './store/reducers/user.reducer'
+import { apolloCache, WebSocketLink } from './utils/apollo'
+import { showToast, ToastStatus } from './utils/toast'
 
 const httpLink = createHttpLink({
   uri: Config.API_URL + '/graphql',
@@ -36,14 +38,21 @@ const errorLink = onError(
   ({ graphQLErrors, networkError, forward, operation }) => {
     if (graphQLErrors) {
       for (let err of graphQLErrors) {
-        console.error(err)
-        //@ts-ignore
-        console.warn('calisiyrum')
+        console.error(err.message)
         // error code is set to UNAUTHENTICATED
         // when AuthenticationError thrown in resolver
         let forward$
 
+        if (err.message == 'Refresh token mismatch') {
+          store.dispatch(logout())
+          showToast(
+            ToastStatus.Error,
+            'Oturumunuz sona erdi. Lütfen tekrar giriş yapınız.',
+          )
+        }
+
         if (
+          //@ts-ignore
           err.extensions?.exception?.name === 'TokenExpiredError' ||
           err.message === 'JWT_EXPIRED'
         ) {

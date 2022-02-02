@@ -2,6 +2,12 @@ import { Avatar } from '@/components/Avatar/Avatar.component'
 import { Icon } from '@/components/Icon/Icon.component'
 import { Page } from '@/components/Page/Page.component'
 import { SkeletonView } from '@/components/SkeletonView/SkeletonView.component'
+import { TextInput } from '@/components/TextInput/TextInput.component'
+import {
+  EDIT_PROFILE,
+  IEditProfileResponse,
+  IEditProfileVariables,
+} from '@/graphql/mutations/EditProfile.mutations'
 import {
   FETCH_USER_PRFOFILE,
   IFetchUserProfileResponse,
@@ -9,18 +15,28 @@ import {
 } from '@/graphql/queries/User.query'
 import { INavigatorParamsList, Routes } from '@/navigators/navigator.props'
 import { navigate } from '@/navigators/utils/navigation'
-import { useQuery } from '@apollo/client'
+import { useAppSelector } from '@/store'
+import { updateUser } from '@/store/reducers/user.reducer'
+import { showToast, ToastStatus } from '@/utils/toast'
+import { useMutation, useQuery } from '@apollo/client'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useLayoutEffect, useMemo } from 'react'
-import { Colors } from 'react-native-ui-lib'
+import { useCallback } from 'react'
+import { useState } from 'react'
+import { Colors, TouchableOpacity } from 'react-native-ui-lib'
 import TabController from 'react-native-ui-lib/tabController'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
+import { useDispatch } from 'react-redux'
 import { CommentsTab } from './components/CommentsTab.component'
 import { PostsTab } from './components/PostsTab.component'
 
 export function ProfileContainer() {
+  const localUser = useAppSelector(state => state.userReducer.user)
+  const [enableEdit, setEnableEdit] = useState<boolean>(false)
+  const [username, setUsername] = useState<string>('')
   const navigation = useNavigation()
+  const dispatch = useDispatch()
   const route = useRoute<RouteProp<INavigatorParamsList, Routes.MyProfile>>()
   const tabItems = useMemo(
     () => [
@@ -42,6 +58,10 @@ export function ProfileContainer() {
       },
     },
   )
+  const [editProfile] = useMutation<
+    IEditProfileResponse,
+    IEditProfileVariables
+  >(EDIT_PROFILE)
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -54,6 +74,40 @@ export function ProfileContainer() {
       ),
     })
   }, [navigation])
+
+  const onClickEditProfile = useCallback(() => {
+    setUsername(localUser?.username ?? '')
+    setEnableEdit(prev => !prev)
+  }, [localUser])
+
+  const onSubmitEditing = useCallback(async () => {
+    if (username.length > 3) {
+      await editProfile({
+        variables: {
+          username,
+        },
+        update: (cache, { data }) => {
+          cache.writeQuery({
+            query: FETCH_USER_PRFOFILE,
+            variables: {
+              username: localUser?.username,
+            },
+            data: {
+              getUser: { ...data?.editProfile, ...user.data?.getUser },
+              userPosts: user.data?.userPosts,
+            },
+          })
+
+          dispatch(updateUser(data?.editProfile))
+        },
+        onCompleted: () => {
+          showToast(ToastStatus.Success, 'Profiliniz başarıyla güncellendi')
+          setEnableEdit(false)
+        },
+        onError: err => console.log(err),
+      })
+    }
+  }, [editProfile, username, user, dispatch, localUser])
 
   return (
     <Page flex>
@@ -75,9 +129,22 @@ export function ProfileContainer() {
               </>
             ) : (
               <>
-                <Text textColor header fontGilroy>
-                  {user.data?.getUser.username}
-                </Text>
+                {enableEdit ? (
+                  <TextInput
+                    value={username}
+                    autoCapitalize="none"
+                    autoComplete="off"
+                    autoCorrect={false}
+                    containerStyle={{ width: 150 }}
+                    onChangeText={setUsername}
+                    onSubmitEditing={onSubmitEditing}
+                  />
+                ) : (
+                  <Text textColor header fontGilroy>
+                    {user.data?.getUser.username}
+                  </Text>
+                )}
+
                 <View marginT-10>
                   <Text document greyText>
                     @{user.data?.getUser.username}
@@ -87,9 +154,13 @@ export function ProfileContainer() {
             )}
           </View>
         </View>
-        <View marginT-35>
-          <Icon name="pencil" size={25} color="#C5C5C5" />
-        </View>
+        {user.data?.getUser.id === localUser?.id ? (
+          <TouchableOpacity onPress={onClickEditProfile}>
+            <View marginT-35>
+              <Icon name="pencil" size={25} color="#C5C5C5" />
+            </View>
+          </TouchableOpacity>
+        ) : null}
       </View>
 
       <View row margin-15 marginT-50 spread>

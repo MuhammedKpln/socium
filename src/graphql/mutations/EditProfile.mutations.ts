@@ -1,5 +1,17 @@
 import { UserFragment } from '@/graphql/fragments/User.fragment'
+import { IUser } from '@/types/login.types'
 import { gql } from '@apollo/client'
+
+export interface IEditProfileVariables {
+  username?: string
+  biography?: string
+  blockIncomingCalls?: boolean
+  birthday?: Date
+}
+
+export interface IEditProfileResponse {
+  editProfile: IUser
+}
 
 export const EDIT_PROFILE = gql`
   ${UserFragment}
@@ -7,7 +19,7 @@ export const EDIT_PROFILE = gql`
     $biography: String
     $username: String
     $blockIncomingCalls: Boolean
-    $birthday: DateTime!
+    $birthday: DateTime
   ) {
     editProfile(
       profile: {

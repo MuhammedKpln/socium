@@ -12,6 +12,10 @@ interface IUpdateLoginStatusPayload {
   payload: IState
 }
 
+interface IUpdateUserPayload {
+  payload: IUser
+}
+
 const initalState: IState = {
   user: null,
   isLoggedIn: false,
@@ -28,6 +32,9 @@ const userSlice = createSlice({
       state.isLoggedIn = isLoggedIn
       state.user = user
     },
+    updateUser: (state, { payload }: IUpdateUserPayload) => {
+      state.user = { ...state.user, ...payload }
+    },
     logout(state) {
       state.isLoggedIn = false
       state.user = null
@@ -41,5 +48,5 @@ const userSlice = createSlice({
   },
 })
 
-export const { logout, updateLoginStatus } = userSlice.actions
+export const { logout, updateLoginStatus, updateUser } = userSlice.actions
 export default userSlice.reducer

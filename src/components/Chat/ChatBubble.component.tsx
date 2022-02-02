@@ -1,23 +1,23 @@
-import React, { useState } from 'react'
-import { useMemo } from 'react'
-import {
-  Colors,
-  Text,
-  View,
-  ActionSheet,
-  TouchableOpacity,
-} from 'react-native-ui-lib'
+import Clipboard from '@react-native-community/clipboard'
+import React, { useCallback, useMemo, useState } from 'react'
+import { Colors } from 'react-native-ui-lib'
+import ActionSheet from 'react-native-ui-lib/actionSheet'
+import Text from 'react-native-ui-lib/text'
+import TouchableOpacity from 'react-native-ui-lib/touchableOpacity'
+import View from 'react-native-ui-lib/view'
 
 interface IProps {
+  id?: number
   message?: string
   isSelf?: boolean
   createdAt?: Date
   customElement?: React.ReactElement
+  onPressRemove?: (messageId: number) => void
 }
 
 function _ChatBubble(props: IProps) {
-  const [showActionSheet, setShowActionSheet] = useState(false)
   const { message, isSelf, createdAt, customElement } = props
+  const [showActionSheet, setShowActionSheet] = useState(false)
 
   const bgColor = useMemo(
     () => (isSelf ? Colors.primary : Colors.white),
@@ -37,13 +37,13 @@ function _ChatBubble(props: IProps) {
     return `${_date.getHours()}:${_date.getMinutes()}`
   }, [createdAt])
 
+  const copyMessage = useCallback(_message => {
+    Clipboard.setString(_message as string)
+  }, [])
+
   return (
     <View right={isSelf ? true : false} left={isSelf ? false : true} margin-10>
-      <TouchableOpacity
-        onLongPress={
-          !customElement ? () => setShowActionSheet(prev => !prev) : undefined
-        }
-      >
+      <TouchableOpacity onLongPress={() => setShowActionSheet(prev => !prev)}>
         <View
           backgroundColor={bgColor}
           padding-20
@@ -65,12 +65,21 @@ function _ChatBubble(props: IProps) {
 
       {!customElement ? (
         <ActionSheet
-          title={'Title'}
-          message={'Message of action sheet'}
-          cancelButtonIndex={3}
-          destructiveButtonIndex={0}
+          title={'Mesaj ayarları'}
+          message={message}
+          cancelButtonIndex={2}
           useNativeIOS={true}
-          options={[{ label: 'option 1' }]}
+          options={[
+            {
+              label: 'Mesajı geri çek',
+              onPress: () =>
+                props.onPressRemove && props.id
+                  ? props.onPressRemove(props?.id)
+                  : null,
+            },
+            { label: 'Kopyala', onPress: () => copyMessage(message) },
+            { label: 'Kapat' },
+          ]}
           visible={showActionSheet}
           onDismiss={() => setShowActionSheet(false)}
         />

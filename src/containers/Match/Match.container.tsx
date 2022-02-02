@@ -1,11 +1,19 @@
+import Button from '@/components/Button/Button.component'
 import { Page } from '@/components/Page/Page.component'
+import { useSocket } from '@/hooks/useSocket'
+import { Routes } from '@/navigators/navigator.props'
+import { useAppSelector } from '@/store'
+import { IUser } from '@/types/login.types'
 import { wait } from '@/utils/utils'
-import React, { useCallback, useEffect, useState } from 'react'
+import { useNavigation } from '@react-navigation/native'
+import AnimatedLottieView from 'lottie-react-native'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
+import { Assets } from 'react-native-ui-lib'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
 import { MatchComponent } from './components/Match.component'
@@ -14,8 +22,25 @@ import { MatchingFoundComponent } from './components/MatchingFound.component'
 export function MatchContainer() {
   const [matching, setMatching] = useState<boolean>(false)
   const [matched, setMatched] = useState<boolean>(false)
+  const [connectedUser, setConnectedUser] = useState<IUser>()
+  const [room, setRoom] = useState<string>('')
+  const navigation = useNavigation()
   const marginBottom = useSharedValue(0)
   const opacity = useSharedValue(1)
+  const localUser = useAppSelector(state => state.userReducer.user)
+  const socketService = useSocket()
+  const animationRef = useRef<AnimatedLottieView>(null)
+
+  useEffect(() => {
+    socketService.clientPairedEvent(data => {
+      setRoom(data.room)
+      setConnectedUser(data.user)
+      setMatched(true)
+      marginBottom.value = 0
+
+      opacity.value = 1
+    })
+  }, [marginBottom, opacity, socketService])
 
   const containerAnimatedStyle = useAnimatedStyle(() => {
     return {
@@ -33,24 +58,34 @@ export function MatchContainer() {
   })
 
   const onPressMatch = useCallback(() => {
-    marginBottom.value = 300
+    marginBottom.value = 0
     opacity.value = 0
 
-    wait(700).then(() => {
-      setMatching(true)
+    wait(700).then(async () => {
+      if (localUser) {
+        socketService.joinQueue({
+          user: localUser,
+        })
+        setMatching(true)
+      }
     })
+  }, [marginBottom, opacity, localUser, socketService])
+
+  const onPressSendMessage = useCallback(() => {
+    navigation.navigate(Routes.MatchChat, {
+      room,
+      //@ts-ignore
+      user: connectedUser,
+    })
+    setMatched(false)
+    setMatching(false)
+  }, [connectedUser, navigation, room])
+
+  const leaveQueue = useCallback(() => {
+    setMatching(false)
+    marginBottom.value = 0
+    opacity.value = 1
   }, [marginBottom, opacity])
-
-  useEffect(() => {
-    if (matching) {
-      wait(2000).then(() => {
-        setMatched(true)
-        marginBottom.value = 0
-
-        opacity.value = 1
-      })
-    }
-  }, [matching, marginBottom, opacity])
 
   return (
     <Page animated center>
@@ -60,12 +95,23 @@ export function MatchContainer() {
             <MatchComponent onPressMatch={() => onPressMatch()} />
           </Animated.View>
         ) : (
-          <View>
-            <Text fontGilroy marginT-250 style={{ fontSize: 22 }}>
+          <View flex spread>
+            <Text fontGilroy style={{ fontSize: 22 }}>
               Eşleşme bekleniyor...
             </Text>
-            {matched ? (
+
+            <AnimatedLottieView
+              source={Assets.animations.paperPlane}
+              ref={animationRef}
+              autoPlay
+              loop
+            />
+
+            <Button label="Eşleşmeden ayrıl" onPress={leaveQueue} />
+            {matched && connectedUser ? (
               <MatchingFoundComponent
+                onPressSendMessage={onPressSendMessage}
+                user={connectedUser}
                 onPressClose={() => {
                   setMatching(false)
                   setMatched(false)

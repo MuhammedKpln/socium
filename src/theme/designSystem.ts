@@ -45,6 +45,9 @@ export const configureDesignSystem = (): void => {
     get typing() {
       return require('@/assets/animations/typing.json')
     },
+    get paperPlane() {
+      return require('@/assets/animations/paper-plane.json')
+    },
   })
 
   Typography.loadTypographies({

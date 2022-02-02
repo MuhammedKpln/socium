@@ -18,6 +18,7 @@ export enum Routes {
   NewPost = 'new-post',
   ImageGallery = 'image-gallery',
   Chat = 'chat',
+  MatchChat = 'match-chat',
 }
 export enum RouteTitles {
   Login = 'Giriş yap',
@@ -52,6 +53,8 @@ export const RouteComponents = {
     require('@/containers/ImageGallery/ImageGallery.container')
       .ImageGalleryContainer,
   Chat: () => require('@/containers/Chat/Chat.container').ChatContainer,
+  MatchChat: () =>
+    require('@/containers/Match/MatchChat.container').MatchChatContainer,
 }
 
 export interface INavigatorParamsList extends ParamListBase {
@@ -68,4 +71,5 @@ export interface INavigatorParamsList extends ParamListBase {
   [Routes.NewPost]: undefined
   [Routes.ImageGallery]: { imageSet: string[] }
   [Routes.Chat]: { room: IRoom; user: IUser }
+  [Routes.MatchChat]: { room: string; user: IUser }
 }

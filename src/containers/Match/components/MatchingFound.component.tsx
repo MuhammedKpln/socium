@@ -1,6 +1,7 @@
+import { Avatar } from '@/components/Avatar/Avatar.component'
 import Button from '@/components/Button/Button.component'
 import { Icon } from '@/components/Icon/Icon.component'
-import { NoAvatar } from '@/components/NoAvatar/NoAvatar.component'
+import { IUser } from '@/types/login.types'
 import AnimatedLottieView from 'lottie-react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -10,11 +11,13 @@ import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
 
 interface IProps {
+  user: IUser
   onPressClose: () => void
+  onPressSendMessage: () => void
 }
 
 export function MatchingFoundComponent(props: IProps) {
-  const { onPressClose } = props
+  const { onPressClose, user, onPressSendMessage } = props
   return (
     <View>
       <Modal
@@ -43,7 +46,7 @@ export function MatchingFoundComponent(props: IProps) {
                 style={{ width: 300, height: 300 }}
               />
               <View style={{ marginTop: -190 }}>
-                <NoAvatar username="muhammed" size={155} />
+                <Avatar userAvatar={user.avatar} size={155} />
               </View>
               <Text
                 fontGilroy
@@ -52,12 +55,13 @@ export function MatchingFoundComponent(props: IProps) {
                 marginT-30
                 marginL-20
               >
-                Selin Yıldız
+                {user.username}
               </Text>
             </View>
 
             <View marginT-200 center>
               <Button
+                onPress={onPressSendMessage}
                 iconSource={() => <Icon name="send" color="white" size={20} />}
                 label="Mesaj Gönder"
                 labelStyle={{

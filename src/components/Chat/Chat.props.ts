@@ -21,8 +21,10 @@ export interface IChatProps {
   onPressHangup?: () => void
   onPressCancelCall?: () => void
   onPressBack: () => void
+  onPressRemove: (messageId: number) => void
   onPressSend: () => void
   onChangeInputText: (value: string) => void
+  onBlurInput: () => void
   onTopReached?: () =>
     | Promise<ApolloQueryResult<IFetchRoomMessagesResponse>>
     | undefined

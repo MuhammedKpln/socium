@@ -9,7 +9,7 @@ export interface IRoom {
 }
 
 export interface IMessage {
-  id?: number
+  id: number
   created_at: Date
   updated_at: Date
   message: string
@@ -17,6 +17,7 @@ export interface IMessage {
   room: IRoom
   sender: IUser
   receiver: IUser
+  senderId?: number
 }
 
 export interface IMessagesRoom {

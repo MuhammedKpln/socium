@@ -1,235 +1,108 @@
 import { Config } from '@/config'
-import { EncryptedStorageKeys, storage } from '@/storage'
-import { IUser } from '@/Types/login.types'
-import { RTCSessionDescriptionType } from 'react-native-webrtc'
-import S, { Socket } from 'socket.io-client'
 import {
-  IAnswerMadeResponse,
-  ICallMadeResponse,
   IClientPairedData,
-  IHangUpResponse,
+  IJoinQueueArgs,
   IJoinRoomArg,
-  IRemoveMessageRequested,
-  ISeenStatusUpdated,
-  ISendMessageResponse,
-  ITypingResponse,
-  IUpdateSeenStatus,
-  JoinRole,
+  IMessageReceivedData,
+  IMessageRemoved,
+  ISendMessageArg,
+  IUserIsTyping,
   SocketFireEvents,
   SocketListenerEvents,
 } from './socket.types'
 
 export class SocketConnection {
-  io: Socket
-  clientId: string = ''
+  io: WebSocket
   roomName: string = ''
+  isTyping: boolean = false
+  eventListener: any
 
   constructor() {
-    const token = storage.getString(EncryptedStorageKeys.AccessToken)
+    // const token = storage.getString(EncryptedStorageKeys.AccessToken)
+    this.io = new WebSocket(Config.SOCKET_URL)
+  }
 
-    this.io = S(Config.SOCKET_URL, {
-      secure: true,
-      autoConnect: true,
-      transports: ['websocket', 'polling'],
-      rememberUpgrade: true,
-      extraHeaders: {
-        Authorization: 'Bearer ' + token,
-      },
+  async connect() {
+    return new Promise((resolve, reject) => {
+      try {
+        this.io = new WebSocket(Config.SOCKET_URL)
+        resolve(true)
+      } catch (error) {
+        reject(error)
+      }
     })
   }
 
-  connect() {
-    if (this.io.connected) return
-
-    this.io.connect()
+  private emit(event: string, data?: any) {
+    const eventPacket = {
+      event,
+      data: { ...data },
+    }
+    this.io.send(JSON.stringify(eventPacket))
   }
 
-  disconnect() {
-    this.io.disconnect()
-    this.roomName = ''
-    this.clientId = ''
-  }
+  private on(event: string, callback: (data?: any) => void) {
+    this.eventListener = this.io.addEventListener('message', message => {
+      {
+        try {
+          console.log(message)
+          const parsedMessage = JSON.parse(message.data)
 
-  userConnectedEvent(callback: () => void) {
-    this.io.on('connect', callback)
-  }
-
-  userConnected(user: IUser) {
-    this.io.emit('user connected', {
-      user: user,
+          if (parsedMessage.event === event) {
+            callback(parsedMessage?.data)
+          }
+        } catch (err) {
+          console.error(err)
+        }
+      }
     })
   }
 
-  checkIfUserIsConnected(userId: number) {
-    this.io.emit(SocketFireEvents.CheckIfUserIsConnected, { userId })
+  joinQueue({ user }: IJoinQueueArgs) {
+    this.emit(SocketFireEvents.JoinQueue, { user })
   }
 
-  listenUserIsOnline(callback: (status: boolean) => void) {
-    this.io.once(SocketListenerEvents.UserIsOnline, data => {
-      callback(data.status)
-    })
+  joinRoom({ room }: IJoinRoomArg) {
+    this.emit(SocketFireEvents.JoinRoom, { room })
   }
 
-  listenAbuseDetected(callback: () => void) {
-    this.io.on(SocketListenerEvents.AbuseDetected, () => {
-      callback()
-    })
+  sendMessage(message: ISendMessageArg) {
+    this.emit(SocketFireEvents.SendMessage, message)
+  }
+
+  typing(typing: boolean, room: string) {
+    this.emit(SocketFireEvents.Typing, { typing, room })
+  }
+
+  removeMessage(messageId: number, room: string) {
+    this.emit(SocketFireEvents.RemoveMessageRequest, { messageId, room })
   }
 
   clientPairedEvent(callback: (data: IClientPairedData) => void) {
-    this.io.on(SocketListenerEvents.ClientPaired, (data: IClientPairedData) => {
-      this.clientId = data.clientId
-      this.roomName = data.roomName
-
-      callback(data)
-    })
+    this.on(SocketListenerEvents.ClientPaired, callback)
   }
 
-  listenMessages(callback: (message: ISendMessageResponse) => void) {
-    this.io.on(SocketListenerEvents.Messages, (data: ISendMessageResponse) => {
-      callback(data)
-    })
+  messageReceivedEvent(callback: (data: IMessageReceivedData) => void) {
+    this.on(SocketListenerEvents.MessageReceived, callback)
   }
 
-  listenClientDisconnected(callback: () => void) {
-    this.io.on(SocketListenerEvents.ClientDisconnected, () => {
-      callback()
-    })
+  userIsTypingEvent(callback: (data: IUserIsTyping) => void) {
+    this.on(SocketListenerEvents.Typing, callback)
   }
 
-  listenCallIsCloseRequest(callback: () => void) {
-    this.io.once(SocketListenerEvents.CallIsRetrieved, callback)
+  userIsDoneTypingEvent(callback: (data: IUserIsTyping) => void) {
+    this.on(SocketListenerEvents.DoneTyping, callback)
   }
 
-  listenSeenStatusUptades(callback: (data: ISeenStatusUpdated) => void) {
-    this.io.on(SocketListenerEvents.SeenStatusUpdated, callback)
-  }
-
-  listenAnswerMade(callback: (data: IAnswerMadeResponse) => void) {
-    this.io.on(SocketListenerEvents.AnswerMade, (data: IAnswerMadeResponse) => {
-      callback(data)
-    })
-  }
-
-  listenOnlineUsersCount(callback: () => void) {
-    this.io.on('online users', callback)
-  }
-
-  getOnlineUsersCount() {
-    this.io.emit('get online users count')
-  }
-
-  listenRemoveMessageRequested(
-    callback: (data: IRemoveMessageRequested) => void,
-  ) {
-    this.io.on(
-      SocketListenerEvents.RemoveMessageRequested,
-      (data: IRemoveMessageRequested) => {
-        callback(data)
-      },
-    )
-  }
-
-  listenCallMade(callback: (data: ICallMadeResponse) => void) {
-    this.io.on(SocketListenerEvents.CallMade, (data: ICallMadeResponse) => {
-      callback(data)
-    })
-  }
-
-  listenHangupCall(callback: (data: IHangUpResponse) => void) {
-    this.io.once(SocketListenerEvents.HangedUpCall, data => {
-      callback(data)
-    })
-  }
-
-  retrieveCall(clientId: string) {
-    this.io.emit(SocketFireEvents.CallCloseRequest, {
-      to: clientId,
-    })
-  }
-
-  makeAnswer(answer: RTCSessionDescriptionType, clientId: string) {
-    this.io.emit(SocketFireEvents.MakeAnswer, {
-      answer,
-      to: clientId,
-    })
-  }
-
-  joinQueue(data: { role: JoinRole }) {
-    this.io.emit(SocketFireEvents.JoinQueue, data)
-  }
-
-  joinRoom(data: IJoinRoomArg) {
-    this.io.emit(SocketFireEvents.JoinRoom, data)
-  }
-
-  callUser(offer: RTCSessionDescriptionType, clientId: string) {
-    this.io.emit(SocketFireEvents.CallUser, {
-      offer,
-      to: clientId,
-    })
-  }
-
-  closeCall() {
-    this.io.emit(SocketFireEvents.HangUpCall, { to: this.clientId })
-  }
-
-  leaveRoom() {
-    this.io.emit(SocketFireEvents.LeaveRoom, {
-      roomName: this.roomName,
-    })
-  }
-
-  leaveQueue() {
-    this.io.emit(SocketFireEvents.LeaveQueue)
-  }
-
-  typing(typing: boolean, roomAdress: string) {
-    this.io.emit(SocketFireEvents.Typing, { typing, roomAdress })
-  }
-
-  sendMessage(message: string, user: IUser, receiver: IUser) {
-    this.io.emit(SocketFireEvents.SendMessage, {
-      roomName: this.roomName,
-      firstJoined: false,
-      message,
-      user,
-      receiver,
-    })
-  }
-
-  listenActorIsTyping(callback: (typing: ITypingResponse) => void) {
-    this.io.on(SocketListenerEvents.ActorIsTyping, callback)
-  }
-
-  removeMessage(messageId: number) {
-    this.io.emit(SocketFireEvents.RemoveMessageRequest, {
-      messageId,
-    })
-  }
-
-  updateSeenStatus(data: IUpdateSeenStatus) {
-    this.io.emit(SocketFireEvents.UpdateSeenStatus, data)
+  messageRemovedEvent(callback: (data: IMessageRemoved) => void) {
+    this.on(SocketListenerEvents.RemoveMessageRequested, callback)
   }
 
   close() {
-    return this.io.disconnect()
+    return this.io.close()
   }
 
-  removeAllListeners(listeners?: string[]) {
-    if (listeners) {
-      listeners.forEach(listener => {
-        this.io.off(listener)
-      })
-
-      return
-    }
-
-    this.io.off()
-
-    //@ts-ignore
-    // return this.io.removeAllListeners(listeners || undefined)
+  removeListeners() {
+    this.io.removeEventListener('message', this.eventListener)
   }
 }
-
-export default new SocketConnection()

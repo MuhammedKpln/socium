@@ -132,6 +132,10 @@ const MainNavigator = () => {
           options={applyRouteTitle(RouteTitles.MyProfile)}
         />
         <Stack.Screen name={Routes.Chat} getComponent={RouteComponents.Chat} />
+        <Stack.Screen
+          name={Routes.MatchChat}
+          getComponent={RouteComponents.MatchChat}
+        />
       </Stack.Group>
 
       <Stack.Group

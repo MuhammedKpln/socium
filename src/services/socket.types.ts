@@ -1,4 +1,5 @@
-import { IUser } from '@/Types/login.types'
+import { IUser } from '@/types/login.types'
+import { IMessage } from '@/types/messages.types'
 import { RTCSessionDescriptionType } from 'react-native-webrtc'
 
 export enum JoinRole {
@@ -7,22 +8,23 @@ export enum JoinRole {
 }
 
 export enum SocketListenerEvents {
-  ClientPaired = 'clientPaired',
+  ClientPaired = 'CLIENT_PAIRED',
   AnswerMade = 'answer-made',
   CallMade = 'call-made',
   HangedUpCall = 'user hanged up call',
   ClientDisconnected = 'client disconnected',
   CallIsRetrieved = 'call is retrieved',
   AbuseDetected = 'abuse is detected',
-  ActorIsTyping = 'user is done with typing',
-  Messages = 'message',
+  Typing = 'USER_IS_TYPING',
+  DoneTyping = 'USER_IS_DONE_TYPING',
+  MessageReceived = 'MESSAGE_RECEIVED',
   UserIsOnline = 'user is online',
-  RemoveMessageRequested = 'remove message requested',
+  RemoveMessageRequested = 'MESSAGE_REMOVED',
   SeenStatusUpdated = 'seen status updated',
 }
 
 export enum SocketFireEvents {
-  JoinQueue = 'joinQueue',
+  JoinQueue = 'join queue',
   JoinRoom = 'join room',
   CallUser = 'call-user',
   MakeAnswer = 'make-answer',
@@ -31,22 +33,41 @@ export enum SocketFireEvents {
   SendMessage = 'send message',
   LeaveRoom = 'leave room',
   LeaveQueue = 'leave queue',
-  Typing = 'user is typing',
+  Typing = 'typing',
   CheckIfUserIsConnected = 'user is already connected',
   RemoveMessageRequest = 'remove single message request',
   UpdateSeenStatus = 'seen status',
 }
 
 export interface IClientPairedData {
-  clientId: string
-  roomName: string
-  pairedUser: string
+  room: string
+  user: IUser
+}
+
+export interface IMessageReceivedData {
+  message: IMessage
+}
+
+export interface IUserIsTyping {
+  typing: boolean
+}
+
+export interface IMessageRemoved {
+  messageId: number
+}
+
+export interface IJoinQueueArgs {
+  user: IUser
 }
 
 export interface IJoinRoomArg {
-  roomName: string
-  pairedClientId?: string
-  user?: IUser
+  room: string
+}
+export interface ISendMessageArg {
+  room: string
+  message?: string
+  user: IUser
+  receiver: IUser
 }
 
 export interface ISendMessageResponse {

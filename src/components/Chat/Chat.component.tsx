@@ -5,20 +5,20 @@ import { wait } from '@/utils/utils'
 import AnimatedLottieView from 'lottie-react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Dimensions, Keyboard } from 'react-native'
-import { Assets, Colors, Incubator, View } from 'react-native-ui-lib'
+import Animated, { FadeInDown } from 'react-native-reanimated'
+import { Assets, Colors } from 'react-native-ui-lib'
+import View from 'react-native-ui-lib/view'
 import {
   DataProvider,
   LayoutProvider,
   RecyclerListView,
 } from 'recyclerlistview'
 import { ScrollEvent } from 'recyclerlistview/dist/reactnative/core/scrollcomponent/BaseScrollView'
-import { Icon } from '../Icon/Icon.component'
 import { KeyboardAvoidingView } from '../KeyboardAvoidingView/KeyboardAvoidingView.component'
 import { IChatProps } from './Chat.props'
 import { ChatBubble } from './ChatBubble.component'
+import { ChatFooter } from './ChatFooter.component'
 import { ChatHeader } from './ChatHeader.component'
-
-const { TextField } = Incubator
 
 const ViewTypes = {
   FULL: 0,
@@ -44,6 +44,12 @@ function _ChatComponent(props: IChatProps, ref: any) {
       keyboardListener.remove()
     }
   }, [ref])
+
+  useEffect(() => {
+    ref.current.scrollToEnd({
+      animated: true,
+    })
+  }, [ref, props.messages])
 
   useEffect(() => {
     if (loading) {
@@ -88,53 +94,28 @@ function _ChatComponent(props: IChatProps, ref: any) {
   }, [])
   const rowRenderer = useCallback(
     (type, data: IMessage) => {
-      const isSelf = data?.sender?.id === localUser?.id
+      const isSelf =
+        data?.sender?.id === localUser?.id || data?.senderId === localUser?.id
       switch (type) {
         case ViewTypes.FULL:
           return (
-            <ChatBubble
-              message={data.message}
-              isSelf={isSelf}
-              createdAt={data.created_at}
-            />
+            <Animated.View entering={FadeInDown}>
+              <ChatBubble
+                id={data.id}
+                message={data.message}
+                isSelf={isSelf}
+                createdAt={data.created_at}
+                onPressRemove={messageId => props.onPressRemove(messageId)}
+              />
+            </Animated.View>
           )
 
         default:
           return null
       }
     },
-    [localUser],
+    [localUser, props],
   )
-
-  const Footer = React.memo(() => {
-    return (
-      <TextField
-        placeholder="Mesaj gönderin"
-        padding-10
-        containerStyle={{
-          padding: 10,
-        }}
-        fieldStyle={{
-          backgroundColor: Colors.surfaceBG,
-          borderRadius: 100,
-          borderColor: Colors.getScheme() === 'dark' ? '#ADADAD' : '#FAFAFC',
-          borderWidth: 1,
-        }}
-        onChangeText={props.onChangeInputText}
-        placeholderTextColor="#ADADAD"
-        trailingAccessory={
-          <View bg-primary padding-10 br100>
-            <Icon
-              name="PaperPlane"
-              size={25}
-              color={Colors.white}
-              onPress={props.onPressSend}
-            />
-          </View>
-        }
-      />
-    )
-  })
 
   const onTopReached = useCallback(
     (e: ScrollEvent) => {
@@ -151,15 +132,17 @@ function _ChatComponent(props: IChatProps, ref: any) {
   const onTyping = useCallback(() => {
     if (props.typing) {
       return (
-        <ChatBubble
-          customElement={
-            <AnimatedLottieView
-              source={Assets.animations.typing}
-              loop
-              autoPlay
-            />
-          }
-        />
+        <Animated.View entering={FadeInDown} exiting={FadeInDown}>
+          <ChatBubble
+            customElement={
+              <AnimatedLottieView
+                source={Assets.animations.typing}
+                loop
+                autoPlay
+              />
+            }
+          />
+        </Animated.View>
       )
     }
 
@@ -186,7 +169,7 @@ function _ChatComponent(props: IChatProps, ref: any) {
           renderFooter={onTyping}
           ref={ref}
         />
-        <Footer />
+        <ChatFooter {...props} />
       </KeyboardAvoidingView>
     </View>
   )

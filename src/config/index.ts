@@ -6,9 +6,7 @@ export const Config = {
     ? 'ws://LOCALHOST:3000/graphql'
     : 'wss://derdevam.com/graphql',
   API_URL: __DEV__ ? 'http://localhost:3000' : 'https://derdevam.com',
-  SOCKET_URL: __DEV__
-    ? 'http://LOCALHOST:3001/PairingScreen'
-    : 'https://cio.derdevam.com/PairingScreen',
+  SOCKET_URL: __DEV__ ? 'ws://LOCALHOST:3001' : 'wss://cio.derdevam.com',
   APP_TITLE: 'Derdevam',
   APP_SLOGAN: 'Derdevam ile içinizi dökmeye hazır mısınız?',
   APP_PLAYSTORE_LINK: 'https://derdevam.com',

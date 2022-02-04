@@ -1,23 +1,13 @@
 import Youtube from '@/assets/icons/Youtube'
 import { Icon } from '@/components/Icon/Icon.component'
-import { IPostActionsProps } from '@/components/Post/Post.props'
-import { IUser } from '@/types/login.types'
-import { IPost } from '@/types/post.types'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Image, ImageBackground } from 'react-native'
 import { Text, View } from 'react-native-ui-lib'
 import { getYoutubeMeta, YoutubeMeta } from 'react-native-youtube-iframe'
 import { YoutubePostComponentStyles } from '../styles/YoutubePost.styles'
-import { DiscoverPost } from './DiscoverPost.component'
+import { DiscoverPost, IDiscoverPostProps } from './DiscoverPost.component'
 
-export interface IYoutubePostProps
-  extends Pick<
-    IPostActionsProps,
-    'onPressLike' | ('onPressComment' | 'onPressSave' | 'isLiked')
-  > {
-  post: IPost
-  user: IUser
-}
+export interface IYoutubePostProps extends IDiscoverPostProps {}
 
 export function YoutubePost(props: IYoutubePostProps) {
   const { post } = props

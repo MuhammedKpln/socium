@@ -1,11 +1,12 @@
+import { IFollowers } from '@/Types/followers.types'
 import { gql } from '@apollo/client'
 
-export interface IFollowUserArgs {
+export interface IFollowArgs {
   actorId: number
 }
 
 export interface IFollowUserResponse {
-  followUser: boolean
+  followUser: IFollowers
 }
 export interface IUnFollowUserResponse {
   unfollowUser: boolean
@@ -13,7 +14,10 @@ export interface IUnFollowUserResponse {
 
 export const FOLLOW_USER = gql`
   mutation FOLLOW_USER($actorId: Float!) {
-    followUser(actorId: $actorId)
+    followUser(actorId: $actorId) {
+      userId
+      actorId
+    }
   }
 `
 

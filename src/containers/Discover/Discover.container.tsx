@@ -1,5 +1,12 @@
 import { Page } from '@/components/Page/Page.component'
 import {
+  FOLLOW_USER,
+  IFollowArgs,
+  IFollowUserResponse,
+  IUnFollowUserResponse,
+  UNFOLLOW_USER,
+} from '@/graphql/mutations/Follower.mutation'
+import {
   FETCH_ALL_DISCOVER_POSTS,
   IFetchallDiscoverPostsResponse,
   IFetchallDiscoverPostsVariables,
@@ -9,7 +16,7 @@ import { usePagination } from '@/hooks/usePagination'
 import { Routes } from '@/navigators/navigator.props'
 import { navigate } from '@/navigators/utils/navigation'
 import { IPost, PostType } from '@/types/post.types'
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { useNavigation } from '@react-navigation/native'
 import React, { useCallback, useEffect, useLayoutEffect } from 'react'
 import { FlatList, RefreshControl } from 'react-native'
@@ -31,6 +38,12 @@ export function DiscoverContainer() {
   >({
     fetchMore,
   })
+  const [followUser] = useMutation<IFollowUserResponse, IFollowArgs>(
+    FOLLOW_USER,
+  )
+  const [unfollowUser] = useMutation<IUnFollowUserResponse, IFollowArgs>(
+    UNFOLLOW_USER,
+  )
 
   useEffect(() => {
     console.log('data changed')
@@ -56,7 +69,7 @@ export function DiscoverContainer() {
         })
 
       if (prevResults) {
-        const newPost = [...prevResults.postsWithoutBlog]
+        const newPost = [...prevResults.posts]
         const index = newPost.findIndex(v => v.id === post.id)
 
         const postLike = {
@@ -65,7 +78,7 @@ export function DiscoverContainer() {
         }
 
         newPost[index] = {
-          ...prevResults.postsWithoutBlog[index],
+          ...prevResults.posts[index],
           postLike,
           userLike: result?.userLike ? result.userLike : null,
         }
@@ -83,6 +96,71 @@ export function DiscoverContainer() {
     [toggleLikeButton, client],
   )
 
+  const onPressFollow = useCallback(
+    async (userId: number, postId: number) => {
+      await followUser({
+        variables: {
+          actorId: userId,
+        },
+        update: (cache, _data) => {
+          const prev: IFetchallDiscoverPostsResponse | null = cache.readQuery({
+            query: FETCH_ALL_DISCOVER_POSTS,
+          })
+
+          if (prev) {
+            const newPosts = [...prev.posts]
+            const index = newPosts.findIndex(v => v.id === postId)
+
+            newPosts[index] = {
+              ...newPosts[index],
+              isFollowed: _data.data?.followUser,
+            }
+
+            cache.writeQuery({
+              query: FETCH_ALL_DISCOVER_POSTS,
+              data: {
+                posts: newPosts,
+              },
+            })
+          }
+        },
+      })
+    },
+    [followUser],
+  )
+
+  const onPressUnfollow = useCallback(
+    async (userId: number, postId: number) => {
+      await unfollowUser({
+        variables: {
+          actorId: userId,
+        },
+        update: (cache, _data) => {
+          const prev: IFetchallDiscoverPostsResponse | null = cache.readQuery({
+            query: FETCH_ALL_DISCOVER_POSTS,
+          })
+
+          if (prev) {
+            const newPosts = [...prev.posts]
+            const index = newPosts.findIndex(v => v.id === postId)
+
+            newPosts[index] = {
+              ...newPosts[index],
+              isFollowed: null,
+            }
+
+            cache.writeQuery({
+              query: FETCH_ALL_DISCOVER_POSTS,
+              data: {
+                posts: newPosts,
+              },
+            })
+          }
+        },
+      })
+    },
+    [unfollowUser],
+  )
   const renderItemComponent = useCallback(
     (item: IPost) => {
       switch (item.type) {
@@ -92,6 +170,8 @@ export function DiscoverContainer() {
               post={item}
               user={item.user}
               onPressLike={() => onPressLike(item)}
+              onPressFollow={() => onPressFollow(item.user.id, item.id)}
+              onPressUnfollow={() => onPressUnfollow(item.user.id, item.id)}
               onPressComment={() =>
                 navigate(Routes.PostDetails, {
                   postId: item.id,
@@ -100,6 +180,7 @@ export function DiscoverContainer() {
               onPressSave={() => null}
               key={item.id}
               isLiked={item.userLike?.liked ?? false}
+              isFollowed={item?.isFollowed ? true : false}
             />
           )
 
@@ -109,6 +190,8 @@ export function DiscoverContainer() {
               post={item}
               user={item.user}
               onPressLike={() => onPressLike(item)}
+              onPressFollow={() => onPressFollow(item.user.id, item.id)}
+              onPressUnfollow={() => onPressUnfollow(item.user.id, item.id)}
               onPressComment={() =>
                 navigate(Routes.PostDetails, {
                   postId: item.id,
@@ -117,6 +200,7 @@ export function DiscoverContainer() {
               onPressSave={() => null}
               key={item.id}
               isLiked={item.userLike?.liked ?? false}
+              isFollowed={item?.isFollowed ? true : false}
             />
           )
         case PostType.Twitter:
@@ -125,6 +209,8 @@ export function DiscoverContainer() {
               post={item}
               user={item.user}
               onPressLike={() => onPressLike(item)}
+              onPressFollow={() => onPressFollow(item.user.id, item.id)}
+              onPressUnfollow={() => onPressUnfollow(item.user.id, item.id)}
               onPressComment={() =>
                 navigate(Routes.PostDetails, {
                   postId: item.id,
@@ -133,6 +219,7 @@ export function DiscoverContainer() {
               onPressSave={() => null}
               key={item.id}
               isLiked={item.userLike?.liked ?? false}
+              isFollowed={item?.isFollowed ? true : false}
             />
           )
 
@@ -154,7 +241,7 @@ export function DiscoverContainer() {
           )
       }
     },
-    [onPressLike],
+    [onPressLike, onPressFollow, onPressUnfollow],
   )
 
   const renderItem = useCallback(
@@ -165,9 +252,9 @@ export function DiscoverContainer() {
   )
 
   const fetchMorePosts = useCallback(() => {
-    if (data?.postsWithoutBlog && data.postsWithoutBlog.length > 15) {
+    if (data?.posts && data.posts.length > 15) {
       fetchMoreData({
-        offset: data.postsWithoutBlog.length,
+        offset: data.posts.length,
         additionalVariables: {},
       })
     }
@@ -184,7 +271,7 @@ export function DiscoverContainer() {
       </View>
       <FlatList
         renderItem={renderItem}
-        data={data?.postsWithoutBlog}
+        data={data?.posts}
         contentContainerStyle={{ padding: 10 }}
         onEndReached={fetchMorePosts}
         onEndReachedThreshold={0.5}

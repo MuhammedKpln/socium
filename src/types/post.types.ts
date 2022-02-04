@@ -1,4 +1,5 @@
 import { IComment } from './comment.types'
+import { IFollowers } from './followers.types'
 import { IUser } from './login.types'
 
 export interface IResponseData<T> {
@@ -24,6 +25,7 @@ export interface IPost {
   postFromFollowers?: boolean
   category?: ICategory
   additional?: string
+  isFollowed?: IFollowers | null
 }
 
 export interface ICategory {

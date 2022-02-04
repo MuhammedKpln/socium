@@ -11,10 +11,6 @@ interface IUserCount {
   followings: number
 }
 
-interface IUserAvatarMeta {
-  avatar: string
-}
-
 export interface IUser {
   id: number
   username: string
@@ -28,7 +24,6 @@ export interface IUser {
   blockIncomingCalls: boolean
   birthday: string
   _count: IUserCount
-  userAvatarMeta: IUserAvatarMeta
   userParentComments?: IComment[]
 }
 

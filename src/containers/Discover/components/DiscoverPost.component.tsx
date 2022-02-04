@@ -1,6 +1,7 @@
 import { Avatar } from '@/components/Avatar/Avatar.component'
 import { IPostActionsProps } from '@/components/Post/Post.props'
 import { PostActions } from '@/components/Post/PostActions.component'
+import { useAppSelector } from '@/store'
 import { IUser } from '@/types/login.types'
 import { IPost } from '@/types/post.types'
 import React from 'react'
@@ -18,10 +19,22 @@ export interface IDiscoverPostProps
   post: IPost
   user: IUser
   children?: React.ReactNode
+  onPressFollow?: () => void
+  onPressUnfollow?: () => void
+  isFollowed?: boolean
 }
 
 export function DiscoverPost(props: IDiscoverPostProps) {
-  const { post, user, onPressComment, onPressLike, onPressSave } = props
+  const localUser = useAppSelector(state => state.userReducer.user)
+  const {
+    post,
+    user,
+    onPressComment,
+    onPressLike,
+    onPressSave,
+    onPressFollow,
+    onPressUnfollow,
+  } = props
 
   return (
     <View>
@@ -40,15 +53,18 @@ export function DiscoverPost(props: IDiscoverPostProps) {
           </TouchableOpacity>
         </View>
 
-        <Button
-          primary
-          outline
-          outlineColor={Colors.primary}
-          label="Takip et"
-          style={{ height: 26, width: 120 }}
-          avoidInnerPadding
-          labelStyle={{ ...Typography.font12 }}
-        />
+        {localUser?.id !== user.id && (
+          <Button
+            primary={!props.isFollowed}
+            outline={!props.isFollowed}
+            outlineColor={Colors.primary}
+            label={props.isFollowed ? 'Takipten çık' : 'Takip et'}
+            onPress={!props.isFollowed ? onPressFollow : onPressUnfollow}
+            style={{ height: 26, width: 120 }}
+            avoidInnerPadding
+            labelStyle={{ ...Typography.font12 }}
+          />
+        )}
       </View>
 
       <View marginV-15>
@@ -64,7 +80,7 @@ export function DiscoverPost(props: IDiscoverPostProps) {
         <PostActions
           commentsCount={post._count.comment.toString()}
           likesCount={post.postLike.likeCount.toString()}
-          isLiked={post?.userLike?.liked}
+          isLiked={post?.userLike?.liked ?? false}
           showDate
           date={post.created_at}
           onPressComment={onPressComment}

@@ -1,22 +1,12 @@
 import { Icon } from '@/components/Icon/Icon.component'
-import { IPostActionsProps } from '@/components/Post/Post.props'
-import { IUser } from '@/types/login.types'
-import { IPost } from '@/types/post.types'
 import { IInstagramMeta } from '@/types/socialMedia.types'
 import React, { useCallback, useEffect, useState } from 'react'
 import { ImageBackground } from 'react-native'
 import { Text, View } from 'react-native-ui-lib'
 import { YoutubePostComponentStyles } from '../styles/YoutubePost.styles'
-import { DiscoverPost } from './DiscoverPost.component'
+import { DiscoverPost, IDiscoverPostProps } from './DiscoverPost.component'
 
-export interface IInstagramPostProps
-  extends Pick<
-    IPostActionsProps,
-    'onPressLike' | ('onPressComment' | 'onPressSave' | 'isLiked')
-  > {
-  post: IPost
-  user: IUser
-}
+export interface IInstagramPostProps extends IDiscoverPostProps {}
 
 export function InstagramPost(props: IInstagramPostProps) {
   const { post } = props

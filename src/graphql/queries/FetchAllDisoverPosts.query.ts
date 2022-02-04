@@ -2,7 +2,7 @@ import { IPost } from '@/types/post.types'
 import { gql } from '@apollo/client'
 
 export interface IFetchallDiscoverPostsResponse {
-  postsWithoutBlog: IPost[]
+  posts: IPost[]
 }
 export interface IFetchallDiscoverPostsVariables {
   limit?: number
@@ -11,7 +11,7 @@ export interface IFetchallDiscoverPostsVariables {
 
 export const FETCH_ALL_DISCOVER_POSTS = gql`
   query FETCH_ALL_DISCOVER_POSTS($limit: Float! = 15, $offset: Float! = 0) {
-    postsWithoutBlog(pagination: { limit: $limit, offset: $offset }) {
+    posts(pagination: { limit: $limit, offset: $offset }) {
       id
 
       content
@@ -33,6 +33,11 @@ export const FETCH_ALL_DISCOVER_POSTS = gql`
         username
         avatar
       }
+
+      isFollowed {
+        __typename
+      }
+
       created_at
     }
   }

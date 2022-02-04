@@ -1,27 +1,17 @@
 import { Icon } from '@/components/Icon/Icon.component'
-import { IPostActionsProps } from '@/components/Post/Post.props'
 import {
   FETCH_TWITTER_POST,
   IFetchTwitterPostResponse,
   IFetchTwitterPostVariables,
 } from '@/components/TwitterPost/queries/GetTwitterPost.query'
-import { IUser } from '@/types/login.types'
-import { IPost } from '@/types/post.types'
 import { useLazyQuery } from '@apollo/client'
 import React, { useEffect } from 'react'
 import { ImageBackground } from 'react-native'
 import { Text, View } from 'react-native-ui-lib'
 import { YoutubePostComponentStyles } from '../styles/YoutubePost.styles'
-import { DiscoverPost } from './DiscoverPost.component'
+import { DiscoverPost, IDiscoverPostProps } from './DiscoverPost.component'
 
-export interface ITwitterPost
-  extends Pick<
-    IPostActionsProps,
-    'onPressLike' | ('onPressComment' | 'onPressSave' | 'isLiked')
-  > {
-  post: IPost
-  user: IUser
-}
+export interface ITwitterPost extends IDiscoverPostProps {}
 
 export function TwitterPost(props: ITwitterPost) {
   const [fetchTwitter, fetchTwitterMeta] = useLazyQuery<

@@ -1,8 +1,10 @@
-import {IUser} from '@/Types/login.types';
+import { IUser } from '@/Types/login.types'
 
 export interface IFollowers {
-  created_at: Date;
-  updated_at: Date;
-  user: IUser;
-  actor: IUser;
+  created_at: Date
+  updated_at: Date
+  user: IUser
+  actor: IUser
+  userId: number
+  actorId: number
 }

@@ -12,6 +12,7 @@ export function PostsTab({ posts }: IPostsTabProps) {
   const renderItem = useCallback(({ item }: { item: IPost }) => {
     return (
       <Post
+        additional={item.additional}
         commentsCount={item._count.comment}
         date={item.created_at}
         likesCount={item.postLike.likeCount}

@@ -17,6 +17,14 @@ import {
   UNFOLLOW_USER,
 } from '@/graphql/mutations/Follower.mutation'
 import {
+  INewMessageRequestResponse,
+  INewMessageRequestVariables,
+  IRetrieveMessageRequestResponse,
+  IRetrieveMessageRequestVariables,
+  NEW_MESSAGE_REQUEST,
+  RETRIEVE_MESSAGE_REQUEST,
+} from '@/graphql/mutations/Message.mutation'
+import {
   IISUserFollowingActorResponse,
   IISUserFollowingActorVariables,
   IS_USER_FOLLOWING_ACTOR,
@@ -26,6 +34,11 @@ import {
   IFetchUserProfileResponse,
   IFetchUserProfileVariables,
 } from '@/graphql/queries/User.query'
+import {
+  FETCH_USER_REQUESTS,
+  IFetchUserRequestsResponse,
+  IFetchUserRequestsVariables,
+} from '@/graphql/queries/UserRequests.query'
 import { INavigatorParamsList, Routes } from '@/navigators/navigator.props'
 import { navigate } from '@/navigators/utils/navigation'
 import { useAppSelector } from '@/store'
@@ -88,6 +101,11 @@ export function ProfileContainer() {
             userId: localUser?.id ?? 0,
           },
         })
+        await fetchUserRequests({
+          variables: {
+            toUserId: data.getUser.id,
+          },
+        })
       },
     },
   )
@@ -97,18 +115,35 @@ export function ProfileContainer() {
     IISUserFollowingActorVariables
   >(IS_USER_FOLLOWING_ACTOR)
 
+  const [fetchUserRequests, requestedMessage] = useLazyQuery<
+    IFetchUserRequestsResponse,
+    IFetchUserRequestsVariables
+  >(FETCH_USER_REQUESTS)
+
   const [editProfile] = useMutation<
     IEditProfileResponse,
     IEditProfileVariables
   >(EDIT_PROFILE)
 
-  const [followUser] = useMutation<IFollowUserResponse, IFollowArgs>(
-    FOLLOW_USER,
-  )
+  const [followUser, followUserMeta] = useMutation<
+    IFollowUserResponse,
+    IFollowArgs
+  >(FOLLOW_USER)
 
-  const [unfollowUser] = useMutation<IUnFollowUserResponse, IFollowArgs>(
-    UNFOLLOW_USER,
-  )
+  const [unfollowUser, unfollowUserMeta] = useMutation<
+    IUnFollowUserResponse,
+    IFollowArgs
+  >(UNFOLLOW_USER)
+
+  const [sendMessageRequest, sendMessageRequestMeta] = useMutation<
+    INewMessageRequestResponse,
+    INewMessageRequestVariables
+  >(NEW_MESSAGE_REQUEST)
+
+  const [retrieveMessageRequest, retrieveMessageRequestMeta] = useMutation<
+    IRetrieveMessageRequestResponse,
+    IRetrieveMessageRequestVariables
+  >(RETRIEVE_MESSAGE_REQUEST)
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -251,8 +286,85 @@ export function ProfileContainer() {
     [unfollowUser, user, localUser],
   )
 
+  const onPressSendMessageRequest = useCallback(
+    async (userId: number) => {
+      await sendMessageRequest({
+        variables: {
+          toUserId: userId,
+        },
+        update: (cache, { data }) => {
+          const prev: IFetchUserRequestsResponse | null = cache.readQuery({
+            query: FETCH_USER_REQUESTS,
+            variables: {
+              toUserId: userId,
+            },
+          })
+
+          if (prev) {
+            const newRequest = {
+              ...prev.checkForRequests,
+              request: data?.newMessageRequest ?? false,
+            }
+
+            cache.writeQuery<
+              IFetchUserRequestsResponse,
+              IFetchUserRequestsVariables
+            >({
+              query: FETCH_USER_REQUESTS,
+              variables: {
+                toUserId: userId,
+              },
+              data: {
+                checkForRequests: newRequest,
+              },
+            })
+          }
+        },
+      })
+    },
+    [sendMessageRequest],
+  )
+  const onPressRetrieveMessageRequest = useCallback(
+    async (requestId: number, userId: number) => {
+      await retrieveMessageRequest({
+        variables: {
+          requestId,
+        },
+        update: (cache, { data }) => {
+          const prev: IFetchUserRequestsResponse | null = cache.readQuery({
+            query: FETCH_USER_REQUESTS,
+            variables: {
+              toUserId: userId,
+            },
+          })
+
+          if (prev) {
+            const newRequest = {
+              ...prev.checkForRequests,
+              request: data?.retrieveMessageRequest ? false : true,
+            }
+
+            cache.writeQuery<
+              IFetchUserRequestsResponse,
+              IFetchUserRequestsVariables
+            >({
+              query: FETCH_USER_REQUESTS,
+              variables: {
+                toUserId: userId,
+              },
+              data: {
+                checkForRequests: newRequest,
+              },
+            })
+          }
+        },
+      })
+    },
+    [retrieveMessageRequest],
+  )
+
   return (
-    <Page flex>
+    <Page>
       <View row spread>
         <View row>
           {user.loading ? (
@@ -306,28 +418,6 @@ export function ProfileContainer() {
                     <Text textColor header fontGilroy>
                       {user.data?.getUser.username}
                     </Text>
-
-                    {localUser?.id !== user.data?.getUser.id && (
-                      <Button
-                        marginL-15
-                        primary={!isFollowing.data?.userFollowsActor}
-                        outline={!isFollowing.data?.userFollowsActor}
-                        outlineColor={Colors.primary}
-                        label={
-                          isFollowing.data?.userFollowsActor
-                            ? 'Takipten çık'
-                            : 'Takip et'
-                        }
-                        onPress={
-                          !isFollowing.data?.userFollowsActor
-                            ? () => onPressFollow(user.data?.getUser.id ?? 0)
-                            : () => onPressUnfollow(user.data?.getUser.id ?? 0)
-                        }
-                        style={{ height: 26, width: 120 }}
-                        avoidInnerPadding
-                        labelStyle={{ ...Typography.font12 }}
-                      />
-                    )}
                   </View>
                 )}
 
@@ -372,6 +462,68 @@ export function ProfileContainer() {
             </View>
           </TouchableOpacity>
         ) : null}
+      </View>
+
+      <View row marginT-20 paddingR-30>
+        {localUser?.id !== user.data?.getUser.id && (
+          <Button
+            padding-5
+            marginL-15
+            style={{ width: '50%' }}
+            primary={!isFollowing.data?.userFollowsActor}
+            outline={!isFollowing.data?.userFollowsActor}
+            outlineColor={Colors.primary}
+            label={
+              isFollowing.data?.userFollowsActor ? 'Takipten çık' : 'Takip et'
+            }
+            onPress={
+              !isFollowing.data?.userFollowsActor
+                ? () => onPressFollow(user.data?.getUser.id ?? 0)
+                : () => onPressUnfollow(user.data?.getUser.id ?? 0)
+            }
+            avoidInnerPadding
+            labelStyle={{ ...Typography.font12 }}
+            loading={
+              followUserMeta.loading ||
+              unfollowUserMeta.loading ||
+              isFollowing.loading
+            }
+          />
+        )}
+
+        {localUser?.id !== user.data?.getUser.id && (
+          <Button
+            padding-5
+            outline={requestedMessage.data?.checkForRequests?.request}
+            outlineColor={Colors.primary}
+            primary={
+              requestedMessage.data?.checkForRequests?.request ? true : false
+            }
+            style={{ width: '50%' }}
+            marginL-15
+            label={
+              !requestedMessage.data?.checkForRequests?.request
+                ? 'Mesaj Gönder'
+                : 'Mesaj isteğini geri al'
+            }
+            onPress={
+              !requestedMessage.data?.checkForRequests?.request
+                ? () => onPressSendMessageRequest(user.data?.getUser.id ?? 0)
+                : () =>
+                    onPressRetrieveMessageRequest(
+                      requestedMessage.data?.checkForRequests?.id ?? 0,
+                      user.data?.getUser.id ?? 0,
+                    )
+            }
+            loading={
+              retrieveMessageRequestMeta.loading ||
+              sendMessageRequestMeta.loading ||
+              requestedMessage.loading
+            }
+            avoidInnerPadding
+            labelStyle={{ ...Typography.font12 }}
+          />
+        )}
       </View>
 
       <View row margin-15 marginT-50 spread>

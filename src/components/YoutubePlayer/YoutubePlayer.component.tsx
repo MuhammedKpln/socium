@@ -6,7 +6,7 @@ import YoutubePlayer, { getYoutubeMeta } from 'react-native-youtube-iframe'
 import { Icon } from '../Icon/Icon.component'
 import { IYTPlayerProps } from './YoutubePlayer.props'
 
-export function YTPlayer(props: IYTPlayerProps) {
+export const YTPlayer = React.memo((props: IYTPlayerProps) => {
   const { videoId } = props
   const [thumbnailUrl, setThumbnailUrl] = useState<string>('')
   const [renderYoutubeFrame, setRenderYoutubeFrame] = useState<boolean>(false)
@@ -90,4 +90,4 @@ export function YTPlayer(props: IYTPlayerProps) {
       )}
     </TouchableOpacity>
   )
-}
+})

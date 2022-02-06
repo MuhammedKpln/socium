@@ -5,7 +5,7 @@ import { TouchableOpacity, View } from 'react-native-ui-lib'
 import { Badge } from '../Badge/Badge.component'
 import { IAvatarProps } from './Avatar.props'
 
-export function Avatar(props: IAvatarProps) {
+export const Avatar = React.memo((props: IAvatarProps) => {
   const { userAvatar } = props
   const size = useMemo(() => (props?.size ? props.size : 40), [props.size])
 
@@ -43,4 +43,4 @@ export function Avatar(props: IAvatarProps) {
       </View>
     </TouchableOpacity>
   )
-}
+})

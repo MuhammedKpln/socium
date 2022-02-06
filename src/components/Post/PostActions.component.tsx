@@ -14,7 +14,7 @@ dayjs.locale('tr')
 dayjs.extend(customParseFormat)
 dayjs.extend(relativeTime)
 
-export function PostActions(props: IPostActionsProps) {
+export const PostActions = React.memo((props: IPostActionsProps) => {
   const {
     commentsCount,
     isLiked,
@@ -81,4 +81,4 @@ export function PostActions(props: IPostActionsProps) {
       </View>
     </View>
   )
-}
+})

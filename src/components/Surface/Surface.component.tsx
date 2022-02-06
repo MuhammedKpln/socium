@@ -1,9 +1,9 @@
-import React, { Component, forwardRef, Ref } from 'react'
+import React, { Component, forwardRef, memo, Ref } from 'react'
 import { ViewProps } from 'react-native-ui-lib'
 import View from 'react-native-ui-lib/view'
 import { ISurfaceProps } from './Surface.props'
 
-export const Surface = forwardRef(
+export const _Surface = forwardRef(
   (props: ISurfaceProps, _ref: Ref<Component<ViewProps>>) => {
     const { children } = props
 
@@ -14,3 +14,5 @@ export const Surface = forwardRef(
     )
   },
 )
+
+export const Surface = memo(_Surface)

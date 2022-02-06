@@ -6,7 +6,7 @@ interface IProps {
   size?: number
 }
 
-export function NoAvatar(props: IProps) {
+export const NoAvatar = React.memo((props: IProps) => {
   const svg = useMemo(
     () => (
       <UIAvatar
@@ -20,4 +20,4 @@ export function NoAvatar(props: IProps) {
   )
 
   return svg
-}
+})

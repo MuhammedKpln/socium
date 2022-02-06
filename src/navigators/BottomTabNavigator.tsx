@@ -158,6 +158,10 @@ const MainNavigator = () => {
           options={{ ...applyRouteTitle(RouteTitles.ChangeAvatar) }}
           getComponent={RouteComponents.ChangeAvatar}
         />
+        <Stack.Screen
+          name={Routes.Followers}
+          getComponent={RouteComponents.Followers}
+        />
       </Stack.Group>
       <Stack.Group
         screenOptions={{

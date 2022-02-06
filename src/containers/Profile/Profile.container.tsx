@@ -363,6 +363,13 @@ export function ProfileContainer() {
     [retrieveMessageRequest],
   )
 
+  const onPressFollowers = useCallback(() => {
+    navigate(Routes.Followers, {
+      userId: user.data?.getUser.id ?? 0,
+      username: user.data?.getUser.username ?? '',
+    })
+  }, [user.data?.getUser.id, user.data?.getUser.username])
+
   return (
     <Page>
       <View row spread>
@@ -533,17 +540,22 @@ export function ProfileContainer() {
           </Text>
         </View>
         <View>
-          <Text text textColor center style={{ width: 55 }}>
-            {user.data?.getUser._count.followers} Takipçi
-          </Text>
+          <TouchableOpacity onPress={onPressFollowers}>
+            <Text text textColor center style={{ width: 55 }}>
+              {user.data?.getUser._count.followers} Takipçi
+            </Text>
+          </TouchableOpacity>
         </View>
         <View>
-          <Text text textColor center>
-            {user.data?.getUser._count.followings}
-          </Text>
-          <Text text textColor center>
-            Takip Edilen
-          </Text>
+          <TouchableOpacity onPress={onPressFollowers}>
+            <Text text textColor center>
+              {user.data?.getUser._count.followings}
+            </Text>
+
+            <Text text textColor center>
+              Takip Edilen
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
 

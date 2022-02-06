@@ -20,6 +20,7 @@ export enum Routes {
   Chat = 'chat',
   MatchChat = 'match-chat',
   ChangeAvatar = 'change-avatar',
+  Followers = 'followers',
 }
 export enum RouteTitles {
   Login = 'Giriş yap',
@@ -60,6 +61,8 @@ export const RouteComponents = {
   ChangeAvatar: () =>
     require('@/containers/ChangeAvatar/ChangeAvatar.container')
       .ChangeAvatarContainer,
+  Followers: () =>
+    require('@/containers/Followers/Followers.container').FollowersContainer,
 }
 
 export interface INavigatorParamsList extends ParamListBase {
@@ -78,4 +81,5 @@ export interface INavigatorParamsList extends ParamListBase {
   [Routes.Chat]: { room: IRoom; user: IUser }
   [Routes.MatchChat]: { room: string; user: IUser }
   [Routes.ChangeAvatar]: undefined
+  [Routes.Followers]: { userId: number; username: string }
 }

@@ -15,6 +15,17 @@ export interface IUnFollowUserResponse {
 export const FOLLOW_USER = gql`
   mutation FOLLOW_USER($actorId: Float!) {
     followUser(actorId: $actorId) {
+      id
+      user {
+        id
+        username
+        avatar
+      }
+      actor {
+        id
+        username
+        avatar
+      }
       userId
       actorId
     }

@@ -12,6 +12,8 @@ import {
 import { IUseLikesEntity, IUseLikesProps, useLikes } from '@/hooks/useLikes'
 import { Routes } from '@/navigators/navigator.props'
 import { navigate } from '@/navigators/utils/navigation'
+import { useAppSelector } from '@/store'
+import { fetchUserStars } from '@/store/reducers/user.reducer'
 import { IPost } from '@/types/post.types'
 import { showToast, ToastStatus } from '@/utils/toast'
 import { useQuery } from '@apollo/client'
@@ -19,15 +21,23 @@ import React, { useCallback, useEffect } from 'react'
 import { FlatList, RefreshControl } from 'react-native'
 import { View } from 'react-native-ui-lib'
 import Text from 'react-native-ui-lib/text'
+import { useDispatch } from 'react-redux'
 
 const HomeContainer = () => {
   const { toggleLikeButton } = useLikes()
+  const dispatch = useDispatch()
+  const isLoggedIn = useAppSelector(state => state.userReducer.isLoggedIn)
   const fetchPosts = useQuery<{ posts: IPost[] }, IFetchPostsVariables>(
     FETCH_POSTS,
     {
       variables: {
         offset: 0,
         limit: 15,
+      },
+      onCompleted() {
+        if (isLoggedIn) {
+          dispatch(fetchUserStars())
+        }
       },
     },
   )

@@ -2,22 +2,46 @@ import Button from '@/components/Button/Button.component'
 import { Icon } from '@/components/Icon/Icon.component'
 import { Page } from '@/components/Page/Page.component'
 import { Surface } from '@/components/Surface/Surface.component'
-import {
-  FETCH_USER_STARS,
-  IFetchUserStarsResponse,
-} from '@/graphql/queries/User.query'
+import { Config } from '@/config'
+import { ADD_NEW_STAR } from '@/graphql/mutations/Star.mutation'
 import { useAppSelector } from '@/store'
+import {
+  updateShowNextAd,
+  updateStarCount,
+} from '@/store/reducers/user.reducer'
+import { IStar } from '@/types/login.types'
+import { showToast, toastRef, ToastStatus } from '@/utils/toast'
 import { wait } from '@/utils/utils'
-import { useQuery } from '@apollo/client'
+import { useMutation } from '@apollo/client'
+import { useRewardedAd } from '@react-native-admob/admob'
 import { useNavigation } from '@react-navigation/native'
+import dayjs from 'dayjs'
 import AnimatedLottieView from 'lottie-react-native'
-import React, { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
-import { useCallback } from 'react'
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { Colors } from 'react-native-ui-lib'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
+import { useDispatch } from 'react-redux'
+import {
+  getTrackingStatus,
+  requestTrackingPermission,
+} from 'react-native-tracking-transparency'
+import { Platform } from 'react-native'
+import { Toast } from '@/components/Toast/Toast.component'
 
 export function EarnStarContainer() {
+  const starCount = useAppSelector(state => state.userReducer.starCount)
+  const showNextAd = useAppSelector(state => state.userReducer.showNextAd)
+  const dispatch = useDispatch()
+  const [nextAd, setNextAd] = useState<number>()
+
   const navigation = useNavigation()
   const animationRef = useRef<AnimatedLottieView>(null)
   const theme = useAppSelector(state => state.themeReducer.theme)
@@ -25,24 +49,83 @@ export function EarnStarContainer() {
     () => (theme === 'dark' ? Colors.black : Colors.white),
     [theme],
   )
-  const { data } = useQuery<IFetchUserStarsResponse>(FETCH_USER_STARS, {
-    fetchPolicy: 'network-only',
+  const { adLoaded, reward, show, load, adDismissed } = useRewardedAd(
+    Config.ADMOB_UNIT_ID,
+  )
+  const [addNewStar] = useMutation<{ addNewStar: IStar }>(ADD_NEW_STAR, {
+    onCompleted: () => {
+      showToast(ToastStatus.Success, '1DP Kazandiniz!')
+      const nextTimeDate = dayjs().add(1, 'hour')
+
+      dispatch(updateShowNextAd(nextTimeDate.toDate()))
+
+      setNextAd(nextTimeDate.diff(Date.now(), 'minutes', false))
+
+      dispatch(updateStarCount(starCount + 1))
+    },
   })
 
   useEffect(() => {
     wait(250).then(() => animationRef.current?.play())
-  }, [])
+
+    if (Platform.OS === 'ios' && Number(Platform.Version) >= 14) {
+      getTrackingStatus().then(status => {
+        if (
+          status === 'not-determined' ||
+          status === 'unavailable' ||
+          status === 'restricted'
+        ) {
+          requestTrackingPermission()
+          load()
+        }
+      })
+    }
+  }, [load])
+
+  useEffect(() => {
+    if (showNextAd) {
+      const dateFromStorage = async () => {
+        try {
+          const date = dayjs(showNextAd)
+          const dateNow = dayjs(Date.now())
+
+          setNextAd(date.diff(dateNow, 'minutes', false))
+        } catch (err) {
+          return
+        }
+      }
+
+      dateFromStorage()
+    }
+    load()
+  }, [showNextAd, dispatch, load])
+
+  useEffect(() => {
+    if (reward && !adDismissed) {
+      addNewStar()
+
+      return
+    }
+  }, [reward, adDismissed, addNewStar])
+
+  const onPressEarnStar = useCallback(() => {
+    if (adLoaded) {
+      show()
+    } else {
+      showToast(ToastStatus.Info, 'Yükleniyor lütfen bekleyiniz..')
+    }
+  }, [adLoaded, show])
 
   const headerRight = useCallback(() => {
     return (
       <View row>
         <Icon name="sparkles" color="#FEB200" size={25} />
         <Text yellow fontGilroy font17 marginL-10 marginT-6>
-          {data?.getUserStars.starCount}
+          {starCount}
         </Text>
       </View>
     )
-  }, [data])
+  }, [starCount])
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -97,21 +180,40 @@ export function EarnStarContainer() {
           <Text center fontSfProRegular font16 textColor>
             Hemen izle, kazan!
           </Text>
-          <Button
-            marginT-10
-            label="1"
-            backgroundColor={Colors.yellow}
-            iconSource={() => (
-              <Icon
-                name="sparkles"
-                color="#fff"
-                size={18}
-                style={{ marginRight: 10 }}
-              />
-            )}
-          />
+
+          {!nextAd ? (
+            <Button
+              marginT-10
+              label="1"
+              onPress={onPressEarnStar}
+              backgroundColor={Colors.yellow}
+              iconSource={() => (
+                <Icon
+                  name="sparkles"
+                  color="#fff"
+                  size={18}
+                  style={{ marginRight: 10 }}
+                />
+              )}
+            />
+          ) : (
+            <Button
+              marginT-10
+              label={nextAd + ' dakika sonra tekrar geliniz.'}
+              backgroundColor={Colors.yellow}
+              iconSource={() => (
+                <Icon
+                  name="sparkles"
+                  color="#fff"
+                  size={18}
+                  style={{ marginRight: 10 }}
+                />
+              )}
+            />
+          )}
         </View>
       </Surface>
+      <Toast ref={toastRef} />
     </Page>
   )
 }

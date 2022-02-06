@@ -47,6 +47,8 @@ export const YTPlayer = React.memo((props: IYTPlayerProps) => {
   }, [fetchYoutubeMeta])
 
   useEffect(() => {
+    if (!thumbnailUrl) return
+
     IM.prefetch(thumbnailUrl).then(val => {
       if (val) {
         setShowContent(true)

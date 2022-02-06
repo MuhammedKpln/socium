@@ -3,6 +3,8 @@ import { createStore } from 'redux'
 import { persistReducer, persistStore } from 'redux-persist'
 import { storage } from '../storage'
 import rootReducer from './reducers'
+import thunkMiddleware from 'redux-thunk'
+import { applyMiddleware } from '@reduxjs/toolkit'
 
 const persistConfig = {
   key: 'root',
@@ -12,7 +14,9 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
-let store = createStore(persistedReducer)
+const composedEnhancer = applyMiddleware(thunkMiddleware)
+
+let store = createStore(persistedReducer, composedEnhancer)
 let persistedStore = persistStore(store)
 
 export type RootState = ReturnType<typeof rootReducer>

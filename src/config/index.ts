@@ -13,6 +13,7 @@ export const Config = {
   SPOTIFY_CLIENT_ID: 'b0c62d8c63bd4dda80b2020fa26f97b5',
   NEW_COMMENT_MAX_COUNT: 200,
   NEW_COMMENT_MIN_COUNT: 10,
+  ADMOB_UNIT_ID: 'ca-app-pub-5089133101627366~1296090636',
 }
 
 // export const Config = {

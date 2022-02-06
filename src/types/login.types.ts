@@ -40,3 +40,11 @@ export interface ILogin {
   status?: boolean
   expire_date: Date
 }
+
+export interface IStar {
+  id: number
+  created_at: Date
+  updated_at: Date
+  starCount: number
+  user: IUser
+}

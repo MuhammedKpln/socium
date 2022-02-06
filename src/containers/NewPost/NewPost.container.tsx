@@ -261,6 +261,8 @@ export function NewPostContainer() {
                 onPressPost={() => null}
                 onPressSave={() => null}
                 onPressRemove={() => null}
+                additional={additionalData}
+                postType={postType}
               />
               <TextInput
                 onChangeText={handleChange('content')}

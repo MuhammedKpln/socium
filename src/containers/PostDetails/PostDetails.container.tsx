@@ -20,6 +20,7 @@ import { useAppSelector } from '@/store'
 import { updateAnsweringParent } from '@/store/reducers/comment.reducer'
 import { PostType } from '@/types/post.types'
 import { IInstagramMeta } from '@/types/socialMedia.types'
+import { showToast, ToastStatus } from '@/utils/toast'
 import { useQuery } from '@apollo/client'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useCallback, useLayoutEffect, useState } from 'react'
@@ -59,7 +60,15 @@ export function PostDetails() {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => <Icon name="bookmark" size={20} />,
+      headerRight: () => (
+        <Icon
+          name="bookmark"
+          size={20}
+          onPress={() =>
+            showToast(ToastStatus.Success, 'Gönderi favorilere eklendi!')
+          }
+        />
+      ),
     })
   })
 

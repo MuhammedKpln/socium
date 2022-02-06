@@ -1,10 +1,10 @@
-import React, { forwardRef, Ref } from 'react'
+import React, { forwardRef, memo, Ref } from 'react'
 import { SafeAreaView } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { View } from 'react-native-ui-lib'
 import { IPageProps } from './Page.props'
 
-export const Page = forwardRef((props: IPageProps, ref: Ref<SafeAreaView>) => {
+export const _Page = forwardRef((props: IPageProps, ref: Ref<SafeAreaView>) => {
   const { scrollable, children } = props
 
   return (
@@ -13,3 +13,5 @@ export const Page = forwardRef((props: IPageProps, ref: Ref<SafeAreaView>) => {
     </View>
   )
 })
+
+export const Page = memo(_Page)

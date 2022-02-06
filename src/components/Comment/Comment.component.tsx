@@ -4,6 +4,7 @@ import * as dayjs from 'dayjs'
 import 'dayjs/locale/tr'
 import { map } from 'lodash'
 import React, { useCallback, useState } from 'react'
+import { Colors } from 'react-native-ui-lib'
 import Text from 'react-native-ui-lib/text'
 import TouchableOpacity from 'react-native-ui-lib/touchableOpacity'
 import View from 'react-native-ui-lib/view'
@@ -19,6 +20,9 @@ export interface ICommentProps {
   date: Date
   avatar: string
   onPressAnswer: () => void
+  onPressLike: (commentId?: number) => void
+  onPressUnlike: (commentId?: number) => void
+  isLiked: boolean
 }
 
 var customParseFormat = require('dayjs/plugin/customParseFormat')
@@ -37,6 +41,9 @@ export function Comment(props: ICommentProps) {
     parentComments,
     onPressAnswer,
     avatar,
+    isLiked,
+    onPressLike,
+    onPressUnlike,
   } = props
   const [showParentComments, setShowParentComments] = useState<number[]>([])
   const dispatch = useDispatch()
@@ -52,6 +59,18 @@ export function Comment(props: ICommentProps) {
       dispatch(updateAnsweringParent(commentId))
     },
     [dispatch],
+  )
+  const parentOnPressLike = useCallback(
+    (commentId: number) => {
+      onPressLike(commentId)
+    },
+    [onPressLike],
+  )
+  const parentOnPressUnlike = useCallback(
+    (commentId: number) => {
+      onPressUnlike(commentId)
+    },
+    [onPressUnlike],
   )
 
   const renderParentComments = useCallback(() => {
@@ -94,6 +113,9 @@ export function Comment(props: ICommentProps) {
               username={mostLikedComment.user.username}
               onPressAnswer={() => parentOnPressAnswer(mostLikedComment.id)}
               avatar={mostLikedComment.user.avatar}
+              onPressLike={() => parentOnPressLike(mostLikedComment.id)}
+              onPressUnlike={() => parentOnPressUnlike(mostLikedComment.id)}
+              isLiked={mostLikedComment?.userLike?.liked ?? false}
             />
           </View>
         )
@@ -120,6 +142,9 @@ export function Comment(props: ICommentProps) {
                 parentComments={comment?.parentComments}
                 avatar={comment.user.avatar}
                 onPressAnswer={() => parentOnPressAnswer(comment.id)}
+                onPressLike={() => parentOnPressLike(comment.id)}
+                onPressUnlike={() => parentOnPressUnlike(comment.id)}
+                isLiked={comment?.userLike?.liked ?? false}
               />
             ))}
           </View>
@@ -133,6 +158,8 @@ export function Comment(props: ICommentProps) {
     _showParentComments,
     showParentComments,
     parentOnPressAnswer,
+    parentOnPressLike,
+    parentOnPressUnlike,
   ])
 
   return (
@@ -151,9 +178,14 @@ export function Comment(props: ICommentProps) {
             </View>
           </View>
 
-          <View>
-            <Icon name="heart" />
-          </View>
+          <TouchableOpacity
+            onPress={!isLiked ? () => onPressLike() : () => onPressUnlike()}
+          >
+            <Icon
+              name={isLiked ? 'heart-filled' : 'heart'}
+              color={isLiked ? Colors.red30 : ''}
+            />
+          </TouchableOpacity>
         </View>
 
         <View row spread marginL-45>

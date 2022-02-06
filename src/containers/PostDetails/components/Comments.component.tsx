@@ -5,6 +5,14 @@ import {
   SkeletonViewTemplates,
 } from '@/components/SkeletonView/SkeletonView.component'
 import {
+  ILikeCommentResponse,
+  ILikeCommentVariables,
+  IUnlikeCommentResponse,
+  IUnlikeCommentVariables,
+  LIKE_COMMENT,
+  UNLIKE_COMMENT,
+} from '@/graphql/mutations/LikePost.mutation'
+import {
   FETCH_COMMENTS,
   IFetchCommentsResponse,
   IFetchCommentsVariables,
@@ -15,7 +23,7 @@ import {
   updateComments,
 } from '@/store/reducers/comment.reducer'
 import { IComment } from '@/Types/comment.types'
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import React, { useCallback } from 'react'
 import { FlatList } from 'react-native'
 import { useDispatch } from 'react-redux'
@@ -28,7 +36,14 @@ export function PostComments(props: IPostCommentsProps) {
   const { postId } = props
   const dispatch = useDispatch()
   const comments = useAppSelector(state => state.commentReducer.comments)
-
+  const [likeComment] = useMutation<
+    ILikeCommentResponse,
+    ILikeCommentVariables
+  >(LIKE_COMMENT)
+  const [unlikeComment] = useMutation<
+    IUnlikeCommentResponse,
+    IUnlikeCommentVariables
+  >(UNLIKE_COMMENT)
   const { loading, fetchMore } = useQuery<
     IFetchCommentsResponse,
     IFetchCommentsVariables
@@ -52,6 +67,77 @@ export function PostComments(props: IPostCommentsProps) {
     [dispatch],
   )
 
+  const onPressLikeComment = useCallback(
+    (commentId: number) => {
+      likeComment({
+        variables: {
+          commentId,
+        },
+        update: (cache, { data }) => {
+          const oldData = comments
+
+          oldData.map(comment => {
+            if (comment.id === commentId) {
+              comment.postLike.likeCount = data?.likeEntry.likeCount ?? 0
+              comment.userLike = data?.likeEntry.userLike ?? null
+            } else {
+              const isParent = comment.parentComments.filter(
+                v => v.id === commentId,
+              )
+
+              if (isParent.length > 0) {
+                isParent[0].postLike.likeCount = data?.likeEntry.likeCount ?? 0
+                isParent[0].userLike = data?.likeEntry.userLike ?? null
+              }
+            }
+
+            return comment
+          })
+
+          dispatch(updateComments([...oldData]))
+        },
+      })
+    },
+    [likeComment, dispatch, comments],
+  )
+  const onPressUnlikeComment = useCallback(
+    (commentId: number) => {
+      unlikeComment({
+        variables: {
+          commentId,
+        },
+        update: (cache, { data }) => {
+          const oldData = comments
+
+          oldData.map(comment => {
+            if (comment.id === commentId) {
+              comment.postLike.likeCount = data?.unlikeEntry.likeCount ?? 0
+              comment.userLike = {
+                ...comment.userLike,
+                liked: data?.unlikeEntry ? false : true,
+              }
+            } else {
+              const isParent = comment.parentComments.filter(
+                v => v.id === commentId,
+              )
+
+              if (isParent.length > 0) {
+                isParent[0].postLike.likeCount =
+                  data?.unlikeEntry.likeCount ?? 0
+                isParent[0].userLike = data?.unlikeEntry.userLike ?? null
+              }
+            }
+
+            return comment
+          })
+
+          dispatch(updateComments([...oldData]))
+        },
+      })
+    },
+    [dispatch, comments, unlikeComment],
+  )
+
   const renderItem = useCallback(
     ({ item }: { item: IComment }) => {
       return (
@@ -63,10 +149,17 @@ export function PostComments(props: IPostCommentsProps) {
           username={item.user.username}
           avatar={item.user.avatar}
           onPressAnswer={() => onPressAnswer(item.id)}
+          onPressLike={(commentId?: number) =>
+            onPressLikeComment(commentId || item.id)
+          }
+          onPressUnlike={(commentId?: number) =>
+            onPressUnlikeComment(commentId || item.id)
+          }
+          isLiked={item?.userLike?.liked ?? false}
         />
       )
     },
-    [onPressAnswer],
+    [onPressAnswer, onPressLikeComment, onPressUnlikeComment],
   )
 
   const fetchMorePosts = useCallback(async () => {

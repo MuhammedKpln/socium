@@ -49,6 +49,10 @@ export const FETCH_COMMENTS = gql`
         content
         created_at
 
+        userLike {
+          liked
+        }
+
         postLike {
           likeCount
         }

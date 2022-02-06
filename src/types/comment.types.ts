@@ -8,7 +8,7 @@ export interface IComment {
   updated_at: Date
   post: IPost
   user: IUser
-  userLike: IUserlike
+  userLike: IUserlike | null
   postLike: IPostLike
   parentComments: IComment[]
 }

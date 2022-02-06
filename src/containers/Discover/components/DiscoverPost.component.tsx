@@ -1,10 +1,13 @@
 import { Avatar } from '@/components/Avatar/Avatar.component'
 import { IPostActionsProps } from '@/components/Post/Post.props'
 import { PostActions } from '@/components/Post/PostActions.component'
+import { Routes } from '@/navigators/navigator.props'
 import { useAppSelector } from '@/store'
 import { IUser } from '@/types/login.types'
 import { IPost } from '@/types/post.types'
+import { useNavigation } from '@react-navigation/native'
 import React from 'react'
+import { useCallback } from 'react'
 import { Colors, Typography } from 'react-native-ui-lib'
 import Button from 'react-native-ui-lib/button'
 import Text from 'react-native-ui-lib/text'
@@ -26,6 +29,7 @@ export interface IDiscoverPostProps
 
 export function DiscoverPost(props: IDiscoverPostProps) {
   const localUser = useAppSelector(state => state.userReducer.user)
+  const navigation = useNavigation()
   const {
     post,
     user,
@@ -36,8 +40,12 @@ export function DiscoverPost(props: IDiscoverPostProps) {
     onPressUnfollow,
   } = props
 
+  const onPressPost = useCallback(() => {
+    navigation.navigate(Routes.PostDetails, { postId: post.id })
+  }, [navigation, post.id])
+
   return (
-    <View>
+    <TouchableOpacity onPress={onPressPost}>
       <View row spread>
         <View row>
           <Avatar userAvatar={user?.avatar} />
@@ -88,6 +96,6 @@ export function DiscoverPost(props: IDiscoverPostProps) {
           onPressSave={onPressSave}
         />
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }

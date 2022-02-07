@@ -1,4 +1,5 @@
 import React from 'react'
+import { Incubator } from 'react-native-ui-lib'
 
 interface IToastRef {
   fire: (
@@ -8,9 +9,8 @@ interface IToastRef {
   ) => void
 }
 
-export interface IToastAdditionalOptions {
-  showLoader: boolean
-}
+export interface IToastAdditionalOptions
+  extends Omit<Incubator.ToastProps, 'autoDissmiss'> {}
 
 export enum ToastStatus {
   Success = 'success',

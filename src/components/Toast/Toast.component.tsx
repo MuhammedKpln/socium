@@ -51,7 +51,7 @@ const _Toast = (_: any, ref: any) => {
 
   return (
     <ToastUI
-      autoDismiss={3000}
+      autoDismiss={additionalOptions?.action ? 0 : 3000}
       message={message}
       visible={visible}
       onDismiss={() => setVisible(false)}

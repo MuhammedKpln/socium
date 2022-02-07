@@ -12,6 +12,14 @@ import {
   IDeleteRoomVariables,
 } from '@/graphql/mutations/DeleteRoom.mutation'
 import {
+  ACCEPT_REQUEST,
+  IAcceptRequestResponse,
+  IAcceptRequestVariables,
+  IRejectRequestResponse,
+  IRejectRequestVariables,
+  REJECT_REQUEST,
+} from '@/graphql/mutations/Requests.mutation'
+import {
   FETCH_MESSAGES,
   FETCH_MESSAGE_REQUESTS,
   IFetchMessageRequestResponse,
@@ -23,21 +31,31 @@ import { Routes } from '@/navigators/navigator.props'
 import { navigate } from '@/navigators/utils/navigation'
 import { useAppSelector } from '@/store'
 import { IUser } from '@/Types/login.types'
-import { IMessage } from '@/types/messages.types'
+import { IMessage, IMessageRequests } from '@/types/messages.types'
 import { showToast, ToastStatus } from '@/utils/toast'
 import { useMutation, useQuery } from '@apollo/client'
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { FlatList, RefreshControl } from 'react-native'
 import { Colors } from 'react-native-ui-lib'
+import ActionSheet from 'react-native-ui-lib/actionSheet'
 import Drawer from 'react-native-ui-lib/drawer'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
 import { findBestMatch } from 'string-similarity'
+import { IActionSheet } from './Chats.props'
 import { ChatBox } from './components/Chatbox.component'
 import { RecentlyMatched } from './components/RecentlyMatched.component'
 import { Search } from './components/Search.component'
+
 export function ChatsContainer() {
   const localUser = useAppSelector(state => state.userReducer.user)
+  const [showActionSheet, setShowActionSheet] = useState<IActionSheet>({
+    visible: false,
+    message: '',
+    title: '',
+    onAccept: () => null,
+    onReject: () => null,
+  })
   const messages = useQuery<IFetchMessagesResponse, IFetchMessagesVariables>(
     FETCH_MESSAGES,
     {
@@ -50,6 +68,16 @@ export function ChatsContainer() {
   >(FETCH_MESSAGE_REQUESTS, {
     fetchPolicy: 'network-only',
   })
+
+  const [acceptRequest] = useMutation<
+    IAcceptRequestResponse,
+    IAcceptRequestVariables
+  >(ACCEPT_REQUEST)
+
+  const [rejectRequest] = useMutation<
+    IRejectRequestResponse,
+    IRejectRequestVariables
+  >(REJECT_REQUEST)
 
   const [deleteRoom] = useMutation<IDeleteRoomResponse, IDeleteRoomVariables>(
     DELETE_ROOM,
@@ -215,6 +243,75 @@ export function ChatsContainer() {
     [messages],
   )
 
+  const onPressRecentlyMatched = useCallback(
+    (item: IMessageRequests) => {
+      const onPressAccept = () => {
+        acceptRequest({
+          variables: {
+            id: item.id,
+            receiverId: item.requestFrom.id,
+          },
+          update: cache => {
+            const prev = cache.readQuery<IFetchMessageRequestResponse>({
+              query: FETCH_MESSAGE_REQUESTS,
+            })
+
+            if (prev) {
+              const newData = prev.messageRequests.filter(v => v.id !== item.id)
+
+              cache.writeQuery<IFetchMessageRequestResponse>({
+                query: FETCH_MESSAGE_REQUESTS,
+                data: {
+                  messageRequests: newData,
+                },
+              })
+            }
+          },
+          onCompleted: async () => {
+            showToast(ToastStatus.Success, 'Mesaj isteği kabul edildi')
+            await messages.refetch()
+          },
+        })
+      }
+      const onPressReject = () => {
+        rejectRequest({
+          variables: {
+            id: item.id,
+          },
+          update: cache => {
+            const prev = cache.readQuery<IFetchMessageRequestResponse>({
+              query: FETCH_MESSAGE_REQUESTS,
+            })
+
+            if (prev) {
+              const newData = prev.messageRequests.filter(v => v.id !== item.id)
+
+              cache.writeQuery<IFetchMessageRequestResponse>({
+                query: FETCH_MESSAGE_REQUESTS,
+                data: {
+                  messageRequests: newData,
+                },
+              })
+            }
+          },
+          onCompleted: async () => {
+            showToast(ToastStatus.Success, 'Mesaj isteği reddedildi.')
+            await messages.refetch()
+          },
+        })
+      }
+
+      setShowActionSheet({
+        visible: true,
+        title: item.requestFrom.username,
+        message: `${item.requestFrom.username} isimli kullanıcının arkadaşlık isteğini kabul etmek istiyor musunuz?`,
+        onAccept: onPressAccept,
+        onReject: onPressReject,
+      })
+    },
+    [acceptRequest, rejectRequest, messages],
+  )
+
   return (
     <Page>
       <View margin-10>
@@ -228,9 +325,32 @@ export function ChatsContainer() {
           <Text fontGilroyBold font17 textColor>
             Eşleşme istekleri
           </Text>
+          <ActionSheet
+            {...showActionSheet}
+            options={[
+              {
+                label: 'Kabul et',
+                onPress: showActionSheet.onAccept,
+              },
+              {
+                label: 'Reddet',
+                onPress: showActionSheet.onReject,
+              },
+              {
+                label: 'İptal',
+              },
+            ]}
+            destructiveButtonIndex={1}
+            cancelButtonIndex={2}
+            useNativeIOS
+            onDismiss={() =>
+              setShowActionSheet(prev => ({ ...prev, visible: false }))
+            }
+          />
           <RecentlyMatched
             messageRequests={messageRequests.data.messageRequests}
             loading={messageRequests.loading}
+            onPress={(item: IMessageRequests) => onPressRecentlyMatched(item)}
           />
         </View>
       ) : null}

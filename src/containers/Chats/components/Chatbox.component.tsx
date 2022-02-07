@@ -16,7 +16,7 @@ export function ChatBox(props: IProps) {
   const { name, lastMessage, date, avatar, onPress } = props
   return (
     <TouchableOpacity onPress={onPress}>
-      <View bg-trueSurfaceBG>
+      <View bg-trueSurfaceBG paddingV-5>
         <View spread row>
           <View row left>
             <Avatar userAvatar={avatar} size={53} />

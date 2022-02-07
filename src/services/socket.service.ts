@@ -74,6 +74,10 @@ export class SocketConnection {
     this.emit(SocketFireEvents.Typing, { typing, room })
   }
 
+  leaveQueue() {
+    this.emit(SocketFireEvents.LeaveQueue)
+  }
+
   removeMessage(messageId: number, room: string) {
     this.emit(SocketFireEvents.RemoveMessageRequest, { messageId, room })
   }

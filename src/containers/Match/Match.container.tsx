@@ -82,10 +82,11 @@ export function MatchContainer() {
   }, [connectedUser, navigation, room])
 
   const leaveQueue = useCallback(() => {
+    socketService.leaveQueue()
     setMatching(false)
     marginBottom.value = 0
     opacity.value = 1
-  }, [marginBottom, opacity])
+  }, [marginBottom, opacity, socketService])
 
   return (
     <Page animated center>

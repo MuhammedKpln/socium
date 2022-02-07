@@ -560,7 +560,7 @@ export function ProfileContainer() {
       </View>
 
       <View flex>
-        <TabController items={tabItems}>
+        <TabController items={tabItems} asCarousel>
           <TabController.TabBar
             activeBackgroundColor={Colors.surfaceBG}
             backgroundColor={Colors.trueSurfaceBG}
@@ -568,20 +568,22 @@ export function ProfileContainer() {
             containerWidth={350}
             centerSelected
           />
-          <TabController.TabPage index={0}>
-            <View flex marginT-50>
-              <PostsTab
-                posts={user.data?.userPosts ? user.data.userPosts : []}
-              />
-            </View>
-          </TabController.TabPage>
-          <TabController.TabPage index={1} lazy>
-            <View marginT-30 flex>
-              {user.data?.getUser && (
-                <CommentsTab userId={user.data?.getUser.id} />
-              )}
-            </View>
-          </TabController.TabPage>
+          <TabController.PageCarousel>
+            <TabController.TabPage index={0}>
+              <View flex marginT-50>
+                <PostsTab
+                  posts={user.data?.userPosts ? user.data.userPosts : []}
+                />
+              </View>
+            </TabController.TabPage>
+            <TabController.TabPage index={1} lazy>
+              <View marginT-30 flex>
+                {user.data?.getUser && (
+                  <CommentsTab userId={user.data?.getUser.id} />
+                )}
+              </View>
+            </TabController.TabPage>
+          </TabController.PageCarousel>
         </TabController>
       </View>
     </Page>

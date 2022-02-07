@@ -2,6 +2,7 @@ import { INavigatorParamsList, Routes } from '@/navigators/navigator.props'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useLayoutEffect, useMemo } from 'react'
 import {
+  Colors,
   TabController,
   TabControllerItemProps,
   View,
@@ -34,7 +35,12 @@ export function FollowersContainer() {
   return (
     <View flex>
       <TabController items={items} asCarousel>
-        <TabController.TabBar enableShadow />
+        <TabController.TabBar
+          enableShadow
+          activeBackgroundColor={Colors.surfaceBG}
+          backgroundColor={Colors.trueSurfaceBG}
+          labelColor={Colors.textColor}
+        />
         <TabController.PageCarousel>
           <TabController.TabPage index={0}>
             <Followers userId={userId} />

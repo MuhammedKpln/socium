@@ -3,6 +3,7 @@ import { SkeletonView } from '@/components/SkeletonView/SkeletonView.component'
 import { IMessageRequests } from '@/types/messages.types'
 import React, { useCallback } from 'react'
 import { FlatList } from 'react-native'
+import { Fader } from 'react-native-ui-lib'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
 
@@ -29,6 +30,7 @@ export function RecentlyMatched(props: IProps) {
     return (
       <View marginT-10>
         <FlatList horizontal renderItem={renderItem} data={messageRequests} />
+        <Fader position={Fader.position.END} size={100} />
       </View>
     )
   }, [renderItem, messageRequests])

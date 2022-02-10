@@ -1,10 +1,10 @@
+import { useHaptic } from '@/hooks/useHaptic'
 import { useAppSelector } from '@/store'
 import { IMessage } from '@/types/messages.types'
 import { showToast, ToastStatus } from '@/utils/toast'
 import { wait } from '@/utils/utils'
 import AnimatedLottieView from 'lottie-react-native'
-import React, { useCallback, useEffect, useState } from 'react'
-import { useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Dimensions, Keyboard, useWindowDimensions } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -16,7 +16,6 @@ import {
   RecyclerListView,
 } from 'recyclerlistview'
 import { ScrollEvent } from 'recyclerlistview/dist/reactnative/core/scrollcomponent/BaseScrollView'
-import { Icon } from '../Icon/Icon.component'
 import { KeyboardAvoidingView } from '../KeyboardAvoidingView/KeyboardAvoidingView.component'
 import { IChatProps } from './Chat.props'
 import { ChatBubble } from './ChatBubble.component'
@@ -34,6 +33,8 @@ function _ChatComponent(props: IChatProps, ref: any) {
   const [loading, setLoading] = useState(false)
   const dimensions = useWindowDimensions()
   const safearea = useSafeAreaInsets()
+  const { trigger: triggerHaptic } = useHaptic()
+
   const listHeight = useMemo(
     () => dimensions.height - 162 - safearea.bottom - safearea.top,
     [dimensions, safearea],
@@ -55,10 +56,15 @@ function _ChatComponent(props: IChatProps, ref: any) {
   }, [ref])
 
   useEffect(() => {
+    const lastMessage = props.messages[props.messages.length - 1]
+    if (lastMessage.senderId !== localUser?.id) {
+      triggerHaptic('impactLight')
+    }
+
     ref.current.scrollToEnd({
       animated: true,
     })
-  }, [ref, props.messages])
+  }, [ref, props.messages, localUser, triggerHaptic])
 
   useEffect(() => {
     if (loading) {

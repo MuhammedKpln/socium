@@ -1,4 +1,5 @@
 import { IFetchRoomMessagesResponse } from '@/graphql/queries/FetchMessages.query'
+import { IMessage } from '@/types/messages.types'
 import { ApolloQueryResult } from '@apollo/client'
 
 export interface IChatProps {
@@ -13,7 +14,7 @@ export interface IChatProps {
   calling?: boolean
   typing: boolean
   avatar: string
-  messages: any[]
+  messages: IMessage[]
   renderItem?: (props: any) => any
   onPressCall?: () => void
   onPressMute?: () => void

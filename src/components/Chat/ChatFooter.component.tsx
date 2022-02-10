@@ -1,7 +1,7 @@
 import React from 'react'
 import { Keyboard } from 'react-native'
 import { Colors, Incubator } from 'react-native-ui-lib'
-import View from 'react-native-ui-lib/view'
+import Button from '../Button/Button.component'
 import { Icon } from '../Icon/Icon.component'
 import { IChatProps } from './Chat.props'
 
@@ -32,14 +32,13 @@ export const ChatFooter = React.memo((props: IProps) => {
       onBlur={props.onBlurInput}
       placeholderTextColor="#ADADAD"
       trailingAccessory={
-        <View bg-primary padding-10 br100>
-          <Icon
-            name="PaperPlane"
-            size={20}
-            color={Colors.white}
-            onPress={props.onPressSend}
-          />
-        </View>
+        <Button
+          padding-10
+          onPress={props.onPressSend}
+          iconSource={() => (
+            <Icon name="PaperPlane" size={20} color={Colors.white} />
+          )}
+        />
       }
     />
   )

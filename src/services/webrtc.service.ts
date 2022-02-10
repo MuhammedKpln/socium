@@ -28,7 +28,7 @@ export class PeerConnection {
 
   async createOffer(): Promise<RTCSessionDescriptionType> {
     const offer = await this.peerConnection.createOffer()
-    this.peerConnection.setLocalDescription(new RTCSessionDescription(offer))
+    await this.peerConnection.setLocalDescription(offer)
 
     return offer
   }
@@ -36,20 +36,14 @@ export class PeerConnection {
   async createAnswer(
     offer: RTCSessionDescriptionType,
   ): Promise<RTCSessionDescriptionType> {
-    await this.peerConnection.setRemoteDescription(
-      new RTCSessionDescription(offer),
-    )
+    await this.peerConnection.setRemoteDescription(offer)
     const answer = await this.peerConnection.createAnswer()
-    await this.peerConnection.setLocalDescription(
-      new RTCSessionDescription(answer),
-    )
+    await this.peerConnection.setLocalDescription(answer)
 
     return answer
   }
 
   async setRemoteDescription(answer: RTCSessionDescriptionType) {
-    await this.peerConnection.setRemoteDescription(
-      new RTCSessionDescription(answer),
-    )
+    await this.peerConnection.setRemoteDescription(answer)
   }
 }

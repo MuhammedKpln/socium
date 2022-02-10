@@ -10,7 +10,7 @@ interface IToastRef {
 }
 
 export interface IToastAdditionalOptions
-  extends Omit<Incubator.ToastProps, 'autoDissmiss'> {}
+  extends Omit<Incubator.ToastProps, 'autoDissmiss' | 'enableHapticFeedback'> {}
 
 export enum ToastStatus {
   Success = 'success',

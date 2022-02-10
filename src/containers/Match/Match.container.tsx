@@ -23,18 +23,20 @@ export function MatchContainer() {
   const [matching, setMatching] = useState<boolean>(false)
   const [matched, setMatched] = useState<boolean>(false)
   const [connectedUser, setConnectedUser] = useState<IUser>()
+  const [connectedUuid, setConnectedUuid] = useState<string>('')
   const [room, setRoom] = useState<string>('')
   const navigation = useNavigation()
   const marginBottom = useSharedValue(0)
   const opacity = useSharedValue(1)
   const localUser = useAppSelector(state => state.userReducer.user)
-  const socketService = useSocket()
+  const { socket: socketService } = useSocket()
   const animationRef = useRef<AnimatedLottieView>(null)
 
   useEffect(() => {
     socketService.clientPairedEvent(data => {
       setRoom(data.room)
       setConnectedUser(data.user)
+      setConnectedUuid(data.uuid)
       setMatched(true)
       marginBottom.value = 0
 
@@ -74,12 +76,13 @@ export function MatchContainer() {
   const onPressSendMessage = useCallback(() => {
     navigation.navigate(Routes.MatchChat, {
       room,
+      uuid: connectedUuid,
       //@ts-ignore
       user: connectedUser,
     })
     setMatched(false)
     setMatching(false)
-  }, [connectedUser, navigation, room])
+  }, [connectedUser, navigation, room, connectedUuid])
 
   const leaveQueue = useCallback(() => {
     socketService.leaveQueue()
@@ -109,7 +112,7 @@ export function MatchContainer() {
             />
 
             <Button label="Eşleşmeden ayrıl" onPress={leaveQueue} />
-            {matched && connectedUser ? (
+            {matched && connectedUser && connectedUuid ? (
               <MatchingFoundComponent
                 onPressSendMessage={onPressSendMessage}
                 user={connectedUser}

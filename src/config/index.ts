@@ -3,10 +3,10 @@ export const Config = {
     ? 'https://derdevam.com/static'
     : 'https://derdevam.com/static',
   GRAPHQL_WS_URL: __DEV__
-    ? 'ws://LOCALHOST:3000/graphql'
+    ? 'ws://81.226.94.21:3000/graphql'
     : 'wss://derdevam.com/graphql',
-  API_URL: __DEV__ ? 'http://localhost:3000' : 'https://derdevam.com',
-  SOCKET_URL: __DEV__ ? 'ws://LOCALHOST:3001' : 'wss://cio.derdevam.com',
+  API_URL: __DEV__ ? 'http://81.226.94.21:3000' : 'https://derdevam.com',
+  SOCKET_URL: __DEV__ ? 'ws://81.226.94.21:3001' : 'wss://cio.derdevam.com',
   APP_TITLE: 'Derdevam',
   APP_SLOGAN: 'Derdevam ile içinizi dökmeye hazır mısınız?',
   APP_PLAYSTORE_LINK: 'https://derdevam.com',

@@ -4,8 +4,10 @@ import { showToast, ToastStatus } from '@/utils/toast'
 import { wait } from '@/utils/utils'
 import AnimatedLottieView from 'lottie-react-native'
 import React, { useCallback, useEffect, useState } from 'react'
-import { Dimensions, Keyboard } from 'react-native'
+import { useMemo } from 'react'
+import { Dimensions, Keyboard, useWindowDimensions } from 'react-native'
 import Animated, { FadeInDown } from 'react-native-reanimated'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Assets, Colors } from 'react-native-ui-lib'
 import View from 'react-native-ui-lib/view'
 import {
@@ -14,6 +16,7 @@ import {
   RecyclerListView,
 } from 'recyclerlistview'
 import { ScrollEvent } from 'recyclerlistview/dist/reactnative/core/scrollcomponent/BaseScrollView'
+import { Icon } from '../Icon/Icon.component'
 import { KeyboardAvoidingView } from '../KeyboardAvoidingView/KeyboardAvoidingView.component'
 import { IChatProps } from './Chat.props'
 import { ChatBubble } from './ChatBubble.component'
@@ -29,6 +32,12 @@ const ViewTypes = {
 function _ChatComponent(props: IChatProps, ref: any) {
   const localUser = useAppSelector(state => state.userReducer.user)
   const [loading, setLoading] = useState(false)
+  const dimensions = useWindowDimensions()
+  const safearea = useSafeAreaInsets()
+  const listHeight = useMemo(
+    () => dimensions.height - 162 - safearea.bottom - safearea.top,
+    [dimensions, safearea],
+  )
 
   useEffect(() => {
     wait(250).then(() => ref.current?.scrollToEnd())
@@ -152,6 +161,7 @@ function _ChatComponent(props: IChatProps, ref: any) {
   return (
     <View bg-surfaceBG>
       <ChatHeader status={props.isOnline} {...props} />
+
       <KeyboardAvoidingView keyboardVerticalOffset={90}>
         <RecyclerListView
           rowRenderer={rowRenderer}
@@ -163,8 +173,8 @@ function _ChatComponent(props: IChatProps, ref: any) {
           }}
           onScroll={onTopReached}
           style={{
-            height: '80%',
             backgroundColor: Colors.surfaceBG,
+            height: listHeight,
           }}
           renderFooter={onTyping}
           ref={ref}

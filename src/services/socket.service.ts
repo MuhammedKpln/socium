@@ -1,6 +1,14 @@
 import { Config } from '@/config'
+import { EventEmitter } from 'events'
 import {
+  RTCIceCandidateType,
+  RTCSessionDescriptionType,
+} from 'react-native-webrtc'
+import {
+  IAnswerMadeResponse,
+  ICallMadeResponse,
   IClientPairedData,
+  IIceCandidateReceived,
   IJoinQueueArgs,
   IJoinRoomArg,
   IMessageReceivedData,
@@ -16,10 +24,25 @@ export class SocketConnection {
   roomName: string = ''
   isTyping: boolean = false
   eventListener: any
+  events: EventEmitter = new EventEmitter()
 
   constructor() {
     // const token = storage.getString(EncryptedStorageKeys.AccessToken)
     this.io = new WebSocket(Config.SOCKET_URL)
+    this.listenForEvents()
+  }
+
+  private listenForEvents() {
+    this.eventListener = this.io.addEventListener('message', message => {
+      try {
+        const parsedMessage = JSON.parse(message.data)
+        const event: string = parsedMessage.event
+
+        this.events.emit(event, parsedMessage.data)
+      } catch (err) {
+        console.error('WW', err)
+      }
+    })
   }
 
   async connect() {
@@ -42,20 +65,7 @@ export class SocketConnection {
   }
 
   private on(event: string, callback: (data?: any) => void) {
-    this.eventListener = this.io.addEventListener('message', message => {
-      {
-        try {
-          console.log(message)
-          const parsedMessage = JSON.parse(message.data)
-
-          if (parsedMessage.event === event) {
-            callback(parsedMessage?.data)
-          }
-        } catch (err) {
-          console.error(err)
-        }
-      }
-    })
+    this.events.on(event, callback)
   }
 
   joinQueue({ user }: IJoinQueueArgs) {
@@ -82,8 +92,36 @@ export class SocketConnection {
     this.emit(SocketFireEvents.RemoveMessageRequest, { messageId, room })
   }
 
+  callUser(offer: RTCSessionDescriptionType, uuid: string) {
+    this.emit(SocketFireEvents.CallUser, { offer, uuid })
+  }
+
+  makeAnswer(answer: RTCSessionDescriptionType, clientId: string) {
+    this.emit(SocketFireEvents.MakeAnswer, {
+      answer,
+      uuid: clientId,
+    })
+  }
+
   clientPairedEvent(callback: (data: IClientPairedData) => void) {
     this.on(SocketListenerEvents.ClientPaired, callback)
+  }
+
+  addIceCandidate(candidate: RTCIceCandidateType, uuid: string) {
+    this.emit(SocketFireEvents.AddIceCandidate, {
+      candidate,
+      uuid,
+    })
+  }
+
+  retrieveCall(uuid: string) {
+    this.emit(SocketFireEvents.RetrieveCall, {
+      uuid,
+    })
+  }
+
+  iceCandidateReceivedEvent(callback: (data: IIceCandidateReceived) => void) {
+    this.on(SocketListenerEvents.ReceivedIceCandidate, callback)
   }
 
   messageReceivedEvent(callback: (data: IMessageReceivedData) => void) {
@@ -102,11 +140,31 @@ export class SocketConnection {
     this.on(SocketListenerEvents.RemoveMessageRequested, callback)
   }
 
+  callMadeEvent(callback: (data: ICallMadeResponse) => void) {
+    this.on(SocketListenerEvents.CallMade, callback)
+  }
+
+  answerMadeEvent(callback: (data: IAnswerMadeResponse) => void) {
+    this.on(SocketListenerEvents.AnswerMade, callback)
+  }
+
+  callRetrievedEvent(callback: () => void) {
+    this.on(SocketListenerEvents.CallIsRetrieved, callback)
+  }
+
   close() {
     return this.io.close()
   }
 
-  removeListeners() {
+  removeListeners(events?: SocketListenerEvents[]) {
     this.io.removeEventListener('message', this.eventListener)
+
+    if (events) {
+      events.forEach(event => {
+        this.events.removeAllListeners(event)
+      })
+    } else {
+      this.events.removeAllListeners()
+    }
   }
 }

@@ -1,3 +1,4 @@
+import { useHaptic } from '@/hooks/useHaptic'
 import { IToastAdditionalOptions, ToastStatus } from '@/utils/toast'
 import React, {
   useCallback,
@@ -16,6 +17,7 @@ const _Toast = (_: any, ref: any) => {
   const [toastStatus, setToastStatus] = useState<ToastStatus>(ToastStatus.Info)
   const [additionalOptions, setAdditionalOptions] =
     useState<IToastAdditionalOptions>()
+  const { trigger } = useHaptic()
 
   useImperativeHandle(
     ref,
@@ -30,9 +32,10 @@ const _Toast = (_: any, ref: any) => {
           setToastStatus(_toastStatus)
           setVisible(true)
           setAdditionalOptions(_additionalOptions)
+          trigger('impactLight')
         },
       }),
-      [setMessage, setVisible, setToastStatus],
+      [setMessage, setVisible, setToastStatus, trigger],
     ),
   )
 

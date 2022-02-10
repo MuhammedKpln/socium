@@ -17,6 +17,9 @@
       android:allowBackup="false"
       android:theme="@style/AppTheme">
       <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-5089133101627366~1296090636"/>
+      <meta-data
         android:name="com.google.firebase.messaging.default_notification_color"
         android:resource="@color/colorAccent" />
       <activity

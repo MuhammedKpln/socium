@@ -1,6 +1,7 @@
 import { IUser } from '@/Types/login.types'
 import { IRoom } from '@/types/messages.types'
 import { ParamListBase } from '@react-navigation/native'
+import { RTCSessionDescriptionType } from 'react-native-webrtc'
 
 export enum Routes {
   App = 'app',
@@ -21,6 +22,9 @@ export enum Routes {
   MatchChat = 'match-chat',
   ChangeAvatar = 'change-avatar',
   Followers = 'followers',
+  CallComing = 'call-coming',
+  Calling = 'calling',
+  Call = 'call',
 }
 export enum RouteTitles {
   Login = 'Giriş yap',
@@ -63,6 +67,10 @@ export const RouteComponents = {
       .ChangeAvatarContainer,
   Followers: () =>
     require('@/containers/Followers/Followers.container').FollowersContainer,
+  CallComing: () =>
+    require('@/containers/Match/CallComing.component').CallComing,
+  Calling: () => require('@/containers/Match/Calling.component').Calling,
+  Call: () => require('@/containers/Match/Call.component').CallContainer,
 }
 
 export interface INavigatorParamsList extends ParamListBase {
@@ -79,7 +87,20 @@ export interface INavigatorParamsList extends ParamListBase {
   [Routes.NewPost]: undefined
   [Routes.ImageGallery]: { imageSet: string[] }
   [Routes.Chat]: { room: IRoom; user: IUser }
-  [Routes.MatchChat]: { room: string; user: IUser }
+  [Routes.MatchChat]: { room: string; user: IUser; uuid: string }
   [Routes.ChangeAvatar]: undefined
   [Routes.Followers]: { userId: number; username: string }
+  [Routes.CallComing]: {
+    username: string
+    offer: RTCSessionDescriptionType
+    uuid: string
+  }
+  [Routes.Calling]: {
+    username: string
+    avatar: string
+  }
+  [Routes.Call]: {
+    username: string
+    avatar: string
+  }
 }

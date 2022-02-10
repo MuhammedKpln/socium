@@ -162,6 +162,7 @@ const MainNavigator = () => {
           name={Routes.Followers}
           getComponent={RouteComponents.Followers}
         />
+        <Stack.Screen name={Routes.Call} getComponent={RouteComponents.Call} />
       </Stack.Group>
       <Stack.Group
         screenOptions={{
@@ -171,6 +172,16 @@ const MainNavigator = () => {
         <Stack.Screen
           name={Routes.ImageGallery}
           getComponent={RouteComponents.ImageGallery}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={Routes.CallComing}
+          getComponent={RouteComponents.CallComing}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={Routes.Calling}
+          getComponent={RouteComponents.Calling}
           options={{ headerShown: false }}
         />
       </Stack.Group>

@@ -4,12 +4,12 @@ import { Icon } from '@/components/Icon/Icon.component'
 import { IUser } from '@/types/login.types'
 import AnimatedLottieView from 'lottie-react-native'
 import React from 'react'
+import { StatusBar } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Colors } from 'react-native-ui-lib'
 import Modal from 'react-native-ui-lib/modal'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
-
 interface IProps {
   user: IUser
   onPressClose: () => void
@@ -18,8 +18,10 @@ interface IProps {
 
 export function MatchingFoundComponent(props: IProps) {
   const { onPressClose, user, onPressSendMessage } = props
+
   return (
     <View>
+      <StatusBar barStyle="light-content" />
       <Modal
         visible={true}
         overlayBackgroundColor="rgba(0,0,0,0.9)"

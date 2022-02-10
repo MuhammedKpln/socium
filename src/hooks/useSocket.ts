@@ -1,25 +1,21 @@
 import { SocketConnection } from '@/services/socket.service'
+import { useCallback } from 'react'
 import { useEffect } from 'react'
-import { useMemo } from 'react'
+
+const socket = new SocketConnection()
 
 export function useSocket() {
-  const socket = useMemo(() => {
-    return new SocketConnection()
+  const connect = useCallback((): Promise<unknown> | undefined => {
+    if (socket.io.readyState !== WebSocket.OPEN) {
+      return socket.connect()
+    }
   }, [])
 
   useEffect(() => {
-    if (
-      socket.io.readyState === WebSocket.CLOSED ||
-      socket.io.readyState === WebSocket.CLOSING
-    ) {
-      socket.connect()
+    if (socket.io.readyState === WebSocket.CLOSED) {
+      connect()
     }
+  }, [connect])
 
-    return () => {
-      socket.removeListeners()
-      socket.close()
-    }
-  }, [socket])
-
-  return socket
+  return { socket, connect }
 }

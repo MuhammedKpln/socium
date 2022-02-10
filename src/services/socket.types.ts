@@ -1,6 +1,6 @@
 import { IUser } from '@/types/login.types'
 import { IMessage } from '@/types/messages.types'
-import { RTCSessionDescriptionType } from 'react-native-webrtc'
+import { RTCIceCandidateType, RTCSessionDescription } from 'react-native-webrtc'
 
 export enum JoinRole {
   Listener = 0,
@@ -9,11 +9,11 @@ export enum JoinRole {
 
 export enum SocketListenerEvents {
   ClientPaired = 'CLIENT_PAIRED',
-  AnswerMade = 'answer-made',
-  CallMade = 'call-made',
+  AnswerMade = 'ANSWER_MADE',
+  CallMade = 'CALL_MADE',
   HangedUpCall = 'user hanged up call',
   ClientDisconnected = 'client disconnected',
-  CallIsRetrieved = 'call is retrieved',
+  CallIsRetrieved = 'CALL_RETRIEVED',
   AbuseDetected = 'abuse is detected',
   Typing = 'USER_IS_TYPING',
   DoneTyping = 'USER_IS_DONE_TYPING',
@@ -21,15 +21,16 @@ export enum SocketListenerEvents {
   UserIsOnline = 'user is online',
   RemoveMessageRequested = 'MESSAGE_REMOVED',
   SeenStatusUpdated = 'seen status updated',
+  ReceivedIceCandidate = 'RECEIVED_ICE_CANDIDATE',
 }
 
 export enum SocketFireEvents {
   JoinQueue = 'join queue',
   JoinRoom = 'join room',
-  CallUser = 'call-user',
-  MakeAnswer = 'make-answer',
+  CallUser = 'call user',
+  MakeAnswer = 'make answer',
+  RetrieveCall = 'retrieve call',
   HangUpCall = 'hang up call',
-  CallCloseRequest = 'call retrieve request',
   SendMessage = 'send message',
   LeaveRoom = 'leave room',
   LeaveQueue = 'leave queue',
@@ -37,11 +38,13 @@ export enum SocketFireEvents {
   CheckIfUserIsConnected = 'user is already connected',
   RemoveMessageRequest = 'remove single message request',
   UpdateSeenStatus = 'seen status',
+  AddIceCandidate = 'add ice candidate',
 }
 
 export interface IClientPairedData {
   room: string
   user: IUser
+  uuid: string
 }
 
 export interface IMessageReceivedData {
@@ -89,13 +92,13 @@ export interface ISendMessageData {
 }
 
 export interface IAnswerMadeResponse {
-  socket: string
-  answer: RTCSessionDescriptionType
+  uuid: string
+  answer: RTCSessionDescription
 }
 
 export interface ICallMadeResponse {
-  offer: RTCSessionDescriptionType
-  socket: string
+  offer: RTCSessionDescription
+  uuid: string
 }
 export interface IHangUpResponse {
   hangup: boolean
@@ -127,4 +130,9 @@ export interface IUpdateSeenStatus {
 
 export interface ISeenStatusUpdated {
   seen: boolean
+}
+
+export interface IIceCandidateReceived {
+  candidate: RTCIceCandidateType
+  uuid: string
 }

@@ -10,8 +10,8 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 interface IState {
   user: IUser | null
   isLoggedIn: boolean
-  starCount: number
-  showNextAd: Date | null
+  starCount?: number
+  showNextAd?: Date | null
 }
 
 interface IUpdateLoginStatusPayload {

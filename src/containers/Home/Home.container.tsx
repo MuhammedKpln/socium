@@ -17,7 +17,7 @@ import { fetchUserStars } from '@/store/reducers/user.reducer'
 import { IPost } from '@/types/post.types'
 import { showToast, ToastStatus } from '@/utils/toast'
 import { useQuery } from '@apollo/client'
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import { FlatList, RefreshControl } from 'react-native'
 import { View } from 'react-native-ui-lib'
 import Text from 'react-native-ui-lib/text'
@@ -25,6 +25,7 @@ import { useDispatch } from 'react-redux'
 
 const HomeContainer = () => {
   const { toggleLikeButton } = useLikes()
+
   const dispatch = useDispatch()
   const isLoggedIn = useAppSelector(state => state.userReducer.isLoggedIn)
   const fetchPosts = useQuery<{ posts: IPost[] }, IFetchPostsVariables>(
@@ -93,10 +94,6 @@ const HomeContainer = () => {
         offset: fetchPosts.data?.posts.length,
       },
     })
-  }, [fetchPosts])
-
-  useEffect(() => {
-    console.log('IM CHANGED WALLAHSS')
   }, [fetchPosts])
 
   function renderItem({ item }: { item: IPost }) {

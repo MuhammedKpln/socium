@@ -53,6 +53,10 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+  <key>NSCameraUsageDescription</key>
+<string>Camera permission description</string>
+<key>NSMicrophoneUsageDescription</key>
+<string>Microphone permission description</string>
 <key>GADApplicationIdentifier</key>
 <string>ca-app-pub-5089133101627366~1296090636</string>
 <key>SKAdNetworkItems</key>

@@ -61,9 +61,11 @@ function _ChatComponent(props: IChatProps, ref: any) {
       triggerHaptic('impactLight')
     }
 
-    ref.current.scrollToEnd({
-      animated: true,
-    })
+    setTimeout(() => {
+      ref.current.scrollToEnd({
+        animated: true,
+      })
+    }, 100)
   }, [ref, props.messages, localUser, triggerHaptic])
 
   useEffect(() => {

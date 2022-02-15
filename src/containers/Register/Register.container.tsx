@@ -11,6 +11,7 @@ import { showToast, ToastStatus } from '@/utils/toast'
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
 import React, { useMemo } from 'react'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Checkbox from 'react-native-ui-lib/checkbox'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
@@ -81,9 +82,9 @@ export function RegisterContainer() {
   }
 
   return (
-    <Page flex useSafeArea>
+    <Page scrollable>
       <Text header>Kayıt ol</Text>
-      <View width="100%">
+      <KeyboardAwareScrollView>
         <Formik
           initialValues={initialValues}
           validationSchema={formValidationSchema}
@@ -198,7 +199,7 @@ export function RegisterContainer() {
             Bir hesabın var mı? <Text primary>Giriş Yap</Text>
           </Text>
         </Button>
-      </View>
+      </KeyboardAwareScrollView>
     </Page>
   )
 }

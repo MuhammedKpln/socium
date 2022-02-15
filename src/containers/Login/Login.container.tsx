@@ -17,6 +17,7 @@ import { showToast, ToastStatus } from '@/utils/toast'
 import { useMutation } from '@apollo/client'
 import { Formik } from 'formik'
 import React, { useMemo } from 'react'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
 import { useDispatch } from 'react-redux'
@@ -94,7 +95,7 @@ export function LoginContainer() {
   return (
     <Page flex center>
       <Logo width={147} height={40} />
-      <View marginV-100 width="100%">
+      <KeyboardAwareScrollView marginV-100>
         <Formik
           initialValues={initialValues}
           validationSchema={formValidationSchema}
@@ -158,7 +159,7 @@ export function LoginContainer() {
             Bir hesabın yok mu ? <Text primary>Kayıt ol</Text>
           </Text>
         </Button>
-      </View>
+      </KeyboardAwareScrollView>
     </Page>
   )
 }

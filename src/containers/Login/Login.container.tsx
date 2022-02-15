@@ -95,7 +95,7 @@ export function LoginContainer() {
   return (
     <Page flex center>
       <Logo width={147} height={40} />
-      <KeyboardAwareScrollView marginV-100>
+      <KeyboardAwareScrollView style={{ width: '100%', marginVertical: 100 }}>
         <Formik
           initialValues={initialValues}
           validationSchema={formValidationSchema}

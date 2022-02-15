@@ -2,9 +2,10 @@ import { Icon } from '@/components/Icon/Icon.component'
 import { Page } from '@/components/Page/Page.component'
 import { INavigatorParamsList, Routes } from '@/navigators/navigator.props'
 import { navigateBack } from '@/navigators/utils/navigation'
+import { chatEmitter } from '@/services/events.service'
 import { RouteProp, useRoute } from '@react-navigation/native'
 import React, { useEffect } from 'react'
-import { DeviceEventEmitter, StyleSheet, Vibration } from 'react-native'
+import { StyleSheet, Vibration } from 'react-native'
 import InCallManager from 'react-native-incall-manager'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Colors, TouchableOpacity } from 'react-native-ui-lib'
@@ -18,26 +19,27 @@ export const CallComing = () => {
   const { bottom } = useSafeAreaInsets()
 
   const onCallAccepted = () => {
-    DeviceEventEmitter.emit('callAccepted', { offer, uuid })
+    chatEmitter.emit('callAccepted', { offer, uuid })
     navigateBack()
   }
 
   const onCallRejected = () => {
-    DeviceEventEmitter.emit('callRejected')
+    chatEmitter.emit('callRejected')
     navigateBack()
   }
 
   useEffect(() => {
-    DeviceEventEmitter.addListener('callIsRetrieved', () => {
+    chatEmitter.addListener('callIsRetrieved', () => {
       navigateBack()
     })
+
     InCallManager.startRingtone()
     Vibration.vibrate([50, 100, 200, 300, 400], true)
 
     return () => {
       InCallManager.stopRingtone()
       Vibration.cancel()
-      DeviceEventEmitter.removeAllListeners('callIsRetrieved')
+      chatEmitter.removeAllListeners('callIsRetrieved')
     }
   }, [])
 

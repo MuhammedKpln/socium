@@ -8,15 +8,20 @@ import { applyMiddleware } from '@reduxjs/toolkit'
 
 const persistConfig = {
   key: 'root',
-  blacklist: ['comments', 'theme', 'post'],
+  blacklist: ['comments', 'theme', 'post', 'chat'],
   storage,
 }
 
+const middlewares = [thunkMiddleware]
+
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
-const composedEnhancer = applyMiddleware(thunkMiddleware)
+if (__DEV__) {
+  const createDebugger = require('redux-flipper').default
+  middlewares.push(createDebugger())
+}
 
-let store = createStore(persistedReducer, composedEnhancer)
+let store = createStore(persistedReducer, applyMiddleware(...middlewares))
 let persistedStore = persistStore(store)
 
 export type RootState = ReturnType<typeof rootReducer>

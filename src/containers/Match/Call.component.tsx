@@ -3,9 +3,13 @@ import Button from '@/components/Button/Button.component'
 import { Icon } from '@/components/Icon/Icon.component'
 import { Page } from '@/components/Page/Page.component'
 import { INavigatorParamsList, Routes } from '@/navigators/navigator.props'
+import { chatEmitter } from '@/services/events.service'
+import { useAppSelector } from '@/store'
 import { RouteProp, useRoute } from '@react-navigation/native'
-import React, { useCallback, useEffect } from 'react'
-import { DeviceEventEmitter, StyleSheet } from 'react-native'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { StyleSheet } from 'react-native'
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -15,11 +19,28 @@ import { Colors } from 'react-native-ui-lib'
 import UIAvatar from 'react-native-ui-lib/avatar'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
+dayjs.extend(relativeTime)
 
 export function CallContainer() {
   const {
-    params: { avatar, username },
+    params: { avatar, username, isMuted },
   } = useRoute<RouteProp<INavigatorParamsList, Routes.Call>>()
+  const mic = useAppSelector(state => state.chatReducer.mic)
+  const speakersOn = useAppSelector(state => state.chatReducer.speakersOn)
+  const callTimer = useAppSelector(state => state.chatReducer.callTimer)
+  const [receiverMicMuted, setReceiverMicMuted] = useState<boolean>(false)
+  const speakerButtonStyles = useMemo(() => {
+    return {
+      width: 50,
+      height: 50,
+    }
+  }, [])
+  const micButtonStyles = useMemo(() => {
+    return {
+      width: 50,
+      height: 50,
+    }
+  }, [])
   const avatarScale = useSharedValue(1)
   const avatarStyle = useAnimatedStyle(() => {
     return {
@@ -34,7 +55,13 @@ export function CallContainer() {
   })
 
   useEffect(() => {
+    chatEmitter.addListener('micMuted', _isMuted => {
+      setReceiverMicMuted(_isMuted)
+    })
+
     const animationLoop = setInterval(() => {
+      if (receiverMicMuted) return
+
       if (avatarScale.value == 0.9) {
         avatarScale.value = 1
       } else {
@@ -44,17 +71,18 @@ export function CallContainer() {
 
     return () => {
       clearInterval(animationLoop)
+      chatEmitter.removeAllListeners('micMuted')
     }
-  }, [avatarScale])
+  }, [avatarScale, receiverMicMuted, isMuted])
 
   const onPressSpeaker = useCallback(() => {
-    DeviceEventEmitter.emit('speakerToggled')
+    chatEmitter.emit('speakerToggled')
   }, [])
   const onPressMic = useCallback(() => {
-    DeviceEventEmitter.emit('micToggled')
+    chatEmitter.emit('micToggled')
   }, [])
   const callEnded = useCallback(() => {
-    DeviceEventEmitter.emit('callEnded')
+    chatEmitter.emit('callEnded')
   }, [])
 
   return (
@@ -64,7 +92,9 @@ export function CallContainer() {
           {username}
         </Text>
         <Text greyText marginT-10>
-          sesli konuşma devam ediyor..
+          {receiverMicMuted || isMuted
+            ? 'Kullanıcı mikrofonu kapalı.'
+            : dayjs(callTimer).fromNow(true)}
         </Text>
       </View>
 
@@ -80,7 +110,8 @@ export function CallContainer() {
         <View style={styles.actionButtons}>
           <Button
             round
-            style={{ width: 50, height: 50 }}
+            style={speakerButtonStyles}
+            backgroundColor={!speakersOn ? Colors.orange50 : Colors.primary}
             iconSource={() => (
               <Icon name="speaker" size={23} color={Colors.white} />
             )}
@@ -89,7 +120,8 @@ export function CallContainer() {
           />
           <Button
             round
-            style={{ width: 50, height: 50 }}
+            style={micButtonStyles}
+            backgroundColor={!mic ? Colors.orange50 : Colors.primary}
             iconSource={() => (
               <Icon name="mic" size={23} color={Colors.white} />
             )}

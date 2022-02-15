@@ -24,6 +24,7 @@ interface IProps {
   status: boolean
   callFunction?: boolean
   inCall?: boolean
+  muted: boolean
 }
 
 export const ChatHeader = React.memo((props: IProps) => {
@@ -36,6 +37,7 @@ export const ChatHeader = React.memo((props: IProps) => {
     onPressCall,
     callFunction,
     inCall,
+    muted,
   } = props
   const buttonScale = useSharedValue(1)
   const buttonStyle = useAnimatedStyle(() => {
@@ -85,8 +87,9 @@ export const ChatHeader = React.memo((props: IProps) => {
     navigation.navigate(Routes.Call, {
       avatar,
       username,
+      isMuted: muted,
     })
-  }, [navigation, avatar, username])
+  }, [navigation, avatar, username, muted])
 
   return (
     <View bg-trueSurfaceBG>

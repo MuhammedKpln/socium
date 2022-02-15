@@ -5,6 +5,7 @@ import themeReducer from './theme.reducer'
 import userReducer from './user.reducer'
 import featureHightlightReducer from './featureHighlight.reducer'
 import postReducer from './post.reducer'
+import chatReducer from './chat.reducer'
 
 export default combineReducers({
   counterSlice,
@@ -13,4 +14,5 @@ export default combineReducers({
   themeReducer,
   featureHightlightReducer,
   postReducer,
+  chatReducer,
 })

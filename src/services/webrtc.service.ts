@@ -1,15 +1,15 @@
 import {
-  RTCPeerConnection,
-  RTCPeerConnectionConfiguration,
-  RTCSessionDescription,
-  RTCSessionDescriptionType,
   mediaDevices,
   MediaStream,
   MediaStreamConstraints,
+  RTCPeerConnection,
+  RTCPeerConnectionConfiguration,
+  RTCSessionDescriptionType,
 } from 'react-native-webrtc'
 
 export class PeerConnection {
   peerConnection: RTCPeerConnection
+  localStream: MediaStream | null = null
   private config: RTCPeerConnectionConfiguration = {
     iceServers: [{ url: 'stun:stun.l.google.com:19302' }],
   }
@@ -19,7 +19,9 @@ export class PeerConnection {
   }
 
   async getUserMedia(options: MediaStreamConstraints) {
-    return await mediaDevices.getUserMedia(options)
+    this.localStream = await mediaDevices.getUserMedia(options)
+
+    return this.localStream
   }
 
   addStream(stream: MediaStream) {
@@ -45,5 +47,10 @@ export class PeerConnection {
 
   async setRemoteDescription(answer: RTCSessionDescriptionType) {
     await this.peerConnection.setRemoteDescription(answer)
+  }
+
+  close() {
+    this.peerConnection.close()
+    this.peerConnection = new RTCPeerConnection(this.config)
   }
 }

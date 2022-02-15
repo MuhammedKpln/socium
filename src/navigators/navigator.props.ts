@@ -102,5 +102,6 @@ export interface INavigatorParamsList extends ParamListBase {
   [Routes.Call]: {
     username: string
     avatar: string
+    isMuted: boolean
   }
 }

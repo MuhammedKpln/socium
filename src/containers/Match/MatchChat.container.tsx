@@ -3,11 +3,17 @@ import { useSocket } from '@/hooks/useSocket'
 import { useWebrtc } from '@/hooks/useWebrtc'
 import { INavigatorParamsList, Routes } from '@/navigators/navigator.props'
 import { navigateBack } from '@/navigators/utils/navigation'
+import { chatEmitter } from '@/services/events.service'
 import {
   ICallMadeResponse,
   SocketListenerEvents,
 } from '@/services/socket.types'
 import { useAppSelector } from '@/store'
+import {
+  resetChat,
+  toggleMicMuted,
+  toggleSpeakers,
+} from '@/store/reducers/chat.reducer'
 import { IMessage } from '@/types/messages.types'
 import { showToast, ToastStatus } from '@/utils/toast'
 import { wait } from '@/utils/utils'
@@ -19,17 +25,20 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { DeviceEventEmitter } from 'react-native'
 import InCallManager from 'react-native-incall-manager'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { useDispatch } from 'react-redux'
+
 export function MatchChatContainer() {
   const {
     params: { user, room, uuid },
   } = useRoute<RouteProp<INavigatorParamsList, Routes.MatchChat>>()
   const [inCall, setInCall] = useState<boolean>(false)
-
+  const speakersOn = useAppSelector(state => state.chatReducer.speakersOn)
+  const dispatch = useDispatch()
   const [message, setMessage] = useState<string>('')
   const [typing, setTyping] = useState<boolean>(false)
+  const [isReceiverMuted, setIsReceiverMuted] = useState<boolean>(false)
   const [messages, setMessages] = useState<IMessage[]>([
     //@ts-ignore
     { message: 'Merhaba!' },
@@ -58,29 +67,49 @@ export function MatchChatContainer() {
   }, [socketService, uuid])
 
   const speakerToggled = useCallback(async () => {
-    InCallManager.setSpeakerphoneOn(true)
-  }, [])
+    if (speakersOn) {
+      InCallManager.setSpeakerphoneOn(false)
+    } else {
+      InCallManager.setSpeakerphoneOn(true)
+    }
+
+    dispatch(toggleSpeakers())
+  }, [dispatch, speakersOn])
 
   const micToggled = useCallback(async () => {
-    rtc.peerConnection
-      .getLocalStreams()
-      .forEach(stream => (stream.active = false))
-  }, [rtc])
-  const callEnded = useCallback(async () => {
-    rtc.peerConnection.getLocalStreams().forEach(stream => stream.release())
-    rtc.peerConnection.close()
-    setInCall(false)
-    showToast(ToastStatus.Info, 'Çağrı sonlandırıldı.')
-    navigateBack()
-  }, [rtc])
+    const isMuted = rtc.localStream?.getAudioTracks()[0].enabled ? true : false
+
+    socketService.muteMic({
+      isMuted,
+      uuid,
+    })
+
+    rtc.localStream?.getTracks().forEach(stream => {
+      stream.enabled = !stream.enabled
+    })
+
+    dispatch(toggleMicMuted())
+  }, [rtc, dispatch, socketService, uuid])
+  const callEnded = useCallback(
+    async (navigate: boolean = true) => {
+      rtc.close()
+      setInCall(false)
+      showToast(ToastStatus.Info, 'Çağrı sonlandırıldı.')
+
+      if (navigate) {
+        navigateBack()
+      }
+    },
+    [rtc],
+  )
 
   useEffect(() => {
-    DeviceEventEmitter.addListener('callAccepted', answerCall)
-    DeviceEventEmitter.addListener('callRejected', rejectCall)
-    DeviceEventEmitter.addListener('callRetrieved', retrieveCall)
-    DeviceEventEmitter.addListener('speakerToggled', speakerToggled)
-    DeviceEventEmitter.addListener('micToggled', micToggled)
-    DeviceEventEmitter.addListener('callEnded', callEnded)
+    chatEmitter.addListener('callAccepted', answerCall)
+    chatEmitter.addListener('callRejected', rejectCall)
+    chatEmitter.addListener('callRetrieved', retrieveCall)
+    chatEmitter.addListener('speakerToggled', speakerToggled)
+    chatEmitter.addListener('micToggled', micToggled)
+    chatEmitter.addListener('callEnded', callEnded)
 
     socketService.joinRoom({
       room,
@@ -103,7 +132,7 @@ export function MatchChatContainer() {
     })
 
     socketService.callRetrievedEvent(() => {
-      DeviceEventEmitter.emit('callIsRetrieved')
+      chatEmitter.emit('callIsRetrieved')
     })
 
     rtc.peerConnection.onicecandidate = e => {
@@ -125,20 +154,23 @@ export function MatchChatContainer() {
       })
     })
 
+    socketService.micMutedEvent(data => {
+      setIsReceiverMuted(data.isMuted)
+      chatEmitter.emit('micMuted', data.isMuted)
+    })
+
     socketService.answerMadeEvent(async data => {
       await rtc.setRemoteDescription(data.answer)
-      DeviceEventEmitter.emit('callAcceptedCloseCallingModal')
+      chatEmitter.emit('callAcceptedCloseCallingModal')
     })
 
     rtc.peerConnection.onconnectionstatechange = () => {
       if (rtc.peerConnection.connectionState === 'connected') {
         setInCall(true)
       } else if (rtc.peerConnection.connectionState === 'closed') {
-        setInCall(false)
+        callEnded(false)
       } else if (rtc.peerConnection.connectionState === 'disconnected') {
-        setInCall(false)
-      } else {
-        setInCall(false)
+        callEnded(false)
       }
     }
 
@@ -152,12 +184,16 @@ export function MatchChatContainer() {
         SocketListenerEvents.AnswerMade,
         SocketListenerEvents.CallIsRetrieved,
         SocketListenerEvents.ReceivedIceCandidate,
+        SocketListenerEvents.MicMuted,
       ])
-      DeviceEventEmitter.removeAllListeners('callAccepted')
-      DeviceEventEmitter.removeAllListeners('callRejected')
-      DeviceEventEmitter.removeAllListeners('callRetrieved')
-      DeviceEventEmitter.removeAllListeners('callEnded')
-      rtc.peerConnection.close()
+      chatEmitter.removeAllListeners('callAccepted')
+      chatEmitter.removeAllListeners('callRejected')
+      chatEmitter.removeAllListeners('callRetrieved')
+      chatEmitter.removeAllListeners('callEnded')
+      chatEmitter.removeAllListeners('micToggled')
+      chatEmitter.removeAllListeners('speakerToggled')
+      rtc.close()
+      dispatch(resetChat())
     }
   }, [
     answerCall,
@@ -170,19 +206,23 @@ export function MatchChatContainer() {
     user.username,
     uuid,
     callEnded,
+    micToggled,
+    speakerToggled,
+    dispatch,
   ])
 
   useEffect(() => {
     if (inCall) {
       InCallManager.start()
     } else {
+      dispatch(resetChat())
       InCallManager.stop()
     }
 
     return () => {
       InCallManager.stop()
     }
-  }, [inCall])
+  }, [inCall, dispatch])
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -261,6 +301,7 @@ export function MatchChatContainer() {
         ref={ref}
         inCall={inCall}
         username={user.username}
+        muted={isReceiverMuted}
         avatar={user.avatar}
         onChangeInputText={onChangeText}
         onPressSend={sendMessage}

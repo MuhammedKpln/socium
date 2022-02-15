@@ -22,6 +22,7 @@ export enum SocketListenerEvents {
   RemoveMessageRequested = 'MESSAGE_REMOVED',
   SeenStatusUpdated = 'seen status updated',
   ReceivedIceCandidate = 'RECEIVED_ICE_CANDIDATE',
+  MicMuted = 'MIC_MUTED',
 }
 
 export enum SocketFireEvents {
@@ -39,6 +40,11 @@ export enum SocketFireEvents {
   RemoveMessageRequest = 'remove single message request',
   UpdateSeenStatus = 'seen status',
   AddIceCandidate = 'add ice candidate',
+  MuteMic = 'microphone muted',
+}
+
+interface IUUID {
+  uuid: string
 }
 
 export interface IClientPairedData {
@@ -136,3 +142,9 @@ export interface IIceCandidateReceived {
   candidate: RTCIceCandidateType
   uuid: string
 }
+
+export interface IMuteMicPayload extends IUUID {
+  isMuted: boolean
+}
+
+export interface IMicMutedResponse extends IMuteMicPayload {}

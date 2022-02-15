@@ -4,10 +4,11 @@ import { Icon } from '@/components/Icon/Icon.component'
 import { Page } from '@/components/Page/Page.component'
 import { INavigatorParamsList, Routes } from '@/navigators/navigator.props'
 import { navigateBack } from '@/navigators/utils/navigation'
+import { chatEmitter } from '@/services/events.service'
 import { showToast, ToastStatus } from '@/utils/toast'
 import { RouteProp, useRoute } from '@react-navigation/native'
 import React, { useEffect } from 'react'
-import { DeviceEventEmitter, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback'
 import InCallManager from 'react-native-incall-manager'
 import Animated, {
@@ -39,13 +40,13 @@ export const Calling = () => {
   })
 
   const retrieveCall = () => {
-    DeviceEventEmitter.emit('callRetrieved')
+    chatEmitter.emit('callRetrieved')
     navigateBack()
   }
 
   useEffect(() => {
     InCallManager.start({ media: 'audio', ringback: '_DEFAULT_' })
-    DeviceEventEmitter.addListener('callAcceptedCloseCallingModal', () => {
+    chatEmitter.addListener('callAcceptedCloseCallingModal', () => {
       showToast(ToastStatus.Success, 'Arama kabul edildi!')
       navigateBack()
     })
@@ -67,8 +68,7 @@ export const Calling = () => {
       InCallManager.stop()
       clearInterval(interval)
       clearInterval(animationLoop)
-      DeviceEventEmitter.removeAllListeners('callRetrieved')
-      DeviceEventEmitter.removeAllListeners('callAcceptedCloseCallingModal')
+      chatEmitter.removeAllListeners('callAcceptedCloseCallingModal')
     }
   }, [avatarScale])
 

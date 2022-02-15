@@ -13,6 +13,8 @@ import {
   IJoinRoomArg,
   IMessageReceivedData,
   IMessageRemoved,
+  IMicMutedResponse,
+  IMuteMicPayload,
   ISendMessageArg,
   IUserIsTyping,
   SocketFireEvents,
@@ -103,6 +105,10 @@ export class SocketConnection {
     })
   }
 
+  muteMic(payload: IMuteMicPayload) {
+    this.emit(SocketFireEvents.MuteMic, payload)
+  }
+
   clientPairedEvent(callback: (data: IClientPairedData) => void) {
     this.on(SocketListenerEvents.ClientPaired, callback)
   }
@@ -150,6 +156,10 @@ export class SocketConnection {
 
   callRetrievedEvent(callback: () => void) {
     this.on(SocketListenerEvents.CallIsRetrieved, callback)
+  }
+
+  micMutedEvent(callback: (muted: IMicMutedResponse) => void) {
+    this.on(SocketListenerEvents.MicMuted, callback)
   }
 
   close() {

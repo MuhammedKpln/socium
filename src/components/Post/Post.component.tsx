@@ -9,7 +9,12 @@ import dayjs from 'dayjs'
 import 'dayjs/locale/tr'
 import { map } from 'lodash'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { ImageBackground, StyleSheet } from 'react-native'
+import {
+  ImageBackground,
+  InteractionManager,
+  StyleSheet,
+  Image as IM,
+} from 'react-native'
 import { Colors } from 'react-native-ui-lib'
 import Image from 'react-native-ui-lib/image'
 import Text from 'react-native-ui-lib/text'
@@ -18,6 +23,7 @@ import View from 'react-native-ui-lib/view'
 import { Avatar } from '../Avatar/Avatar.component'
 import { Icon } from '../Icon/Icon.component'
 import { NoAvatar } from '../NoAvatar/NoAvatar.component'
+import { SkeletonView } from '../SkeletonView/SkeletonView.component'
 import { Surface } from '../Surface/Surface.component'
 import {
   FETCH_TWITTER_POST,
@@ -64,11 +70,15 @@ export const Post = React.memo((props: IPostProps) => {
   }, [fetchTwitterMeta])
 
   const fetchInstagramPost = useCallback(async () => {
-    const url = `https://api.instagram.com/oembed/?url=${additional}`
-    const response = await fetch(url)
-    const data: IInstagramMeta = await response.json()
+    InteractionManager.runAfterInteractions(async () => {
+      console.warn('instagram aldim')
+      const url = `https://api.instagram.com/oembed/?url=${additional}`
+      const response = await fetch(url)
+      const data: IInstagramMeta = await response.json()
+      await IM.prefetch(data.thumbnail_url)
 
-    setInstagramThumbnailUrl(data.thumbnail_url)
+      setInstagramThumbnailUrl(data.thumbnail_url)
+    })
   }, [additional])
 
   const fetchTwitterPost = useCallback(async () => {
@@ -79,10 +89,17 @@ export const Post = React.memo((props: IPostProps) => {
     const match = url.match(regex)
 
     if (match) {
-      fetchTwitter({
-        variables: {
-          twitterId: match[1],
-        },
+      InteractionManager.runAfterInteractions(() => {
+        console.warn('twtitteer aldim')
+        fetchTwitter({
+          variables: {
+            twitterId: match[1],
+          },
+        }).then(resp => {
+          resp.data?.getTwitterPost.includes.media.forEach(async image => {
+            await IM.prefetch(image.url)
+          })
+        })
       })
     }
   }, [additional, fetchTwitter])
@@ -125,6 +142,75 @@ export const Post = React.memo((props: IPostProps) => {
 
     return <YoutubePlayer videoId={videoId} />
   }
+
+  const renderTwitterImages = useCallback(() => {
+    if (twitterImages.length > 1) {
+      map(twitterImages.slice(0, 2), (media, index) => {
+        if (index === 1) {
+          return (
+            <TouchableOpacity
+              onPress={() =>
+                navigate(Routes.ImageGallery, {
+                  imageSet: [...map(twitterImages, _ => _.url)],
+                })
+              }
+              key={index}
+            >
+              <ImageBackground
+                source={{ uri: media.url }}
+                borderRadius={5}
+                style={{
+                  width: 100,
+                  height: 50,
+                  marginTop: 20,
+                  marginRight: 10,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Text fontGilroyBold white>
+                  {twitterImages.length !== 2 ? twitterImages.length - 2 : ''}
+                </Text>
+                <View
+                  style={{
+                    ...StyleSheet.absoluteFillObject,
+                    backgroundColor: 'rgba(0,0,0,0.2)',
+                  }}
+                ></View>
+              </ImageBackground>
+            </TouchableOpacity>
+          )
+        }
+      })
+    } else {
+      return (
+        <SkeletonView
+          width={150}
+          height={100}
+          showContent={!fetchTwitterMeta.loading}
+          renderContent={() => (
+            <Image
+              source={{
+                uri: fetchTwitterMeta.data?.getTwitterPost.includes.media[0]
+                  .url,
+              }}
+              overlayColor="#000"
+              overlayType={Image.overlayTypes.BOTTOM}
+              overlayIntensity={Image.overlayIntensityType.MEDIUM}
+              borderRadius={5}
+              style={{
+                width: 150,
+                height: 100,
+                borderRadius: 4,
+                marginTop: 20,
+                marginRight: 10,
+              }}
+            />
+          )}
+        />
+      )
+    }
+  }, [twitterImages, fetchTwitterMeta])
 
   return (
     <TouchableOpacity
@@ -175,83 +261,34 @@ export const Post = React.memo((props: IPostProps) => {
             </Text>
 
             {postType === PostType.Instagram ? (
-              <View row>
-                <Image
-                  source={{ uri: instagramThumbnailUrl }}
-                  overlayColor="#000"
-                  overlayType={Image.overlayTypes.BOTTOM}
-                  overlayIntensity={Image.overlayIntensityType.MEDIUM}
-                  style={{
-                    width: 150,
-                    height: 100,
-                    borderRadius: 4,
-                    marginTop: 20,
-                    marginRight: 10,
-                  }}
+              <>
+                <SkeletonView
+                  width={150}
+                  height={100}
+                  showContent={!instagramThumbnailUrl}
+                  renderContent={() => (
+                    <View row>
+                      <Image
+                        source={{ uri: instagramThumbnailUrl }}
+                        overlayColor="#000"
+                        overlayType={Image.overlayTypes.BOTTOM}
+                        overlayIntensity={Image.overlayIntensityType.MEDIUM}
+                        borderRadius={5}
+                        style={{
+                          width: 150,
+                          height: 100,
+                          borderRadius: 4,
+                          marginTop: 20,
+                          marginRight: 10,
+                        }}
+                      />
+                    </View>
+                  )}
                 />
-              </View>
+              </>
             ) : null}
             {postType === PostType.Twitter ? (
-              <View row>
-                {map(twitterImages.slice(0, 2), (media, index) => {
-                  if (index === 1) {
-                    return (
-                      <TouchableOpacity
-                        onPress={() =>
-                          navigate(Routes.ImageGallery, {
-                            imageSet: [...map(twitterImages, _ => _.url)],
-                          })
-                        }
-                        key={index}
-                      >
-                        <ImageBackground
-                          source={{ uri: media.url }}
-                          style={{
-                            width: 100,
-                            height: 50,
-                            borderRadius: 4,
-                            marginTop: 20,
-                            marginRight: 10,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                          }}
-                        >
-                          <Text fontGilroyBold white>
-                            {twitterImages.length !== 2
-                              ? twitterImages.length - 2
-                              : ''}
-                          </Text>
-                          <View
-                            style={{
-                              ...StyleSheet.absoluteFillObject,
-                              backgroundColor: 'rgba(0,0,0,0.2)',
-                            }}
-                          ></View>
-                        </ImageBackground>
-                      </TouchableOpacity>
-                    )
-                  }
-
-                  return (
-                    <Image
-                      source={{
-                        uri: media.url,
-                      }}
-                      key={index}
-                      overlayColor="#000"
-                      overlayType={Image.overlayTypes.BOTTOM}
-                      overlayIntensity={Image.overlayIntensityType.MEDIUM}
-                      style={{
-                        width: 100,
-                        height: 50,
-                        borderRadius: 4,
-                        marginTop: 20,
-                        marginRight: 10,
-                      }}
-                    />
-                  )
-                })}
-              </View>
+              <View row>{renderTwitterImages()}</View>
             ) : null}
             {postType === PostType.Youtube ? (
               <View>{renderYoutubeIframe(additional ? additional : '')}</View>

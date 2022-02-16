@@ -60,10 +60,12 @@ export const YTPlayer = React.memo((props: IYTPlayerProps) => {
     return (
       <ImageBackground
         source={{ uri: thumbnailUrl }}
+        imageStyle={{
+          borderRadius: 4,
+        }}
         style={{
           width: 150,
           height: 100,
-          borderRadius: 4,
           marginTop: 20,
           alignContent: 'center',
           alignItems: 'center',

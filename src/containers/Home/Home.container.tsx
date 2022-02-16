@@ -126,8 +126,8 @@ const HomeContainer = () => {
     )
   }
   const getItemLayout = (data: any, index: any) => ({
-    length: 50,
-    offset: 70 * index,
+    length: 374,
+    offset: 374 * index,
     index,
   })
 
@@ -152,7 +152,7 @@ const HomeContainer = () => {
           </Text>
         }
         onEndReached={fetchMorePosts}
-        onEndReachedThreshold={0.5}
+        onEndReachedThreshold={0.1}
         getItemLayout={getItemLayout}
         removeClippedSubviews
         refreshControl={refreshControl()}

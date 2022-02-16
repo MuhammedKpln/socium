@@ -170,23 +170,25 @@ const MainNavigator = () => {
       </Stack.Group>
       <Stack.Group
         screenOptions={{
-          presentation: 'transparentModal',
+          presentation: 'containedTransparentModal',
+          headerShown: false,
         }}
       >
         <Stack.Screen
           name={Routes.ImageGallery}
           getComponent={RouteComponents.ImageGallery}
-          options={{ headerShown: false }}
         />
         <Stack.Screen
           name={Routes.CallComing}
           getComponent={RouteComponents.CallComing}
-          options={{ headerShown: false }}
         />
         <Stack.Screen
           name={Routes.Calling}
           getComponent={RouteComponents.Calling}
-          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={Routes.MatchingFound}
+          getComponent={RouteComponents.MatchingFound}
         />
       </Stack.Group>
     </Stack.Navigator>

@@ -20,6 +20,7 @@ export enum Routes {
   ImageGallery = 'image-gallery',
   Chat = 'chat',
   MatchChat = 'match-chat',
+  MatchingFound = 'matching-found',
   ChangeAvatar = 'change-avatar',
   Followers = 'followers',
   CallComing = 'call-coming',
@@ -71,6 +72,9 @@ export const RouteComponents = {
     require('@/containers/Match/CallComing.component').CallComing,
   Calling: () => require('@/containers/Match/Calling.component').Calling,
   Call: () => require('@/containers/Match/Call.component').CallContainer,
+  MatchingFound: () =>
+    require('@/containers/Match/containers/MatchingFound.container')
+      .MatchingFoundContainer,
 }
 
 export interface INavigatorParamsList extends ParamListBase {
@@ -103,5 +107,10 @@ export interface INavigatorParamsList extends ParamListBase {
     username: string
     avatar: string
     isMuted: boolean
+  }
+  [Routes.MatchingFound]: {
+    user: IUser
+    room: string
+    uuid: string
   }
 }

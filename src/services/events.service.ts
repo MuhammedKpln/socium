@@ -15,3 +15,10 @@ type ChatEvents = {
 }
 
 export const chatEmitter = new EventEmitter() as TypedEmitter<ChatEvents>
+
+type MatchEvents = {
+  acceptMatch: () => void
+  rejectMatch: () => void
+}
+
+export const matchEmitter = new EventEmitter() as TypedEmitter<MatchEvents>

@@ -1,27 +1,35 @@
 import { Avatar } from '@/components/Avatar/Avatar.component'
 import Button from '@/components/Button/Button.component'
 import { Icon } from '@/components/Icon/Icon.component'
+import { matchEmitter } from '@/services/events.service'
 import { IUser } from '@/types/login.types'
 import AnimatedLottieView from 'lottie-react-native'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { StatusBar } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Colors } from 'react-native-ui-lib'
 import Modal from 'react-native-ui-lib/modal'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
+
 interface IProps {
   user: IUser
-  onPressClose: () => void
-  onPressSendMessage: () => void
 }
 
 export function MatchingFoundComponent(props: IProps) {
-  const { onPressClose, user, onPressSendMessage } = props
+  const { user } = props
+
+  const onPressClose = useCallback(() => {
+    matchEmitter.emit('rejectMatch')
+  }, [])
+
+  const onPressSendMessage = useCallback(() => {
+    matchEmitter.emit('acceptMatch')
+  }, [])
 
   return (
     <View>
-      <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="dark-content" />
       <Modal
         visible={true}
         overlayBackgroundColor="rgba(0,0,0,0.9)"

@@ -17,7 +17,6 @@ import { Assets } from 'react-native-ui-lib'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
 import { MatchComponent } from './components/Match.component'
-import { MatchingFoundComponent } from './components/MatchingFound.component'
 
 export function MatchContainer() {
   const [matching, setMatching] = useState<boolean>(false)
@@ -73,16 +72,25 @@ export function MatchContainer() {
     })
   }, [marginBottom, opacity, localUser, socketService])
 
-  const onPressSendMessage = useCallback(() => {
-    navigation.navigate(Routes.MatchChat, {
-      room,
-      uuid: connectedUuid,
-      //@ts-ignore
-      user: connectedUser,
-    })
+  const resetState = useCallback(() => {
     setMatched(false)
     setMatching(false)
-  }, [connectedUser, navigation, room, connectedUuid])
+    setConnectedUser(undefined)
+    setConnectedUuid('')
+  }, [])
+
+  useEffect(() => {
+    if (matched && connectedUser) {
+      wait(100).then(() => {
+        resetState()
+        navigation.navigate(Routes.MatchingFound, {
+          room,
+          uuid: connectedUuid,
+          user: connectedUser,
+        })
+      })
+    }
+  }, [matched, navigation, connectedUser, room, connectedUuid, resetState])
 
   const leaveQueue = useCallback(() => {
     socketService.leaveQueue()
@@ -112,16 +120,6 @@ export function MatchContainer() {
             />
 
             <Button label="Eşleşmeden ayrıl" onPress={leaveQueue} />
-            {matched && connectedUser && connectedUuid ? (
-              <MatchingFoundComponent
-                onPressSendMessage={onPressSendMessage}
-                user={connectedUser}
-                onPressClose={() => {
-                  setMatching(false)
-                  setMatched(false)
-                }}
-              />
-            ) : null}
           </View>
         )}
       </Animated.View>

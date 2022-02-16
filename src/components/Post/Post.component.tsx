@@ -5,7 +5,7 @@ import { PostType } from '@/types/post.types'
 import { IInstagramMeta } from '@/types/socialMedia.types'
 import { authRequiredFunction } from '@/utils/auth'
 import { useLazyQuery } from '@apollo/client'
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs'
 import 'dayjs/locale/tr'
 import { map } from 'lodash'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
@@ -164,8 +164,7 @@ export const Post = React.memo((props: IPostProps) => {
                 style={{ color: '#fff', marginRight: 10 }}
               />
               <Text greyText text style={{ marginTop: -2 }}>
-                {/* @ts-ignore */}
-                {dayjs.default(date).fromNow()}
+                {dayjs(date).fromNow()}
               </Text>
             </View>
           </View>

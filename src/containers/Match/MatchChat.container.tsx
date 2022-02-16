@@ -68,9 +68,9 @@ export function MatchChatContainer() {
 
   const speakerToggled = useCallback(async () => {
     if (speakersOn) {
-      InCallManager.setSpeakerphoneOn(false)
+      InCallManager.setForceSpeakerphoneOn(false)
     } else {
-      InCallManager.setSpeakerphoneOn(true)
+      InCallManager.setForceSpeakerphoneOn(true)
     }
 
     dispatch(toggleSpeakers())

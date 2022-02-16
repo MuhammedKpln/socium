@@ -23,9 +23,14 @@ import { IInstagramMeta } from '@/types/socialMedia.types'
 import { showToast, ToastStatus } from '@/utils/toast'
 import { useQuery } from '@apollo/client'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
-import React, { useCallback, useLayoutEffect, useState } from 'react'
-import { useEffect } from 'react'
-import { ScrollView } from 'react-native'
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
+import { Keyboard, ScrollView } from 'react-native'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
 import { useDispatch } from 'react-redux'
@@ -36,6 +41,7 @@ import { PostTypeWrapper } from './components/PostTypeWrapper.component'
 export function PostDetails() {
   const navigation = useNavigation()
   const dispatch = useDispatch()
+  const scrollViewRef = useRef<ScrollView>()
   const { toggleLikeButton } = useLikes()
   const isAnsweringParent = useAppSelector(
     state => state.commentReducer.isAnsweringParent,
@@ -73,8 +79,13 @@ export function PostDetails() {
   })
 
   useEffect(() => {
+    Keyboard.addListener('keyboardWillShow', () => {
+      scrollViewRef.current?.scrollToEnd({ animated: true })
+    })
+
     return () => {
       dispatch(updateAnsweringParent(null))
+      Keyboard.removeAllListeners('keyboardWillShow')
     }
   }, [dispatch])
 
@@ -146,7 +157,10 @@ export function PostDetails() {
     return (
       <Page>
         <KeyboardAvoidingView keyboardVerticalOffset={115}>
-          <ScrollView style={{ height: !isAnsweringParent ? '90%' : '70%' }}>
+          <ScrollView
+            ref={scrollViewRef}
+            style={{ height: !isAnsweringParent ? '90%' : '70%' }}
+          >
             <View>
               <View row>
                 <Avatar userAvatar={post?.user?.avatar} />
@@ -221,7 +235,6 @@ export function PostDetails() {
             <NewComment
               postId={post.id}
               parentId={isAnsweringParent ?? undefined}
-              post={post}
             />
           </View>
         </KeyboardAvoidingView>

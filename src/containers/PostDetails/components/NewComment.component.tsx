@@ -91,6 +91,9 @@ export function NewComment(props: IProps) {
                 avatar={parentComment.user.avatar}
                 onPressAnswer={() => null}
                 parentComments={undefined}
+                isLiked={parentComment?.userLike?.liked ?? false}
+                onPressLike={() => null}
+                onPressUnlike={() => null}
               />
             </Animated.View>
           </Surface>

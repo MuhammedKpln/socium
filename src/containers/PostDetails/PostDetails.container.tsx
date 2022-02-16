@@ -242,11 +242,22 @@ export function PostDetails() {
     )
   }
 
-  return (
-    <SkeletonView
-      renderContent={renderContent}
-      showContent={!_post.loading}
-      template={SkeletonViewTemplates.TEXT_CONTENT}
-    />
-  )
+  if (_post.loading) {
+    return (
+      <Page>
+        <View row>
+          <SkeletonView circle width={50} height={50} />
+          <View marginL-10>
+            <SkeletonView width={100} height={15} />
+            <SkeletonView width={100} height={10} style={{ marginTop: 15 }} />
+          </View>
+        </View>
+        <View marginT-30>
+          <SkeletonView template={SkeletonViewTemplates.TEXT_CONTENT} />
+        </View>
+      </Page>
+    )
+  }
+
+  return renderContent()
 }

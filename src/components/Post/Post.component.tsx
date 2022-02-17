@@ -220,7 +220,11 @@ export const Post = React.memo((props: IPostProps) => {
       <View row>
         <View marginR-10>
           {user.avatar ? (
-            <Avatar userAvatar={user?.avatar} size={40} />
+            <Avatar
+              userAvatar={user?.avatar}
+              size={40}
+              onPress={() => authRequiredFunction(onPressUsername)}
+            />
           ) : (
             <NoAvatar size={32} />
           )}

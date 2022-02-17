@@ -9,11 +9,11 @@ import {
   Operation,
 } from '@apollo/client'
 import { concatPagination } from '@apollo/client/utilities'
-import { persistCache, MMKVStorageWrapper } from 'apollo3-cache-persist'
+import { MMKVStorageWrapper, persistCacheSync } from 'apollo3-cache-persist'
 import { GraphQLError, print } from 'graphql'
 import { Client, ClientOptions, createClient } from 'graphql-ws'
 
-export const initApolloCache = async () => {
+export const initApolloCache = () => {
   const cache = new InMemoryCache({
     typePolicies: {
       Query: {
@@ -33,7 +33,7 @@ export const initApolloCache = async () => {
     },
   })
 
-  await persistCache({
+  persistCacheSync({
     cache,
     storage: new MMKVStorageWrapper(storage),
   })

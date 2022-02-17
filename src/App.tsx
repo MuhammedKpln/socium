@@ -145,12 +145,12 @@ const splitLink = split(
   httpLink,
 )
 
-initApolloCache().then(cache => {
-  apolloClient = new ApolloClient({
-    cache,
-    connectToDevTools: false,
-    link: from([errorLink, authLink, splitLink]),
-  })
+const cache = initApolloCache()
+
+apolloClient = new ApolloClient({
+  cache,
+  connectToDevTools: false,
+  link: from([errorLink, authLink, splitLink]),
 })
 
 export default () => {

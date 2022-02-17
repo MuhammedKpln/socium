@@ -1,7 +1,6 @@
 import { Toast } from '@/components/Toast/Toast.component'
 import { useAppSelector } from '@/store'
 import { updateTheme } from '@/store/reducers/theme.reducer'
-import { configureDesignSystem } from '@/theme/designSystem'
 import { toastRef } from '@/utils/toast'
 import { NavigationContainer, Theme } from '@react-navigation/native'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
@@ -36,7 +35,6 @@ const ApplicationNavigator = () => {
   }, [theme, ready])
 
   const startApp = useCallback(async () => {
-    configureDesignSystem()
     dispatch(
       updateTheme({
         theme: colorScheme === 'dark' ? 'dark' : 'light',

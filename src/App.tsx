@@ -4,7 +4,6 @@ import {
   createHttpLink,
   from,
   fromPromise,
-  NormalizedCacheObject,
   split,
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
@@ -29,7 +28,6 @@ const httpLink = createHttpLink({
 
 let isRefreshing = false
 let pendingRequests: Function[] = []
-let apolloClient: ApolloClient<NormalizedCacheObject>
 
 const resolvePendingRequests = () => {
   pendingRequests.map(callback => callback())
@@ -147,7 +145,7 @@ const splitLink = split(
 
 const cache = initApolloCache()
 
-apolloClient = new ApolloClient({
+export const client = new ApolloClient({
   cache,
   connectToDevTools: false,
   link: from([errorLink, authLink, splitLink]),
@@ -157,7 +155,7 @@ export default () => {
   return (
     <Provider store={store}>
       <PersistGate persistor={persistedStore} loading={<ActivityIndicator />}>
-        <ApolloProvider client={apolloClient}>
+        <ApolloProvider client={client}>
           <ApplicationNavigator />
         </ApolloProvider>
       </PersistGate>

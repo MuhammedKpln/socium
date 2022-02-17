@@ -47,8 +47,9 @@ const BottomTabBarNavigator = () => {
       />
       <Tab.Screen
         name={'s'}
-        component={() => <></>}
+        getComponent={() => RouteComponents.NewPost}
         options={{
+          unmountOnBlur: true,
           tabBarIcon: () => (
             <PlusFilled style={{ marginLeft: 40, marginTop: 10 }} />
           ),
@@ -64,6 +65,12 @@ const BottomTabBarNavigator = () => {
         name={Routes.Match}
         getComponent={RouteComponents.Match}
         options={{ ...applyTabIcon('fire'), ...applyRouteTitle('') }}
+        listeners={({ navigation }) => ({
+          tabPress: e => {
+            e.preventDefault()
+            authRequiredFunction(() => navigation.navigate(Routes.Match))
+          },
+        })}
       />
       <Tab.Screen
         name={Routes.Chats}

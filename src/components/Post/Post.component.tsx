@@ -71,7 +71,6 @@ export const Post = React.memo((props: IPostProps) => {
 
   const fetchInstagramPost = useCallback(async () => {
     InteractionManager.runAfterInteractions(async () => {
-      console.warn('instagram aldim')
       const url = `https://api.instagram.com/oembed/?url=${additional}`
       const response = await fetch(url)
       const data: IInstagramMeta = await response.json()
@@ -90,7 +89,6 @@ export const Post = React.memo((props: IPostProps) => {
 
     if (match) {
       InteractionManager.runAfterInteractions(() => {
-        console.warn('twtitteer aldim')
         fetchTwitter({
           variables: {
             twitterId: match[1],
@@ -224,7 +222,7 @@ export const Post = React.memo((props: IPostProps) => {
           {user.avatar ? (
             <Avatar userAvatar={user?.avatar} size={40} />
           ) : (
-            <NoAvatar username={user.username} size={32} />
+            <NoAvatar size={32} />
           )}
         </View>
         <Surface padding-10 br20 width="100%">

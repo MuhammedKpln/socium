@@ -1,23 +1,26 @@
+import { avatarStatic } from '@/utils/static'
 import React, { useMemo } from 'react'
-import UIAvatar from 'react-native-ui-lib/avatar'
+import FastImage from 'react-native-fast-image'
 
 interface IProps {
-  username: string
   size?: number
 }
 
 export const NoAvatar = React.memo((props: IProps) => {
-  const svg = useMemo(
-    () => (
-      <UIAvatar
-        source={{
-          uri: `https://avatars.dicebear.com/api/micah/${props.username}.png`,
-        }}
-        size={props.size || 30}
-      />
-    ),
-    [props.username, props.size],
-  )
+  const randomAvatar = useMemo(() => {
+    const randomNumber = Math.floor(Math.random() * 50)
 
-  return svg
+    return `avatar${randomNumber}`
+  }, [])
+
+  return (
+    <FastImage
+      source={{ uri: avatarStatic(randomAvatar), cache: 'immutable' }}
+      style={{
+        width: props.size || 30,
+        height: props.size || 30,
+        borderRadius: props.size || 30,
+      }}
+    />
+  )
 })

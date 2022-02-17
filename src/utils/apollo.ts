@@ -1,3 +1,4 @@
+import { storage } from '@/storage'
 import { ERROR_CODES_RAW } from '@/types/error_codes'
 import {
   ApolloError,
@@ -8,27 +9,37 @@ import {
   Operation,
 } from '@apollo/client'
 import { concatPagination } from '@apollo/client/utilities'
+import { persistCache, MMKVStorageWrapper } from 'apollo3-cache-persist'
 import { GraphQLError, print } from 'graphql'
 import { Client, ClientOptions, createClient } from 'graphql-ws'
 
-export const apolloCache = new InMemoryCache({
-  typePolicies: {
-    Query: {
-      fields: {
-        postsWithoutBlog: concatPagination(),
-        posts: concatPagination(),
-        messagesFromRoom: {
-          merge(existing: any, incoming: any) {
-            if (!existing) {
-              return incoming
-            }
-            return [...incoming, ...existing]
+export const initApolloCache = async () => {
+  const cache = new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          postsWithoutBlog: concatPagination(),
+          posts: concatPagination(),
+          messagesFromRoom: {
+            merge(existing: any, incoming: any) {
+              if (!existing) {
+                return incoming
+              }
+              return [...incoming, ...existing]
+            },
           },
         },
       },
     },
-  },
-})
+  })
+
+  await persistCache({
+    cache,
+    storage: new MMKVStorageWrapper(storage),
+  })
+
+  return cache
+}
 
 export class WebSocketLink extends ApolloLink {
   private client: Client

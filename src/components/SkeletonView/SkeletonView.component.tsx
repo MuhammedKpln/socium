@@ -9,7 +9,7 @@ export function SkeletonView(props: SkeletonViewProps) {
 
   useEffect(() => {
     if (showContent) {
-      wait(1000).then(() => setShowIt(true))
+      wait(100).then(() => setShowIt(true))
     }
   }, [showContent])
 

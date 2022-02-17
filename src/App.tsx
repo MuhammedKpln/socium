@@ -4,6 +4,7 @@ import {
   createHttpLink,
   from,
   fromPromise,
+  NormalizedCacheObject,
   split,
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
@@ -19,7 +20,7 @@ import { getNewToken } from './services/token.service'
 import { EncryptedStorageKeys, storage } from './storage'
 import { persistedStore, store } from './store'
 import { logout } from './store/reducers/user.reducer'
-import { apolloCache, WebSocketLink } from './utils/apollo'
+import { initApolloCache, WebSocketLink } from './utils/apollo'
 import { showToast, ToastStatus } from './utils/toast'
 
 const httpLink = createHttpLink({
@@ -28,6 +29,7 @@ const httpLink = createHttpLink({
 
 let isRefreshing = false
 let pendingRequests: Function[] = []
+let apolloClient: ApolloClient<NormalizedCacheObject>
 
 const resolvePendingRequests = () => {
   pendingRequests.map(callback => callback())
@@ -143,17 +145,19 @@ const splitLink = split(
   httpLink,
 )
 
-export const client = new ApolloClient({
-  cache: apolloCache,
-  connectToDevTools: false,
-  link: from([errorLink, authLink, splitLink]),
+initApolloCache().then(cache => {
+  apolloClient = new ApolloClient({
+    cache,
+    connectToDevTools: false,
+    link: from([errorLink, authLink, splitLink]),
+  })
 })
 
 export default () => {
   return (
     <Provider store={store}>
       <PersistGate persistor={persistedStore} loading={<ActivityIndicator />}>
-        <ApolloProvider client={client}>
+        <ApolloProvider client={apolloClient}>
           <ApplicationNavigator />
         </ApolloProvider>
       </PersistGate>

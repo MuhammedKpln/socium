@@ -7,6 +7,7 @@ import {
 import { useSocket } from '@/hooks/useSocket'
 import { INavigatorParamsList, Routes } from '@/navigators/navigator.props'
 import { navigateBack } from '@/navigators/utils/navigation'
+import { chatEmitter } from '@/services/events.service'
 import { SocketListenerEvents } from '@/services/socket.types'
 import { useAppSelector } from '@/store'
 import { useQuery } from '@apollo/client'
@@ -129,11 +130,9 @@ export function ChatContainer() {
       user: localUser,
     })
 
+    chatEmitter.emit('cleanTextInputValue')
     setMessage('')
     socketService.typing(false, room.roomAdress)
-
-    //@ts-ignore
-    ref.current?.scrollToEnd({ animated: true })
   }, [message, room, user, localUser, socketService])
 
   const onBlurInput = useCallback(() => {
@@ -153,13 +152,13 @@ export function ChatContainer() {
       }
 
       setMessage(text)
+      chatEmitter.emit('textInputValue', text)
     },
     [room, socketService],
   )
 
   const removeMessage = useCallback(
     (messageId: number) => {
-      console.log('QWEQWEQWE', messageId)
       socketService.removeMessage(messageId, room.roomAdress)
     },
     [room, socketService],
@@ -179,7 +178,6 @@ export function ChatContainer() {
         onTopReached={fetchOlderMessages}
         onPressSend={sendMessage}
         onPressRemove={removeMessage}
-        message={message}
         onChangeInputText={onChangeText}
         onBlurInput={onBlurInput}
         ref={ref}

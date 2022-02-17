@@ -1,18 +1,36 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useEffect } from 'react'
 import { Keyboard } from 'react-native'
 import { Colors, Incubator } from 'react-native-ui-lib'
 import Button from '../Button/Button.component'
 import { Icon } from '../Icon/Icon.component'
 import { IChatProps } from './Chat.props'
+import { chatEmitter } from '@/services/events.service'
 
 const { TextField } = Incubator
 
 type IProps = Pick<
   IChatProps,
-  'onPressSend' | 'onChangeInputText' | 'message' | 'onBlurInput'
+  'onPressSend' | 'onChangeInputText' | 'onBlurInput'
 >
 
 export const ChatFooter = React.memo((props: IProps) => {
+  const [value, setValue] = useState<string>()
+
+  useEffect(() => {
+    chatEmitter.addListener('cleanTextInputValue', () => {
+      setValue('')
+    })
+    chatEmitter.on('textInputValue', _value => {
+      setValue(_value)
+    })
+
+    return () => {
+      chatEmitter.removeAllListeners('cleanTextInputValue')
+      chatEmitter.removeAllListeners('textInputValue')
+    }
+  }, [])
+
   return (
     <TextField
       onSubmitEditing={Keyboard.dismiss}
@@ -28,9 +46,9 @@ export const ChatFooter = React.memo((props: IProps) => {
         borderWidth: 1,
       }}
       onChangeText={props.onChangeInputText}
-      value={props.message}
       onBlur={props.onBlurInput}
       placeholderTextColor="#ADADAD"
+      value={value}
       trailingAccessory={
         <Button
           padding-10

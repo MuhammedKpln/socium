@@ -15,17 +15,20 @@ import View from 'react-native-ui-lib/view'
 import { Avatar } from '../Avatar/Avatar.component'
 import Button from '../Button/Button.component'
 import { Icon } from '../Icon/Icon.component'
+import { IChatProps } from './Chat.props'
 
-interface IProps {
-  onPressBack: () => void
-  onPressCall?: () => void
-  avatar: string
-  username: string
-  status: boolean
-  callFunction?: boolean
-  inCall?: boolean
-  muted: boolean
-}
+interface IProps
+  extends Pick<
+    IChatProps,
+    | 'onPressBack'
+    | 'onPressCall'
+    | 'avatar'
+    | 'username'
+    | 'isOnline'
+    | 'callFunction'
+    | 'inCall'
+    | 'muted'
+  > {}
 
 export const ChatHeader = React.memo((props: IProps) => {
   const navigation = useNavigation()
@@ -33,7 +36,7 @@ export const ChatHeader = React.memo((props: IProps) => {
     onPressBack,
     avatar,
     username,
-    status,
+    isOnline,
     onPressCall,
     callFunction,
     inCall,
@@ -87,7 +90,7 @@ export const ChatHeader = React.memo((props: IProps) => {
     navigation.navigate(Routes.Call, {
       avatar,
       username,
-      isMuted: muted,
+      isMuted: muted ?? false,
     })
   }, [navigation, avatar, username, muted])
 
@@ -108,18 +111,18 @@ export const ChatHeader = React.memo((props: IProps) => {
                 fontSfProRegular
                 font13
                 marginT-5
-                green={status ? true : false}
-                red={!status ? true : false}
+                green={isOnline ? true : false}
+                red={!isOnline ? true : false}
               >
                 <View
                   width={8}
                   height={8}
                   br100
-                  bg-green={status ? true : false}
-                  bg-red={!status ? true : false}
+                  bg-green={isOnline ? true : false}
+                  bg-red={!isOnline ? true : false}
                 ></View>
                 {'  '}
-                {status ? 'Çevrimiçi' : 'Çevrimdışı'}
+                {isOnline ? 'Çevrimiçi' : 'Çevrimdışı'}
               </Text>
             </View>
           </TouchableOpacity>

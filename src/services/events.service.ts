@@ -12,6 +12,8 @@ type ChatEvents = {
   micToggled: () => void
   speakerToggled: () => void
   callEnded: () => void
+  cleanTextInputValue: () => void
+  textInputValue: (value: string) => void
 }
 
 export const chatEmitter = new EventEmitter() as TypedEmitter<ChatEvents>

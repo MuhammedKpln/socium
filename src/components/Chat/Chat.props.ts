@@ -6,7 +6,6 @@ export interface IChatProps {
   callFunction: boolean
   username: string
   userId: number
-  message: string
   isOnline: boolean
   inCall?: boolean
   muted?: boolean

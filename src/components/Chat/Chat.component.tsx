@@ -45,7 +45,7 @@ function _ChatComponent(props: IChatProps, ref: any) {
     const keyboardListener = Keyboard.addListener('keyboardDidShow', () => {
       if (ref.current.scrollToEnd) {
         ref.current.scrollToEnd({
-          animated: true,
+          animated: false,
         })
       }
     })
@@ -63,7 +63,7 @@ function _ChatComponent(props: IChatProps, ref: any) {
 
     setTimeout(() => {
       ref.current.scrollToEnd({
-        animated: true,
+        animated: false,
       })
     }, 100)
   }, [ref, props.messages, localUser, triggerHaptic])
@@ -100,7 +100,7 @@ function _ChatComponent(props: IChatProps, ref: any) {
             break
           case ViewTypes.FULL:
             dim.width = width
-            dim.height = 110
+            dim.height = 130
             break
           default:
             dim.width = 0
@@ -168,17 +168,13 @@ function _ChatComponent(props: IChatProps, ref: any) {
 
   return (
     <View bg-surfaceBG>
-      <ChatHeader status={props.isOnline} {...props} />
+      <ChatHeader {...props} />
 
       <KeyboardAvoidingView keyboardVerticalOffset={90}>
         <RecyclerListView
           rowRenderer={rowRenderer}
           layoutProvider={layoutProvider()}
           dataProvider={dataProvider().cloneWithRows(props.messages)}
-          onItemLayout={e => console.log(e)}
-          scrollViewProps={{
-            invertStickyHeaders: true,
-          }}
           onScroll={onTopReached}
           style={{
             backgroundColor: Colors.surfaceBG,

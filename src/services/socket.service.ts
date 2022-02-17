@@ -20,9 +20,10 @@ import {
   SocketFireEvents,
   SocketListenerEvents,
 } from './socket.types'
+import ReconnectingWebSocket from 'reconnecting-websocket'
 
 export class SocketConnection {
-  io: WebSocket
+  io: ReconnectingWebSocket
   roomName: string = ''
   isTyping: boolean = false
   eventListener: any
@@ -30,30 +31,20 @@ export class SocketConnection {
 
   constructor() {
     // const token = storage.getString(EncryptedStorageKeys.AccessToken)
-    this.io = new WebSocket(Config.SOCKET_URL)
+    this.io = new ReconnectingWebSocket(Config.SOCKET_URL)
     this.listenForEvents()
   }
 
   private listenForEvents() {
     this.eventListener = this.io.addEventListener('message', message => {
       try {
+        console.log(message)
         const parsedMessage = JSON.parse(message.data)
         const event: string = parsedMessage.event
 
         this.events.emit(event, parsedMessage.data)
       } catch (err) {
         console.error('WW', err)
-      }
-    })
-  }
-
-  async connect() {
-    return new Promise((resolve, reject) => {
-      try {
-        this.io = new WebSocket(Config.SOCKET_URL)
-        resolve(true)
-      } catch (error) {
-        reject(error)
       }
     })
   }

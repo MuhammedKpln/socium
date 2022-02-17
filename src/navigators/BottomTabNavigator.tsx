@@ -170,7 +170,7 @@ const MainNavigator = () => {
       </Stack.Group>
       <Stack.Group
         screenOptions={{
-          presentation: 'containedTransparentModal',
+          presentation: 'transparentModal',
           headerShown: false,
         }}
       >

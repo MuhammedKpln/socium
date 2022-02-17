@@ -7,8 +7,8 @@ import {
 import { useSocket } from '@/hooks/useSocket'
 import { INavigatorParamsList, Routes } from '@/navigators/navigator.props'
 import { navigateBack } from '@/navigators/utils/navigation'
+import { SocketListenerEvents } from '@/services/socket.types'
 import { useAppSelector } from '@/store'
-import { wait } from '@/utils/utils'
 import { useQuery } from '@apollo/client'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import React, {
@@ -28,8 +28,8 @@ export function ChatContainer() {
   const ref = useRef()
   const [typing, setTyping] = useState<boolean>(false)
   const [message, setMessage] = useState('')
-  const localUser = useAppSelector(state => state.userReducer.isLoggedIn)
-  const socketService = useSocket()
+  const localUser = useAppSelector(state => state.userReducer.user)
+  const { socket: socketService } = useSocket()
   const messagesResponse = useQuery<
     IFetchRoomMessagesResponse,
     IFetchRoomMessagesVariables
@@ -41,68 +41,70 @@ export function ChatContainer() {
   })
 
   useEffect(() => {
-    socketService
-      .connect()
-      .then(async () => {
-        await wait(700)
+    console.log(socketService.io.readyState)
 
-        socketService.joinRoom({ room: room.roomAdress })
+    socketService.joinRoom({ room: room.roomAdress })
 
-        socketService.messageReceivedEvent(_message => {
-          const prevResults: IFetchRoomMessagesResponse =
-            messagesResponse.client.cache.readQuery({
-              query: FETCH_ROOM_MESSAGES,
-              variables: {
-                roomId: room.id,
-              },
-            })
-
-          messagesResponse.client.cache.writeQuery({
-            query: FETCH_ROOM_MESSAGES,
-            variables: {
-              roomId: room.id,
-            },
-            data: {
-              messagesFromRoom: [
-                ...prevResults.messagesFromRoom,
-                _message.message,
-              ],
-            },
-          })
+    socketService.messageReceivedEvent(_message => {
+      console.log('EVENTT')
+      const prevResults: IFetchRoomMessagesResponse =
+        messagesResponse.client.cache.readQuery({
+          query: FETCH_ROOM_MESSAGES,
+          variables: {
+            roomId: room.id,
+          },
         })
 
-        socketService.userIsTypingEvent(_typing => {
-          setTyping(prev => !prev && _typing.typing)
-        })
-
-        socketService.userIsDoneTypingEvent(_typing => {
-          setTyping(false)
-        })
-
-        socketService.messageRemovedEvent(resp => {
-          const prevResults: IFetchRoomMessagesResponse =
-            messagesResponse.client.cache.readQuery({
-              query: FETCH_ROOM_MESSAGES,
-              variables: {
-                roomId: room.id,
-              },
-            })
-
-          messagesResponse.client.cache.writeQuery({
-            query: FETCH_ROOM_MESSAGES,
-            variables: {
-              roomId: room.id,
-            },
-            data: {
-              messagesFromRoom: prevResults.messagesFromRoom.filter(
-                v => v.id !== resp.messageId,
-              ),
-            },
-          })
-        })
+      messagesResponse.client.cache.writeQuery({
+        query: FETCH_ROOM_MESSAGES,
+        variables: {
+          roomId: room.id,
+        },
+        data: {
+          messagesFromRoom: [...prevResults.messagesFromRoom, _message.message],
+        },
       })
-      .catch(err => console.error(err))
-  }, [])
+    })
+
+    socketService.userIsTypingEvent(_typing => {
+      setTyping(prev => !prev && _typing.typing)
+    })
+
+    socketService.userIsDoneTypingEvent(_typing => {
+      setTyping(false)
+    })
+
+    socketService.messageRemovedEvent(resp => {
+      const prevResults: IFetchRoomMessagesResponse =
+        messagesResponse.client.cache.readQuery({
+          query: FETCH_ROOM_MESSAGES,
+          variables: {
+            roomId: room.id,
+          },
+        })
+
+      messagesResponse.client.cache.writeQuery({
+        query: FETCH_ROOM_MESSAGES,
+        variables: {
+          roomId: room.id,
+        },
+        data: {
+          messagesFromRoom: prevResults.messagesFromRoom.filter(
+            v => v.id !== resp.messageId,
+          ),
+        },
+      })
+    })
+
+    return () => {
+      socketService.removeListeners([
+        SocketListenerEvents.MessageReceived,
+        SocketListenerEvents.DoneTyping,
+        SocketListenerEvents.Typing,
+        SocketListenerEvents.RemoveMessageRequested,
+      ])
+    }
+  }, [messagesResponse.client.cache, room.id, room.roomAdress, socketService])
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -124,7 +126,6 @@ export function ChatContainer() {
       room: room.roomAdress,
       message,
       receiver: user,
-      //@ts-ignore
       user: localUser,
     })
 

@@ -1,5 +1,4 @@
 import { INavigatorParamsList, Routes } from '@/navigators/navigator.props'
-import { navigateBack } from '@/navigators/utils/navigation'
 import { matchEmitter } from '@/services/events.service'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useEffect } from 'react'
@@ -11,8 +10,8 @@ export function MatchingFoundContainer() {
   const navigation = useNavigation()
 
   useEffect(() => {
-    matchEmitter.addListener('acceptMatch', () => {
-      navigateBack()
+    matchEmitter.addListener('acceptMatch', async () => {
+      navigation.goBack()
       navigation.navigate(Routes.MatchChat, {
         room: routes.params.room,
         user: routes.params.user,
@@ -20,7 +19,7 @@ export function MatchingFoundContainer() {
       })
     })
     matchEmitter.addListener('rejectMatch', () => {
-      navigateBack()
+      navigation.goBack()
     })
 
     return () => {

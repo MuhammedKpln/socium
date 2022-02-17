@@ -3,8 +3,9 @@ import Button from '@/components/Button/Button.component'
 import { Icon } from '@/components/Icon/Icon.component'
 import { matchEmitter } from '@/services/events.service'
 import { IUser } from '@/types/login.types'
+import { wait } from '@/utils/utils'
 import AnimatedLottieView from 'lottie-react-native'
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { StatusBar } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Colors } from 'react-native-ui-lib'
@@ -18,12 +19,18 @@ interface IProps {
 
 export function MatchingFoundComponent(props: IProps) {
   const { user } = props
+  const [modalVisible, setModalVisible] = useState<boolean>(true)
 
-  const onPressClose = useCallback(() => {
+  const onPressClose = useCallback(async () => {
+    setModalVisible(false)
+    await wait(100)
     matchEmitter.emit('rejectMatch')
   }, [])
 
-  const onPressSendMessage = useCallback(() => {
+  const onPressSendMessage = useCallback(async () => {
+    setModalVisible(false)
+
+    await wait(100)
     matchEmitter.emit('acceptMatch')
   }, [])
 
@@ -31,7 +38,7 @@ export function MatchingFoundComponent(props: IProps) {
     <View>
       <StatusBar barStyle="dark-content" />
       <Modal
-        visible={true}
+        visible={modalVisible}
         overlayBackgroundColor="rgba(0,0,0,0.9)"
         style={{ opacity: 0.5 }}
       >

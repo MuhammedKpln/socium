@@ -240,7 +240,6 @@ export function MatchChatContainer() {
       room,
       message,
       receiver: user,
-      //@ts-ignore
       user: localUser,
     })
 

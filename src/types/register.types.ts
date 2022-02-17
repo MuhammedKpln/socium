@@ -1,4 +1,4 @@
-import { IUser } from './login.types'
+import { ILogin } from './login.types'
 
 export interface IRegisterData {
   username: string
@@ -28,4 +28,6 @@ export interface IGoogleRegisterParams {
   idToken: string
 }
 
-export type IRegisterResponse = IUser
+export interface IRegisterResponse {
+  register: ILogin
+}

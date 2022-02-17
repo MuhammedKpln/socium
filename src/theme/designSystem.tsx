@@ -1,5 +1,6 @@
 import { Platform } from 'react-native'
 import { Assets, Colors, ThemeManager, Typography } from 'react-native-ui-lib'
+import React from 'react'
 
 const colors = {
   primary: '#FE7949',
@@ -40,6 +41,10 @@ export const configureDesignSystem = (): void => {
     get NoData() {
       return require('../assets/images/NoData.webp')
     },
+    get VerifyMail() {
+      const Image = require('@/assets/images/VerifyMail.svg').default
+      return <Image width={200} height={200} />
+    },
   })
   Assets.loadAssetsGroup('animations', {
     get typing() {
@@ -47,6 +52,9 @@ export const configureDesignSystem = (): void => {
     },
     get paperPlane() {
       return require('@/assets/animations/paper-plane.json')
+    },
+    get mailSent() {
+      return require('@/assets/animations/mail-sent.json')
     },
   })
 

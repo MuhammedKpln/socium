@@ -9,6 +9,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Colors } from 'react-native-ui-lib'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
@@ -42,6 +43,7 @@ export const ChatHeader = React.memo((props: IProps) => {
     inCall,
     muted,
   } = props
+  const { top } = useSafeAreaInsets()
   const buttonScale = useSharedValue(1)
   const buttonStyle = useAnimatedStyle(() => {
     return {
@@ -95,7 +97,7 @@ export const ChatHeader = React.memo((props: IProps) => {
   }, [navigation, avatar, username, muted])
 
   return (
-    <View bg-trueSurfaceBG>
+    <View bg-trueSurfaceBG style={{ paddingTop: top, zIndex: 1 }}>
       <View row spread padding-20>
         <View row>
           <View marginR-50 marginT-10>

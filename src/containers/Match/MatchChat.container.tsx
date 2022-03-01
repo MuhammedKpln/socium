@@ -14,7 +14,6 @@ import {
   toggleMicMuted,
   toggleSpeakers,
 } from '@/store/reducers/chat.reducer'
-import { IMessage } from '@/types/messages.types'
 import { showToast, ToastStatus } from '@/utils/toast'
 import { wait } from '@/utils/utils'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
@@ -25,6 +24,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
+import type { IMessage } from 'react-native-chatty/lib/typescript/src/types/Chatty.types'
 import InCallManager from 'react-native-incall-manager'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useDispatch } from 'react-redux'
@@ -41,7 +41,7 @@ export function MatchChatContainer() {
   const [isReceiverMuted, setIsReceiverMuted] = useState<boolean>(false)
   const [messages, setMessages] = useState<IMessage[]>([
     //@ts-ignore
-    { message: 'Merhaba!' },
+    { text: 'Merhaba!' },
   ])
   const ref = useRef()
   const localUser = useAppSelector(state => state.userReducer.user)
@@ -116,7 +116,20 @@ export function MatchChatContainer() {
     })
 
     socketService.messageReceivedEvent(_message => {
-      setMessages(prev => [...prev, _message.message])
+      setMessages(prev => [
+        ...prev,
+        {
+          id: _message.message.id ?? 0,
+          text: _message.message.message,
+          user: {
+            id: _message.message.senderId,
+            username: 'selam',
+            avatar: 'https://i.pravatar.cc/300',
+          },
+          createdAt: _message.message.created_at,
+          me: _message.message.senderId === localUser?.id,
+        },
+      ])
     })
 
     socketService.userIsTypingEvent(_typing => {
@@ -209,6 +222,7 @@ export function MatchChatContainer() {
     micToggled,
     speakerToggled,
     dispatch,
+    localUser?.id,
   ])
 
   useEffect(() => {

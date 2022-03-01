@@ -1,8 +1,15 @@
 import { IFetchRoomMessagesResponse } from '@/graphql/queries/FetchMessages.query'
-import { IMessage } from '@/types/messages.types'
 import { ApolloQueryResult } from '@apollo/client'
+import {
+  IChatty,
+  IMessage,
+} from 'react-native-chatty/lib/typescript/src/types/Chatty.types'
 
-export interface IChatProps {
+export interface IChatProps
+  extends Pick<
+    IChatty,
+    'loadEarlierProps' | 'onReply' | 'bubbleProps' | 'replyingTo'
+  > {
   callFunction: boolean
   username: string
   userId: number

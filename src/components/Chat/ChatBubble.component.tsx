@@ -1,5 +1,7 @@
 import Clipboard from '@react-native-community/clipboard'
+import dayjs from 'dayjs'
 import React, { useCallback, useMemo, useState } from 'react'
+import { IMessage } from 'react-native-chatty/lib/typescript/src/types/Chatty.types'
 import { Colors } from 'react-native-ui-lib'
 import ActionSheet from 'react-native-ui-lib/actionSheet'
 import Text from 'react-native-ui-lib/text'
@@ -13,6 +15,7 @@ interface IProps {
   createdAt?: Date
   customElement?: React.ReactElement
   onPressRemove?: (messageId: number) => void
+  repliedTo?: IMessage
 }
 
 function _ChatBubble(props: IProps) {
@@ -32,9 +35,9 @@ function _ChatBubble(props: IProps) {
   const date = useMemo(() => {
     if (!createdAt) return null
 
-    const _date = new Date(createdAt)
+    const _date = dayjs(createdAt).format('HH:mm')
 
-    return `${_date.getHours()}:${_date.getMinutes()}`
+    return `${_date.toString()}`
   }, [createdAt])
 
   const copyMessage = useCallback(_message => {
@@ -46,20 +49,40 @@ function _ChatBubble(props: IProps) {
       <TouchableOpacity onLongPress={() => setShowActionSheet(prev => !prev)}>
         <View
           backgroundColor={bgColor}
-          padding-20
-          style={{ maxWidth: 300 }}
-          br100
+          style={{
+            padding: props.repliedTo ? 10 : 20,
+            borderRadius: props.repliedTo ? 10 : 100,
+            maxWidth: 300,
+          }}
         >
           {customElement ? (
             customElement
           ) : (
-            <Text color={textColor}>{message}</Text>
+            <>
+              {props.repliedTo && (
+                <View
+                  padding-5
+                  br20
+                  backgroundColor={Colors.white}
+                  style={{
+                    borderLeftColor: Colors.violet50,
+                    borderLeftWidth: 3,
+                  }}
+                >
+                  <Text bold>{props.repliedTo.user.username}</Text>
+                  <Text>{props.repliedTo.text}</Text>
+                </View>
+              )}
+              <Text color={textColor}>{message}</Text>
+            </>
           )}
         </View>
         {!customElement ? (
-          <Text color="#BBC3CA" margin-10 fontSfProRegular font13>
-            {date}
-          </Text>
+          <>
+            <Text color="#BBC3CA" margin-10 fontSfProRegular font13>
+              {date}
+            </Text>
+          </>
         ) : null}
       </TouchableOpacity>
 

@@ -1,15 +1,17 @@
 import { ChatComponent } from '@/components/Chat/Chat.component'
+import { Icon } from '@/components/Icon/Icon.component'
 import {
   FETCH_ROOM_MESSAGES,
   IFetchRoomMessagesResponse,
   IFetchRoomMessagesVariables,
 } from '@/graphql/queries/FetchMessages.query'
 import { useSocket } from '@/hooks/useSocket'
-import { INavigatorParamsList, Routes } from '@/navigators/navigator.props'
+import type { INavigatorParamsList, Routes } from '@/navigators/navigator.props'
 import { navigateBack } from '@/navigators/utils/navigation'
 import { chatEmitter } from '@/services/events.service'
 import { SocketListenerEvents } from '@/services/socket.types'
 import { useAppSelector } from '@/store'
+import { avatarStatic } from '@/utils/static'
 import { useQuery } from '@apollo/client'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import React, {
@@ -19,18 +21,25 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { ActivityIndicator, Alert } from 'react-native'
+import { ChatEmitter } from 'react-native-chatty'
+import {
+  IMessage,
+  ListRef,
+  MediaType,
+} from 'react-native-chatty/lib/typescript/src/types/Chatty.types'
 
 export function ChatContainer() {
   const {
     params: { room, user },
   } = useRoute<RouteProp<INavigatorParamsList, Routes.Chat>>()
   const navigation = useNavigation()
-  const ref = useRef()
-  const [typing, setTyping] = useState<boolean>(false)
-  const [message, setMessage] = useState('')
+  const ref = useRef<ListRef>()
+  const message = useRef<string>('')
   const localUser = useAppSelector(state => state.userReducer.user)
+  const [messages, setMessages] = useState<IMessage[]>([])
   const { socket: socketService } = useSocket()
+  const [replying, setReplying] = useState<IMessage | null>(null)
   const messagesResponse = useQuery<
     IFetchRoomMessagesResponse,
     IFetchRoomMessagesVariables
@@ -39,65 +48,65 @@ export function ChatContainer() {
       roomId: room.id,
     },
     fetchPolicy: 'network-only',
+    onCompleted: data => {
+      const _messages: IMessage[] = []
+
+      data.messagesFromRoom.forEach(_message => {
+        const __message: IMessage = {
+          id: _message.id,
+          text: _message.message,
+          user: {
+            id: _message.sender.id,
+            username: _message.sender.username,
+            avatar: { uri: avatarStatic(_message.sender.avatar) },
+          },
+          createdAt: _message.created_at,
+          me:
+            _message?.sender?.id === localUser?.id ||
+            _message?.senderId === localUser?.id,
+        }
+
+        _messages.push(__message)
+      })
+
+      setMessages(_messages)
+    },
   })
 
   useEffect(() => {
-    console.log(socketService.io.readyState)
-
     socketService.joinRoom({ room: room.roomAdress })
 
     socketService.messageReceivedEvent(_message => {
-      console.log('EVENTT')
-      const prevResults: IFetchRoomMessagesResponse =
-        messagesResponse.client.cache.readQuery({
-          query: FETCH_ROOM_MESSAGES,
-          variables: {
-            roomId: room.id,
-          },
-        })
+      console.log(_message)
 
-      messagesResponse.client.cache.writeQuery({
-        query: FETCH_ROOM_MESSAGES,
-        variables: {
-          roomId: room.id,
-        },
-        data: {
-          messagesFromRoom: [...prevResults.messagesFromRoom, _message.message],
-        },
-      })
+      setMessages(prev =>
+        prev.concat({
+          id: _message.message.id,
+          text: _message.message.message,
+          user: {
+            id: _message.message.senderId,
+            username: 'selam',
+          },
+          createdAt: _message.message.created_at,
+          me: _message.message.senderId === localUser?.id,
+        }),
+      )
     })
 
     socketService.userIsTypingEvent(_typing => {
-      setTyping(prev => !prev && _typing.typing)
+      ref.current?.setIsTyping(_typing.typing)
     })
 
     socketService.userIsDoneTypingEvent(_typing => {
-      setTyping(false)
+      ref.current?.setIsTyping(false)
     })
 
     socketService.messageRemovedEvent(resp => {
-      const prevResults: IFetchRoomMessagesResponse =
-        messagesResponse.client.cache.readQuery({
-          query: FETCH_ROOM_MESSAGES,
-          variables: {
-            roomId: room.id,
-          },
-        })
-
-      messagesResponse.client.cache.writeQuery({
-        query: FETCH_ROOM_MESSAGES,
-        variables: {
-          roomId: room.id,
-        },
-        data: {
-          messagesFromRoom: prevResults.messagesFromRoom.filter(
-            v => v.id !== resp.messageId,
-          ),
-        },
-      })
+      ref.current?.removeMessage(resp.messageId)
     })
 
     return () => {
+      ChatEmitter.removeAllListeners()
       socketService.removeListeners([
         SocketListenerEvents.MessageReceived,
         SocketListenerEvents.DoneTyping,
@@ -105,7 +114,13 @@ export function ChatContainer() {
         SocketListenerEvents.RemoveMessageRequested,
       ])
     }
-  }, [messagesResponse.client.cache, room.id, room.roomAdress, socketService])
+  }, [
+    messagesResponse.client.cache,
+    room.id,
+    room.roomAdress,
+    socketService,
+    localUser?.id,
+  ])
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -125,13 +140,13 @@ export function ChatContainer() {
   const sendMessage = useCallback(() => {
     socketService.sendMessage({
       room: room.roomAdress,
-      message,
+      message: message.current,
       receiver: user,
       user: localUser,
     })
 
     chatEmitter.emit('cleanTextInputValue')
-    setMessage('')
+    message.current = ''
     socketService.typing(false, room.roomAdress)
   }, [message, room, user, localUser, socketService])
 
@@ -151,7 +166,7 @@ export function ChatContainer() {
         socketService.typing(false, room.roomAdress)
       }
 
-      setMessage(text)
+      message.current = text
       chatEmitter.emit('textInputValue', text)
     },
     [room, socketService],
@@ -164,24 +179,35 @@ export function ChatContainer() {
     [room, socketService],
   )
 
+  if (messages.length < 1) return <ActivityIndicator />
+
   return (
-    <SafeAreaView>
-      <ChatComponent
-        isOnline={true}
-        typing={typing}
-        avatar={user.avatar}
-        username={user.username}
-        userId={user.id}
-        messages={messagesResponse.data?.messagesFromRoom ?? ['we']}
-        callFunction={false}
-        onPressBack={() => navigateBack()}
-        onTopReached={fetchOlderMessages}
-        onPressSend={sendMessage}
-        onPressRemove={removeMessage}
-        onChangeInputText={onChangeText}
-        onBlurInput={onBlurInput}
-        ref={ref}
-      />
-    </SafeAreaView>
+    <ChatComponent
+      isOnline={true}
+      avatar={user.avatar}
+      username={user.username}
+      userId={user.id}
+      messages={messages}
+      callFunction={false}
+      onPressBack={() => navigateBack()}
+      onTopReached={fetchOlderMessages}
+      onPressSend={sendMessage}
+      onPressRemove={removeMessage}
+      onChangeInputText={onChangeText}
+      onBlurInput={onBlurInput}
+      onReply={setReplying}
+      replyingTo={replying ?? undefined}
+      bubbleProps={{
+        replyDragElement: (
+          <Icon
+            name="PaperPlane"
+            color="#ccc"
+            size={20}
+            style={{ alignSelf: 'center' }}
+          />
+        ),
+      }}
+      ref={ref}
+    />
   )
 }

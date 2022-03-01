@@ -1,12 +1,14 @@
+const dev = true
+
 export const Config = {
-  STATIC_URL: __DEV__
+  STATIC_URL: dev
     ? 'https://derdevam.com/static'
     : 'https://derdevam.com/static',
-  GRAPHQL_WS_URL: __DEV__
+  GRAPHQL_WS_URL: dev
     ? 'ws://81.226.94.21:3000/graphql'
     : 'wss://derdevam.com/graphql',
-  API_URL: __DEV__ ? 'http://81.226.94.21:3000' : 'https://derdevam.com',
-  SOCKET_URL: __DEV__ ? 'ws://81.226.94.21:3001' : 'wss://cio.derdevam.com',
+  API_URL: dev ? 'http://81.226.94.21:3000' : 'https://derdevam.com',
+  SOCKET_URL: dev ? 'ws://81.226.94.21:3001' : 'wss://cio.derdevam.com',
   APP_TITLE: 'Derdevam',
   APP_SLOGAN: 'Derdevam ile içinizi dökmeye hazır mısınız?',
   APP_PLAYSTORE_LINK: 'https://derdevam.com',
@@ -17,14 +19,14 @@ export const Config = {
 }
 
 // export const Config = {
-//   STATIC_URL: __DEV__
+//   STATIC_URL: dev
 //     ? 'https://derdevam.com/static'
 //     : 'https://derdevam.com/static',
-//   GRAPHQL_WS_URL: __DEV__
+//   GRAPHQL_WS_URL: dev
 //     ? 'wss://derdevam.com/graphql'
 //     : 'wss://derdevam.com/graphql',
-//   API_URL: __DEV__ ? 'https://derdevam.com' : 'https://derdevam.com',
-//   SOCKET_URL: __DEV__
+//   API_URL: dev ? 'https://derdevam.com' : 'https://derdevam.com',
+//   SOCKET_URL: dev
 //     ? 'https://cio.derdevam.com/PairingScreen'
 //     : 'https://cio.derdevam.com/PairingScreen',
 //   APP_TITLE: 'Derdevam',

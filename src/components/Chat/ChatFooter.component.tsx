@@ -15,22 +15,6 @@ type IProps = Pick<
 >
 
 export const ChatFooter = React.memo((props: IProps) => {
-  const [value, setValue] = useState<string>()
-
-  useEffect(() => {
-    chatEmitter.addListener('cleanTextInputValue', () => {
-      setValue('')
-    })
-    chatEmitter.on('textInputValue', _value => {
-      setValue(_value)
-    })
-
-    return () => {
-      chatEmitter.removeAllListeners('cleanTextInputValue')
-      chatEmitter.removeAllListeners('textInputValue')
-    }
-  }, [])
-
   return (
     <TextField
       onSubmitEditing={Keyboard.dismiss}
@@ -48,7 +32,7 @@ export const ChatFooter = React.memo((props: IProps) => {
       onChangeText={props.onChangeInputText}
       onBlur={props.onBlurInput}
       placeholderTextColor="#ADADAD"
-      value={value}
+      value={props.value}
       trailingAccessory={
         <Button
           padding-10

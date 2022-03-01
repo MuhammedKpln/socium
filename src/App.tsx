@@ -11,6 +11,7 @@ import { onError } from '@apollo/client/link/error'
 import { getMainDefinition } from '@apollo/client/utilities'
 import React from 'react'
 import { ActivityIndicator } from 'react-native'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { Config } from './config'
@@ -156,7 +157,9 @@ export default () => {
     <Provider store={store}>
       <PersistGate persistor={persistedStore} loading={<ActivityIndicator />}>
         <ApolloProvider client={client}>
-          <ApplicationNavigator />
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <ApplicationNavigator />
+          </GestureHandlerRootView>
         </ApolloProvider>
       </PersistGate>
     </Provider>

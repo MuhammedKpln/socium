@@ -3688,6 +3688,11 @@ event-target-shim@^5.0.0, event-target-shim@^5.0.1:
   resolved "https://registry.yarnpkg.com/event-target-shim/-/event-target-shim-5.0.1.tgz#5d4d3ebdf9583d63a5333ce2deb7480ab2b05789"
   integrity sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==
 
+eventemitter3@^4.0.7:
+  version "4.0.7"
+  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
+  integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
+
 events@^3.2.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/events/-/events-3.3.0.tgz#31a95ad0a924e2d2c419a813aeb2c4e878ea7400"
@@ -6686,6 +6691,14 @@ react-is@^16.13.0, react-is@^16.13.1, react-is@^16.7.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
+react-native-chatty@^0.2.10:
+  version "0.2.10"
+  resolved "https://registry.yarnpkg.com/react-native-chatty/-/react-native-chatty-0.2.10.tgz#06f59c2ead0de4a0fc3dbc8b25245e3c7909c217"
+  integrity sha512-IFwckLZCZh2J0nAIPB3jFEKiYd1uZx12ugFwHTyGAvwVyidMkA3Ve2QsoEqZu4kPK9tEyxpS1teToF0j1uj6xQ==
+  dependencies:
+    eventemitter3 "^4.0.7"
+    typed-emitter "^2.1.0"
+
 react-native-codegen@^0.0.8:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/react-native-codegen/-/react-native-codegen-0.0.8.tgz#b7796a54074139d956fff2862cf1285db43c891b"
@@ -6703,6 +6716,11 @@ react-native-color@0.0.10:
     prop-types "^15.6.0"
     react-native-slider "^0.11.0"
     tinycolor2 "^1.4.1"
+
+react-native-context-menu-view@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-context-menu-view/-/react-native-context-menu-view-1.3.0.tgz#66cf417521fbc389dcfb5880b80f6f0292410825"
+  integrity sha512-auO8+vlAT1bYwbOU77FJRDPjh/EmlqfGbK3AERMo30MvtxqKCHyjWlpT8yeiLUU2fs700JE+SmkzzupIyTI4FA==
 
 react-native-fast-image@^8.5.11:
   version "8.5.11"
@@ -6879,15 +6897,14 @@ react-native-vector-icons@^9.0.0:
     prop-types "^15.7.2"
     yargs "^16.1.1"
 
-react-native-webrtc@^1.94.1:
-  version "1.94.1"
-  resolved "https://registry.yarnpkg.com/react-native-webrtc/-/react-native-webrtc-1.94.1.tgz#4d2d9e74240b494f7582b5f638bac3a8bfb86a7f"
-  integrity sha512-S+qU2i0PY2QfWzh8choBlVzUF6I6DVKhrUFbGrriuffieMu+/sR40pPTNCCFEXo4USNZAAM8osBgn6E/aZsJbg==
+react-native-webrtc@^1.94.2:
+  version "1.94.2"
+  resolved "https://registry.yarnpkg.com/react-native-webrtc/-/react-native-webrtc-1.94.2.tgz#91ec5975d2fb923e620f4d339b55e892cf56e5e4"
+  integrity sha512-8wf7CDLYmrxxvta3XxZbmtNrxUblE70fDpoxjYKWfEa48Y4FnFw7MF61g8qYo+V0adoOUNc3j4fIgVnAMghJ9Q==
   dependencies:
     base64-js "1.5.1"
     event-target-shim "6.0.2"
     tar "6.1.11"
-    uuid "3.4.0"
 
 react-native-webview@^11.15.0:
   version "11.15.0"
@@ -8299,7 +8316,7 @@ utils-merge@1.0.1:
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=
 
-uuid@3.4.0, uuid@^3.3.2:
+uuid@^3.3.2:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==

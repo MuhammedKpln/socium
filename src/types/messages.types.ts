@@ -1,4 +1,4 @@
-import { IUser } from './login.types'
+import type { IUser } from './login.types'
 
 export interface IRoom {
   id: number

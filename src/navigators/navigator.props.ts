@@ -1,7 +1,7 @@
-import { IUser } from '@/Types/login.types'
-import { IRoom } from '@/types/messages.types'
-import { ParamListBase } from '@react-navigation/native'
-import { RTCSessionDescriptionType } from 'react-native-webrtc'
+import type { IUser } from '@/Types/login.types'
+import type { IRoom } from '@/types/messages.types'
+import type { ParamListBase } from '@react-navigation/native'
+import type { RTCSessionDescriptionType } from 'react-native-webrtc'
 
 export enum Routes {
   App = 'app',
@@ -26,6 +26,7 @@ export enum Routes {
   CallComing = 'call-coming',
   Calling = 'calling',
   Call = 'call',
+  ConnectToSpotify = 'connect-to-spotify',
 }
 export enum RouteTitles {
   Login = 'Giriş yap',
@@ -37,6 +38,7 @@ export enum RouteTitles {
   EarnStar = 'Puan kazan',
   NewPost = 'Yeni gönderi',
   ChangeAvatar = 'Profil resmini değiştir',
+  ConnectToSpotify = 'Spotify ile bağlan',
 }
 
 export const RouteComponents = {
@@ -75,6 +77,9 @@ export const RouteComponents = {
   MatchingFound: () =>
     require('@/containers/Match/containers/MatchingFound.container')
       .MatchingFoundContainer,
+  ConnectToSpotify: () =>
+    require('@/containers/ConnectToSpotify/ConnectToSpotify.container')
+      .ConnectToSpotifyContainer,
 }
 
 export interface INavigatorParamsList extends ParamListBase {
@@ -113,4 +118,5 @@ export interface INavigatorParamsList extends ParamListBase {
     room: string
     uuid: string
   }
+  [Routes.ConnectToSpotify]: undefined
 }

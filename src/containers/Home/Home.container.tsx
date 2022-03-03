@@ -12,14 +12,14 @@ import {
 import { IUseLikesEntity, IUseLikesProps, useLikes } from '@/hooks/useLikes'
 import { Routes } from '@/navigators/navigator.props'
 import { navigate } from '@/navigators/utils/navigation'
+import { updateCurrentTrackInterval } from '@/services/spotify.service'
 import { useAppSelector } from '@/store'
 import { fetchAvatars } from '@/store/reducers/app.reducer'
 import { fetchUserStars } from '@/store/reducers/user.reducer'
-import { IPost } from '@/types/post.types'
+import type { IPost } from '@/types/post.types'
 import { showToast, ToastStatus } from '@/utils/toast'
 import { useQuery } from '@apollo/client'
-import React, { useCallback } from 'react'
-import { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { FlatList, RefreshControl } from 'react-native'
 import { View } from 'react-native-ui-lib'
 import Text from 'react-native-ui-lib/text'
@@ -30,6 +30,9 @@ const HomeContainer = () => {
 
   const dispatch = useDispatch()
   const isLoggedIn = useAppSelector(state => state.userReducer.isLoggedIn)
+  const spotifyLoggedIn = useAppSelector(
+    state => state.spotifyReducer.accessToken,
+  )
   const fetchPosts = useQuery<{ posts: IPost[] }, IFetchPostsVariables>(
     FETCH_POSTS,
     {
@@ -48,6 +51,12 @@ const HomeContainer = () => {
   useEffect(() => {
     dispatch(fetchAvatars())
   }, [dispatch])
+
+  useEffect(() => {
+    if (isLoggedIn && spotifyLoggedIn) {
+      updateCurrentTrackInterval()
+    }
+  }, [isLoggedIn, spotifyLoggedIn])
 
   const likePost = useCallback(
     async (props: IUseLikesProps) => {

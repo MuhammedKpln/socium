@@ -1,8 +1,8 @@
 import React, { forwardRef, memo, Ref } from 'react'
-import { SafeAreaView } from 'react-native'
+import type { SafeAreaView } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { View } from 'react-native-ui-lib'
-import { IPageProps } from './Page.props'
+import View from 'react-native-ui-lib/view'
+import type { IPageProps } from './Page.props'
 
 export const _Page = forwardRef((props: IPageProps, ref: Ref<SafeAreaView>) => {
   const { scrollable, children } = props

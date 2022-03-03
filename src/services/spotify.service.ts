@@ -19,7 +19,7 @@ import { authorize } from 'react-native-app-auth'
 
 const config = {
   clientId: Config.SPOTIFY_CLIENT_ID,
-  redirectUrl: 'com.socium.oauth://oauth',
+  redirectUrl: 'com.socium://post/selam',
   scopes: [
     'user-read-currently-playing',
     'user-read-private',
@@ -51,7 +51,7 @@ const fetchUserInfo = async (
   return userInfo
 }
 
-export const connectToSpotify = async () => {
+export const connectToSpotify = async (): Promise<boolean> => {
   const auth = await authorize(config).catch(err => {
     console.log(err)
     showToast(
@@ -61,19 +61,16 @@ export const connectToSpotify = async () => {
   })
 
   if (!auth) {
-    return
+    return false
   }
-
-  showToast(
-    ToastStatus.Success,
-    'Giriş başarılı! Artık profilinizde dinlediğiniz şarkı gözükebilir.',
-  )
 
   const accessToken = auth.accessToken
   const userInfo = await fetchUserInfo(accessToken)
 
   store.dispatch(updateAccessToken(accessToken))
   store.dispatch(updateUserInfo(userInfo))
+
+  return true
 }
 
 export const getCurrentTrack =

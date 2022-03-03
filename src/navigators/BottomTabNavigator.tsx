@@ -174,6 +174,11 @@ const MainNavigator = () => {
           getComponent={RouteComponents.Call}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name={Routes.ConnectToSpotify}
+          getComponent={RouteComponents.ConnectToSpotify}
+          options={{ ...applyRouteTitle(RouteTitles.ConnectToSpotify) }}
+        />
       </Stack.Group>
       <Stack.Group
         screenOptions={{

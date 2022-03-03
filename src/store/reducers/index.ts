@@ -7,6 +7,7 @@ import featureHightlightReducer from './featureHighlight.reducer'
 import postReducer from './post.reducer'
 import chatReducer from './chat.reducer'
 import appReducer from './app.reducer'
+import spotifyReducer from './spotify.reducer'
 
 export default combineReducers({
   counterSlice,
@@ -17,4 +18,5 @@ export default combineReducers({
   postReducer,
   chatReducer,
   appReducer,
+  spotifyReducer,
 })

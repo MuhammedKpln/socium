@@ -59,7 +59,9 @@ import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
 import { useDispatch } from 'react-redux'
 import { CommentsTab } from './components/CommentsTab.component'
+import CurrentlyListeningTrack from './components/CurrentlyListeningTrack.component'
 import { PostsTab } from './components/PostsTab.component'
+import UserZodiac from './components/UserZodiac.component'
 
 export function ProfileContainer() {
   const localUser = useAppSelector(state => state.userReducer.user)
@@ -472,6 +474,10 @@ export function ProfileContainer() {
       </View>
 
       <View row marginT-20 paddingR-30>
+        <CurrentlyListeningTrack userId={user.data?.getUser.id} />
+        <View marginH-10 />
+        <UserZodiac userBirthday={user.data?.getUser.birthday} />
+
         {localUser?.id !== user.data?.getUser.id && (
           <Button
             padding-5

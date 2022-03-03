@@ -5,9 +5,11 @@ export interface IFetchUserCurrentTrackVariables {
 }
 
 export interface IFetchUserCurrentTrackResponse {
-  songName: string
-  artistName: string
-  image: string
+  getUserCurrentTrack: {
+    songName: string
+    artistName: string
+    image: string
+  }
 }
 
 export const GET_USER_CURRENT_TRACK = gql`

@@ -100,7 +100,7 @@ export function MatchContainer() {
   }, [marginBottom, opacity, socketService])
 
   return (
-    <Page animated center>
+    <Page animated center spread>
       <Animated.View style={containerAnimatedStyle}>
         {!matching ? (
           <Animated.View style={matchComponentStyle}>

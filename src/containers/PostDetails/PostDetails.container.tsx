@@ -15,11 +15,11 @@ import {
   IFetchPostVariables,
 } from '@/graphql/queries/FetchPost.query'
 import { IUseLikesEntity, IUseLikesProps, useLikes } from '@/hooks/useLikes'
-import { INavigatorParamsList, Routes } from '@/navigators/navigator.props'
+import type { INavigatorParamsList, Routes } from '@/navigators/navigator.props'
 import { useAppSelector } from '@/store'
 import { updateAnsweringParent } from '@/store/reducers/comment.reducer'
 import { PostType } from '@/types/post.types'
-import { IInstagramMeta } from '@/types/socialMedia.types'
+import type { IInstagramMeta } from '@/types/socialMedia.types'
 import { showToast, ToastStatus } from '@/utils/toast'
 import { useQuery } from '@apollo/client'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
@@ -30,6 +30,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
+import { Platform } from 'react-native'
 import { Keyboard, ScrollView } from 'react-native'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
@@ -156,7 +157,9 @@ export function PostDetails() {
 
     return (
       <Page>
-        <KeyboardAvoidingView keyboardVerticalOffset={115}>
+        <KeyboardAvoidingView
+          keyboardVerticalOffset={Platform.select({ ios: 115, android: 100 })}
+        >
           <ScrollView
             ref={scrollViewRef}
             style={{ height: !isAnsweringParent ? '90%' : '70%' }}

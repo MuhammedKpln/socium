@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { Ref } from 'react'
+import type { TextInput as RNTextInput } from 'react-native'
 import { Colors, Incubator } from 'react-native-ui-lib'
 import TextInputStyle from './TextInput.style'
 
@@ -8,14 +9,15 @@ interface IProps {
   backgroundColor?: string
 }
 
-export const TextInput = (
+export const _TextInput = (
   props: IProps & Incubator.TextFieldProps,
-
-  //@ts-ignore
+  ref: Ref<RNTextInput>,
 ) => {
   return (
     <TextField
       padding-20
+      //@ts-ignore
+      ref={ref}
       fieldStyle={[
         TextInputStyle.input,
         props?.backgroundColor
@@ -27,3 +29,5 @@ export const TextInput = (
     />
   )
 }
+
+export const TextInput = React.forwardRef(_TextInput)

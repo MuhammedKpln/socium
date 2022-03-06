@@ -97,7 +97,7 @@ apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
  * Upload all the APKs to the Play Store and people will download
  * the correct one based on the CPU architecture of their device.
  */
-def enableSeparateBuildPerCPUArchitecture = false
+def enableSeparateBuildPerCPUArchitecture = true
 
 /**
  * Run Proguard to shrink the Java bytecode in release builds.
@@ -143,7 +143,7 @@ android {
         versionCode 1
         versionName "1.0"
         manifestPlaceholders = [
-            appAuthRedirectScheme: "com.socium.oauth"
+            appAuthRedirectScheme: "com.socium://posts/jane"
         ]
     }
     splits {
@@ -205,6 +205,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation project(':react-native-notifications')
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+    implementation'com.facebook.soloader:soloader:0.9.0+'
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'

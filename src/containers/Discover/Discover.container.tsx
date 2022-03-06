@@ -85,7 +85,7 @@ export function DiscoverContainer() {
 
         client.cache.writeQuery({
           data: {
-            postsWithoutBlog: newPost,
+            posts: newPost,
           },
           overwrite: true,
           query: FETCH_ALL_DISCOVER_POSTS,

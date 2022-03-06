@@ -13,7 +13,7 @@ export function KeyboardAvoidingView(props: IProps) {
   return (
     <RNKeyboardAvoidingView
       behavior={Platform.select({
-        android: undefined,
+        android: 'height',
         ios: 'height',
       })}
       {...props}

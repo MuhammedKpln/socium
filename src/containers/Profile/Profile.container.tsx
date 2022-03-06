@@ -373,7 +373,7 @@ export function ProfileContainer() {
   }, [user.data?.getUser.id, user.data?.getUser.username])
 
   return (
-    <Page>
+    <Page useSafeArea>
       <View row spread>
         <View row>
           {user.loading ? (
@@ -473,70 +473,74 @@ export function ProfileContainer() {
         ) : null}
       </View>
 
-      <View row marginT-20 paddingR-30>
-        <CurrentlyListeningTrack userId={user.data?.getUser.id} />
-        <View marginH-10 />
-        <UserZodiac userBirthday={user.data?.getUser.birthday} />
+      <View marginT-20 paddingR-30>
+        <View marginB-20>
+          <CurrentlyListeningTrack userId={user.data?.getUser.id} />
+          <View marginH-10 />
+          <UserZodiac userBirthday={user.data?.getUser.birthday} />
+        </View>
 
-        {localUser?.id !== user.data?.getUser.id && (
-          <Button
-            padding-5
-            marginL-15
-            style={{ width: '50%' }}
-            primary={!isFollowing.data?.userFollowsActor}
-            outline={!isFollowing.data?.userFollowsActor}
-            outlineColor={Colors.primary}
-            label={
-              isFollowing.data?.userFollowsActor ? 'Takipten çık' : 'Takip et'
-            }
-            onPress={
-              !isFollowing.data?.userFollowsActor
-                ? () => onPressFollow(user.data?.getUser.id ?? 0)
-                : () => onPressUnfollow(user.data?.getUser.id ?? 0)
-            }
-            avoidInnerPadding
-            labelStyle={{ ...Typography.font12 }}
-            loading={
-              followUserMeta.loading ||
-              unfollowUserMeta.loading ||
-              isFollowing.loading
-            }
-          />
-        )}
+        <View row>
+          {localUser?.id !== user.data?.getUser.id && (
+            <Button
+              padding-5
+              marginL-15
+              style={{ width: '50%' }}
+              primary={!isFollowing.data?.userFollowsActor}
+              outline={!isFollowing.data?.userFollowsActor}
+              outlineColor={Colors.primary}
+              label={
+                isFollowing.data?.userFollowsActor ? 'Takipten çık' : 'Takip et'
+              }
+              onPress={
+                !isFollowing.data?.userFollowsActor
+                  ? () => onPressFollow(user.data?.getUser.id ?? 0)
+                  : () => onPressUnfollow(user.data?.getUser.id ?? 0)
+              }
+              avoidInnerPadding
+              labelStyle={{ ...Typography.font12 }}
+              loading={
+                followUserMeta.loading ||
+                unfollowUserMeta.loading ||
+                isFollowing.loading
+              }
+            />
+          )}
 
-        {localUser?.id !== user.data?.getUser.id && (
-          <Button
-            padding-5
-            outline={requestedMessage.data?.checkForRequests?.request}
-            outlineColor={Colors.primary}
-            primary={
-              requestedMessage.data?.checkForRequests?.request ? true : false
-            }
-            style={{ width: '50%' }}
-            marginL-15
-            label={
-              !requestedMessage.data?.checkForRequests?.request
-                ? 'Mesaj Gönder'
-                : 'Mesaj isteğini geri al'
-            }
-            onPress={
-              !requestedMessage.data?.checkForRequests?.request
-                ? () => onPressSendMessageRequest(user.data?.getUser.id ?? 0)
-                : () =>
-                    onPressRetrieveMessageRequest(
-                      requestedMessage.data?.checkForRequests?.id ?? 0,
-                      user.data?.getUser.id ?? 0,
-                    )
-            }
-            loading={
-              retrieveMessageRequestMeta.loading ||
-              sendMessageRequestMeta.loading ||
-              requestedMessage.loading
-            }
-            avoidInnerPadding
-            labelStyle={{ ...Typography.font12 }}
-          />
-        )}
+          {localUser?.id !== user.data?.getUser.id && (
+            <Button
+              padding-5
+              outline={requestedMessage.data?.checkForRequests?.request}
+              outlineColor={Colors.primary}
+              primary={
+                requestedMessage.data?.checkForRequests?.request ? true : false
+              }
+              style={{ width: '50%' }}
+              marginL-15
+              label={
+                !requestedMessage.data?.checkForRequests?.request
+                  ? 'Mesaj Gönder'
+                  : 'Mesaj isteğini geri al'
+              }
+              onPress={
+                !requestedMessage.data?.checkForRequests?.request
+                  ? () => onPressSendMessageRequest(user.data?.getUser.id ?? 0)
+                  : () =>
+                      onPressRetrieveMessageRequest(
+                        requestedMessage.data?.checkForRequests?.id ?? 0,
+                        user.data?.getUser.id ?? 0,
+                      )
+              }
+              loading={
+                retrieveMessageRequestMeta.loading ||
+                sendMessageRequestMeta.loading ||
+                requestedMessage.loading
+              }
+              avoidInnerPadding
+              labelStyle={{ ...Typography.font12 }}
+            />
+          )}
+        </View>
       </View>
 
       <View row margin-15 marginT-50 spread>

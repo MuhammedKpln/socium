@@ -12,20 +12,8 @@ interface IProps {
 
 export function MatchComponent(props: IProps) {
   return (
-    <>
-      <MatchBackground
-        style={{
-          shadowColor: '#ccc',
-          shadowOffset: {
-            width: 40,
-            height: 50,
-          },
-          shadowOpacity: 0.58,
-          shadowRadius: 16.0,
-
-          elevation: 24,
-        }}
-      />
+    <View style={{ justifyContent: 'space-evenly' }}>
+      <MatchBackground style={{ marginTop: -100 }} />
       <View center style={{ marginTop: -50 }}>
         <TouchableOpacity onPress={props.onPressMatch}>
           <AnimatedLottieView
@@ -50,6 +38,6 @@ export function MatchComponent(props: IProps) {
           eşleymeyi yakala!
         </Text>
       </View>
-    </>
+    </View>
   )
 }

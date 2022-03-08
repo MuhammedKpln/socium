@@ -87,9 +87,10 @@ export const getCurrentTrack =
     )
 
     if (_data.status !== 200) {
-      await client.mutate({
-        mutation: REMOVE_CURRENT_TRACK,
-      })
+      //FIXME: handle error
+      // await client.mutate({
+      //   mutation: REMOVE_CURRENT_TRACK,
+      // })
 
       return null
     }

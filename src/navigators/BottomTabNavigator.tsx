@@ -179,6 +179,11 @@ const MainNavigator = () => {
           getComponent={RouteComponents.ConnectToSpotify}
           options={{ ...applyRouteTitle(RouteTitles.ConnectToSpotify) }}
         />
+        <Stack.Screen
+          name={Routes.Zodiac}
+          getComponent={RouteComponents.Zodiac}
+          options={{ ...applyRouteTitle(RouteTitles.Zodiac) }}
+        />
       </Stack.Group>
       <Stack.Group
         screenOptions={{

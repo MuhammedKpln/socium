@@ -1,5 +1,6 @@
 import type { IUser } from '@/Types/login.types'
 import type { IRoom } from '@/types/messages.types'
+import type { IZodiac } from '@/utils/zodiac'
 import type { ParamListBase } from '@react-navigation/native'
 import type { RTCSessionDescriptionType } from 'react-native-webrtc'
 
@@ -27,6 +28,7 @@ export enum Routes {
   Calling = 'calling',
   Call = 'call',
   ConnectToSpotify = 'connect-to-spotify',
+  Zodiac = 'zodiac',
 }
 export enum RouteTitles {
   Login = 'Giriş yap',
@@ -39,6 +41,7 @@ export enum RouteTitles {
   NewPost = 'Yeni gönderi',
   ChangeAvatar = 'Profil resmini değiştir',
   ConnectToSpotify = 'Spotify ile bağlan',
+  Zodiac = 'Socium burç',
 }
 
 export const RouteComponents = {
@@ -80,6 +83,7 @@ export const RouteComponents = {
   ConnectToSpotify: () =>
     require('@/containers/ConnectToSpotify/ConnectToSpotify.container')
       .ConnectToSpotifyContainer,
+  Zodiac: () => require('@/containers/Zodiac/Zodiac.container').ZodiacContainer,
 }
 
 export interface INavigatorParamsList extends ParamListBase {
@@ -119,4 +123,7 @@ export interface INavigatorParamsList extends ParamListBase {
     uuid: string
   }
   [Routes.ConnectToSpotify]: undefined
+  [Routes.Zodiac]: {
+    currentZodiac: IZodiac
+  }
 }

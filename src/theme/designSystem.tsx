@@ -45,6 +45,9 @@ export const configureDesignSystem = (): void => {
       const Image = require('@/assets/images/VerifyMail.svg').default
       return <Image width={200} height={200} />
     },
+    get ZodiacBg() {
+      return require('@/assets/images/Zodiacbg.webp')
+    },
   })
   Assets.loadAssetsGroup('animations', {
     get typing() {

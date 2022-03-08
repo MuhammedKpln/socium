@@ -48,6 +48,7 @@ import { useLazyQuery, useMutation, useQuery } from '@apollo/client'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import React, { useCallback, useLayoutEffect, useMemo, useState } from 'react'
 import { Platform } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import {
   Colors,
   DateTimePicker,

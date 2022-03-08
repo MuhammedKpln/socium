@@ -2,7 +2,7 @@ import { Routes } from '@/navigators/navigator.props'
 import { navigate } from '@/navigators/utils/navigation'
 import { useAppSelector } from '@/store'
 import { PostType } from '@/types/post.types'
-import { IInstagramMeta } from '@/types/socialMedia.types'
+import type { IInstagramMeta } from '@/types/socialMedia.types'
 import { authRequiredFunction } from '@/utils/auth'
 import { useLazyQuery } from '@apollo/client'
 import dayjs from 'dayjs'
@@ -10,10 +10,10 @@ import 'dayjs/locale/tr'
 import { map } from 'lodash'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import {
+  Image as IM,
   ImageBackground,
   InteractionManager,
   StyleSheet,
-  Image as IM,
 } from 'react-native'
 import { Colors } from 'react-native-ui-lib'
 import Image from 'react-native-ui-lib/image'
@@ -30,7 +30,8 @@ import {
   IFetchTwitterPostResponse,
   IFetchTwitterPostVariables,
 } from '../TwitterPost/queries/GetTwitterPost.query'
-import { IPostProps } from './Post.props'
+import { YTPlayer } from '../YoutubePlayer/YoutubePlayer.component'
+import type { IPostProps } from './Post.props'
 import { PostActions } from './PostActions.component'
 
 var customParseFormat = require('dayjs/plugin/customParseFormat')
@@ -103,12 +104,14 @@ export const Post = React.memo((props: IPostProps) => {
   }, [additional, fetchTwitter])
 
   useEffect(() => {
-    if (postType === PostType.Instagram) {
-      fetchInstagramPost()
-    }
-    if (postType === PostType.Twitter) {
-      fetchTwitterPost()
-    }
+    InteractionManager.runAfterInteractions(() => {
+      if (postType === PostType.Instagram) {
+        fetchInstagramPost()
+      }
+      if (postType === PostType.Twitter) {
+        fetchTwitterPost()
+      }
+    })
   }, [fetchInstagramPost, postType, fetchTwitterPost])
 
   const _onPressPost = () => {
@@ -127,8 +130,6 @@ export const Post = React.memo((props: IPostProps) => {
   }
 
   const renderYoutubeIframe = (postContent: string) => {
-    const YoutubePlayer =
-      require('@/components/YoutubePlayer/YoutubePlayer.component').YTPlayer
     let videoId: string = ''
 
     if (postContent.includes('youtu.be')) {
@@ -138,7 +139,7 @@ export const Post = React.memo((props: IPostProps) => {
       videoId = postContent.split('watch?v=')[1]
     }
 
-    return <YoutubePlayer videoId={videoId} />
+    return <YTPlayer videoId={videoId} />
   }
 
   const renderTwitterImages = useCallback(() => {

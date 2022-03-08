@@ -1,4 +1,4 @@
-import { IComment } from '@/Types/comment.types'
+import type { IComment } from '@/Types/comment.types'
 import gql from 'graphql-tag'
 
 export interface IFetchCommentsVariables {

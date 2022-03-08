@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Image as IM, ImageBackground, TouchableOpacity } from 'react-native'
-import SkeletonView from 'react-native-ui-lib/skeletonView'
 import View from 'react-native-ui-lib/view'
 import YoutubePlayer, { getYoutubeMeta } from 'react-native-youtube-iframe'
 import { Icon } from '../Icon/Icon.component'
-import { IYTPlayerProps } from './YoutubePlayer.props'
+import { SkeletonView } from '../SkeletonView/SkeletonView.component'
+import type { IYTPlayerProps } from './YoutubePlayer.props'
 
 export const YTPlayer = React.memo((props: IYTPlayerProps) => {
   const { videoId } = props

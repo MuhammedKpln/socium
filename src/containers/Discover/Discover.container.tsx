@@ -19,7 +19,8 @@ import { IPost, PostType } from '@/types/post.types'
 import { useMutation, useQuery } from '@apollo/client'
 import { useNavigation } from '@react-navigation/native'
 import React, { useCallback, useEffect, useLayoutEffect } from 'react'
-import { FlatList, RefreshControl } from 'react-native'
+import { RefreshControl } from 'react-native'
+import BigList from 'react-native-big-list'
 import View from 'react-native-ui-lib/view'
 import { Categories } from './components/Categories.component'
 import { DiscoverPost } from './components/DiscoverPost.component'
@@ -269,7 +270,7 @@ export function DiscoverContainer() {
       <View marginB-10>
         <Categories />
       </View>
-      <FlatList
+      <BigList
         renderItem={renderItem}
         data={data?.posts}
         contentContainerStyle={{ padding: 10 }}
@@ -277,6 +278,7 @@ export function DiscoverContainer() {
         onEndReachedThreshold={0.5}
         removeClippedSubviews
         refreshControl={refreshControl()}
+        itemHeight={350}
       />
     </Page>
   )

@@ -20,7 +20,8 @@ import type { IPost } from '@/types/post.types'
 import { showToast, ToastStatus } from '@/utils/toast'
 import { useQuery } from '@apollo/client'
 import React, { useCallback, useEffect } from 'react'
-import { FlatList, RefreshControl } from 'react-native'
+import { RefreshControl } from 'react-native'
+import BigList from 'react-native-big-list'
 import { View } from 'react-native-ui-lib'
 import Text from 'react-native-ui-lib/text'
 import { useDispatch } from 'react-redux'
@@ -49,6 +50,7 @@ const HomeContainer = () => {
   )
 
   useEffect(() => {
+    console.warn('runned')
     dispatch(fetchAvatars())
   }, [dispatch])
 
@@ -111,40 +113,38 @@ const HomeContainer = () => {
     })
   }, [fetchPosts])
 
-  function renderItem({ item }: { item: IPost }) {
-    return (
-      <View key={item.slug}>
-        <Post
-          commentsCount={item._count.comment}
-          date={item.created_at}
-          likesCount={item.postLike.likeCount}
-          onPressPost={() => {
-            navigate(Routes.PostDetails, { postId: item.id })
-          }}
-          postType={item.type}
-          additional={item.additional}
-          isLiked={item.userLike?.liked || false}
-          user={item.user}
-          onPressRemove={() => null}
-          content={item.content}
-          onPressComment={() => null}
-          onPressSave={onPressSave}
-          onPressLike={() =>
-            likePost({
-              entityId: item.id,
-              entityType: IUseLikesEntity.POST,
-              isLiked: item.userLike?.liked || false,
-            })
-          }
-        />
-      </View>
-    )
-  }
-  const getItemLayout = (data: any, index: any) => ({
-    length: 374,
-    offset: 374 * index,
-    index,
-  })
+  const renderItem = useCallback(
+    ({ item }: { item: IPost }) => {
+      return (
+        <View key={item.slug}>
+          <Post
+            commentsCount={item._count.comment}
+            date={item.created_at}
+            likesCount={item.postLike.likeCount}
+            onPressPost={() => {
+              navigate(Routes.PostDetails, { postId: item.id })
+            }}
+            postType={item.type}
+            additional={item.additional}
+            isLiked={item.userLike?.liked || false}
+            user={item.user}
+            onPressRemove={() => null}
+            content={item.content}
+            onPressComment={() => null}
+            onPressSave={onPressSave}
+            onPressLike={() =>
+              likePost({
+                entityId: item.id,
+                entityType: IUseLikesEntity.POST,
+                isLiked: item.userLike?.liked || false,
+              })
+            }
+          />
+        </View>
+      )
+    },
+    [likePost],
+  )
 
   const refreshControl = useCallback(() => {
     return (
@@ -155,25 +155,28 @@ const HomeContainer = () => {
     )
   }, [fetchPosts])
 
-  function renderContent() {
+  const renderContent = useCallback(() => {
     return (
-      <FlatList
-        data={fetchPosts.data?.posts}
-        renderItem={renderItem}
-        maxToRenderPerBatch={10}
-        ListHeaderComponent={
-          <Text title textColor>
-            🚀 Öne çıkanlar
-          </Text>
-        }
-        onEndReached={fetchMorePosts}
-        onEndReachedThreshold={0.1}
-        getItemLayout={getItemLayout}
-        removeClippedSubviews
-        refreshControl={refreshControl()}
-      />
+      <View style={{ display: 'flex', height: '100%' }}>
+        <BigList
+          data={fetchPosts.data?.posts}
+          itemHeight={280}
+          renderItem={renderItem}
+          renderEmpty={() => <Text>empty</Text>}
+          renderHeader={() => (
+            <Text title textColor>
+              🚀 Öne çıkanlar
+            </Text>
+          )}
+          headerHeight={50}
+          onEndReached={fetchMorePosts}
+          onEndReachedThreshold={0.1}
+          // getItemLayout={getItemLayout}
+          refreshControl={refreshControl()}
+        />
+      </View>
     )
-  }
+  }, [fetchPosts, renderItem, fetchMorePosts, refreshControl])
 
   return (
     <Page>
@@ -183,7 +186,6 @@ const HomeContainer = () => {
         renderContent={renderContent}
         times={8}
       />
-      {/* <Button onPress={() => dispatch(logout())} label="qwelqwekl" /> */}
     </Page>
   )
 }

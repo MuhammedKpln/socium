@@ -1,6 +1,6 @@
 import { wait } from '@/utils/utils'
 import React, { useEffect, useState } from 'react'
-import { SkeletonViewProps } from 'react-native-ui-lib'
+import type { SkeletonViewProps } from 'react-native-ui-lib'
 import SKView from 'react-native-ui-lib/skeletonView'
 
 export function SkeletonView(props: SkeletonViewProps) {
@@ -13,7 +13,14 @@ export function SkeletonView(props: SkeletonViewProps) {
     }
   }, [showContent])
 
-  return <SKView {...props} showContent={showIt} />
+  if (!showIt) {
+    return <SKView {...props} showContent={false} renderContent={() => null} />
+  } else {
+    if (props.renderContent) {
+      return <>{props.renderContent()}</>
+    }
+    return null
+  }
 }
 
 export const SkeletonViewTemplates = SKView.templates

@@ -374,7 +374,7 @@ export function ProfileContainer() {
   }, [user.data?.getUser.id, user.data?.getUser.username])
 
   return (
-    <Page useSafeArea>
+    <Page>
       <View row spread>
         <View row>
           {user.loading ? (

@@ -475,7 +475,7 @@ export function ProfileContainer() {
       </View>
 
       <View marginT-20 paddingR-30>
-        <View marginB-20>
+        <View row marginB-20>
           <CurrentlyListeningTrack userId={user.data?.getUser.id} />
           <View marginH-10 />
           <UserZodiac userBirthday={user.data?.getUser.birthday} />

@@ -21,6 +21,9 @@ interface IProps {
 export default function CurrentlyListeningTrack(props: IProps) {
   const { userId } = props
   const localUserId = useAppSelector(state => state.userReducer.user?.id)
+  const isLoggedInToSpotify = useAppSelector(
+    state => state.spotifyReducer.accessToken,
+  )
   const navigation = useNavigation()
 
   const [fetchUserTrack, currentTrack] = useLazyQuery<
@@ -46,7 +49,21 @@ export default function CurrentlyListeningTrack(props: IProps) {
   if (!userId && currentTrack.loading)
     return <SkeletonView height={30} width={200} />
 
-  if (!currentTrack.data?.getUserCurrentTrack) return null
+  if (!currentTrack.data?.getUserCurrentTrack)
+    if (userId === localUserId && !isLoggedInToSpotify) {
+      return (
+        <TouchableOpacity onPress={onPress}>
+          <View bg-green padding-10 row left br100>
+            <Icon name="spotify" color="#FFF" size={20} />
+            <Text white center marginL-10 font15 fontSfProRegular>
+              Spotify ile bağlan
+            </Text>
+          </View>
+        </TouchableOpacity>
+      )
+    } else {
+      return null
+    }
 
   return (
     <TouchableOpacity onPress={onPress}>

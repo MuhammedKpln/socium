@@ -36,7 +36,7 @@ export default function UserZodiac(props: IProps) {
 
   return (
     <TouchableOpacity onPress={onPressZodiac}>
-      <View bg-primary padding-10 row br100 center style={{ maxWidth: '50%' }}>
+      <View bg-primary padding-10 row br100 center>
         <Icon name={userZodiac.image} color="#FFF" size={15} />
         <Text white marginL-10 font15 fontSfProRegular>
           {userZodiac.name}

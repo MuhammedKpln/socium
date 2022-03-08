@@ -278,7 +278,7 @@ export function DiscoverContainer() {
         onEndReachedThreshold={0.5}
         removeClippedSubviews
         refreshControl={refreshControl()}
-        itemHeight={350}
+        itemHeight={470}
       />
     </Page>
   )

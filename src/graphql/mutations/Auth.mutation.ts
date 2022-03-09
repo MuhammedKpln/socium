@@ -1,6 +1,16 @@
 import { UserFragment } from '@/graphql/fragments/User.fragment'
-import { ILogin } from '@/Types/login.types'
+import type { ILogin } from '@/Types/login.types'
 import { gql } from '@apollo/client'
+
+export interface IRegisterWithGoogleVariables {
+  username: string
+  idToken: string
+  email: string
+}
+
+export interface IRegisterWithGoogleResponse {
+  registerWithGoogle: ILogin
+}
 
 export const REGISTER_WITH_GOOGLE = gql`
   ${UserFragment}
@@ -21,6 +31,15 @@ export const REGISTER_WITH_GOOGLE = gql`
     }
   }
 `
+
+export interface ILoginWithGoggleVariables {
+  email: string
+  idToken: string
+}
+
+export interface ILoginWithGoogleResponse {
+  loginGoogle: ILogin
+}
 
 export const LOGIN_GOOGLE = gql`
   ${UserFragment}

@@ -32,6 +32,16 @@
 				<string>socium</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.googleusercontent.apps.1001258849296-m674lmiar4v8spj3r4ligbbhj2p59rvv</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.1001258849296-otjv622e6lbqggjbbad04nujpq74t7og</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
@@ -55,7 +65,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Camera permission description</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Microphone permission description</string>
 	<key>NSUserTrackingUsageDescription</key>

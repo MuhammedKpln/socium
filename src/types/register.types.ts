@@ -1,4 +1,4 @@
-import { ILogin } from './login.types'
+import type { ILogin } from './login.types'
 
 export interface IRegisterData {
   username: string

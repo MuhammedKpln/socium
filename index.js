@@ -11,6 +11,6 @@ import { configureDesignSystem } from '@/theme/designSystem'
 
 configureDesignSystem()
 enableScreens(true)
-enableFreeze(true)
+enableFreeze(false)
 
 AppRegistry.registerComponent(appName, () => gestureHandlerRootHOC(App))

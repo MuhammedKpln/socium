@@ -83,8 +83,6 @@ export function LoginContainer() {
     },
   })
 
-  // TODO: cannot sign in,wrong response
-
   useEffect(() => {
     GoogleSignin.configure({
       scopes: [

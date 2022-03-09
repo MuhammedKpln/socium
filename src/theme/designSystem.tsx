@@ -35,6 +35,7 @@ const themes = {
 
 // for more information - https://wix.github.io/react-native-ui-lib/foundation/style
 export const configureDesignSystem = (): void => {
+  Colors.supportDarkMode()
   Colors.loadColors(colors)
   Colors.loadSchemes(themes)
   Assets.loadAssetsGroup('app', {

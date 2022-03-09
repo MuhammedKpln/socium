@@ -17,14 +17,20 @@ import { useAppSelector } from '@/store'
 import { fetchAvatars } from '@/store/reducers/app.reducer'
 import { fetchUserStars } from '@/store/reducers/user.reducer'
 import type { IPost } from '@/types/post.types'
+import { configureNotifications } from '@/utils/notifications'
 import { showToast, ToastStatus } from '@/utils/toast'
 import { useQuery } from '@apollo/client'
 import React, { useCallback, useEffect } from 'react'
-import { RefreshControl } from 'react-native'
+import { Platform, RefreshControl } from 'react-native'
 import BigList from 'react-native-big-list'
+import { Notifications } from 'react-native-notifications'
 import { View } from 'react-native-ui-lib'
 import Text from 'react-native-ui-lib/text'
 import { useDispatch } from 'react-redux'
+
+if (Platform.OS !== 'ios') {
+  configureNotifications()
+}
 
 const HomeContainer = () => {
   const { toggleLikeButton } = useLikes()
@@ -55,6 +61,10 @@ const HomeContainer = () => {
   }, [dispatch])
 
   useEffect(() => {
+    if (isLoggedIn) {
+      Notifications.registerRemoteNotifications()
+    }
+
     if (isLoggedIn && spotifyLoggedIn) {
       updateCurrentTrackInterval()
     }

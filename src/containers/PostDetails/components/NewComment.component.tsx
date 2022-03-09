@@ -17,11 +17,13 @@ import {
 import { showToast, ToastStatus } from '@/utils/toast'
 import { useMutation } from '@apollo/client'
 import React, { useCallback, useState } from 'react'
+import { useMemo } from 'react'
 import { Keyboard } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import Animated, { FadeInDown } from 'react-native-reanimated'
 import { Colors, View } from 'react-native-ui-lib'
 import { useDispatch } from 'react-redux'
+import * as Yup from 'yup'
 
 interface IProps {
   postId?: number
@@ -35,6 +37,11 @@ export function NewComment(props: IProps) {
   const isAnsweringParent = useAppSelector(
     state => state.commentReducer.isAnsweringParent,
   )
+  const valueSchema = useMemo(() => {
+    return Yup.object({
+      comment: Yup.string().min(10).required('Comment is required'),
+    })
+  }, [])
   const parentComment = useAppSelector(
     state =>
       state.commentReducer.comments.filter(v => v.id === isAnsweringParent)[0],
@@ -45,7 +52,14 @@ export function NewComment(props: IProps) {
     NEW_COMMENT,
   )
 
-  const onSubmit = useCallback(() => {
+  const onSubmit = useCallback(async () => {
+    const isValid = await valueSchema.isValid({ comment })
+
+    if (!isValid) {
+      showToast(ToastStatus.Error, 'Lütfen geçerli bir yorum giriniz.')
+      return
+    }
+
     newComment({
       variables: {
         parentId,
@@ -71,7 +85,15 @@ export function NewComment(props: IProps) {
         }
       },
     })
-  }, [comment, postId, newComment, parentId, isAnsweringParent, dispatch])
+  }, [
+    valueSchema,
+    comment,
+    newComment,
+    parentId,
+    postId,
+    dispatch,
+    isAnsweringParent,
+  ])
 
   const removeParentComment = useCallback(() => {
     dispatch(updateAnsweringParent(null))

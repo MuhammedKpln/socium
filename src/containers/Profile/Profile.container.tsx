@@ -240,7 +240,6 @@ export function ProfileContainer() {
     },
     [followUser, user, localUser],
   )
-
   const onPressUnfollow = useCallback(
     async (userId: number) => {
       await unfollowUser({

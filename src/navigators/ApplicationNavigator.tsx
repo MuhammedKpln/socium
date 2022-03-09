@@ -123,8 +123,8 @@ const ApplicationNavigator = () => {
           useAbsolutePosition
           label="Lütfen internet bağlantınızı kontrol ediniz."
         />
+        <Toast ref={toastRef} />
       </NavigationContainer>
-      <Toast ref={toastRef} />
     </SafeAreaProvider>
   )
 }

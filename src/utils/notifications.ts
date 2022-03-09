@@ -1,10 +1,22 @@
 import { client } from '@/App'
 import { UPDATE_FCM_TOKEN } from '@/graphql/mutations/UpdateFcmToken.mutation'
+import { Routes } from '@/navigators/navigator.props'
+import { navigate, navigationRef } from '@/navigators/utils/navigation'
 import { EncryptedStorageKeys, storage } from '@/storage'
-import { Notifications } from 'react-native-notifications'
+import { store } from '@/store'
+import { current } from '@reduxjs/toolkit'
+import {
+  NotificationCompletion,
+  Notifications,
+} from 'react-native-notifications'
+import { IToastAdditionalOptions, showToast, ToastStatus } from './toast'
 
 export const configureNotifications = async () => {
   Notifications.events().registerRemoteNotificationsRegistered(async event => {
+    const isLoggedIn = store.getState().userReducer.isLoggedIn
+
+    if (!isLoggedIn) return
+
     const savedToken = await storage.getStringAsync(
       EncryptedStorageKeys.FcmToken,
     )
@@ -38,8 +50,41 @@ export const configureNotifications = async () => {
   )
 
   Notifications.events().registerNotificationReceivedForeground(
-    (notification, completion: (response) => void) => {
+    (notification, completion: (response: NotificationCompletion) => void) => {
       console.log('Notification Received - Foreground', notification.payload)
+
+      const { entity, entityType } = notification.payload
+      const title = notification.payload['gcm.notification.title']
+      const body = notification.payload['gcm.notification.body']
+
+      let toastOptions: IToastAdditionalOptions = {}
+      if (entityType === 'message') {
+        const onPress = () => {
+          const _entity = JSON.parse(entity)
+          navigate(Routes.Chat, {
+            room: _entity.room,
+            user: _entity.user,
+          })
+        }
+
+        Object.assign(toastOptions, {
+          action: {
+            label: 'Göster',
+            onPress,
+          },
+        })
+      }
+
+      if (body || title) {
+        const currentRoute = navigationRef.current?.getCurrentRoute()
+
+        if (
+          (currentRoute && currentRoute.name === Routes.Chat) ||
+          (currentRoute && currentRoute.name === Routes.Chats)
+        ) {
+          //DO anything
+        } else showToast(ToastStatus.Info, `${title}`, toastOptions)
+      }
 
       // Calling completion on iOS with `alert: true` will present the native iOS inApp notification.
       completion({ alert: true, sound: true, badge: false })

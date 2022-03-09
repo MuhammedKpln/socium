@@ -9,7 +9,7 @@ import {
   updateShowNextAd,
   updateStarCount,
 } from '@/store/reducers/user.reducer'
-import { IStar } from '@/types/login.types'
+import type { IStar } from '@/types/login.types'
 import { showToast, toastRef, ToastStatus } from '@/utils/toast'
 import { wait } from '@/utils/utils'
 import { useMutation } from '@apollo/client'

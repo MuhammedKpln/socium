@@ -1,6 +1,6 @@
-import { IFetchRoomMessagesResponse } from '@/graphql/queries/FetchMessages.query'
-import { ApolloQueryResult } from '@apollo/client'
-import {
+import type { IFetchRoomMessagesResponse } from '@/graphql/queries/FetchMessages.query'
+import type { ApolloQueryResult } from '@apollo/client'
+import type {
   IChatty,
   IMessage,
 } from 'react-native-chatty/lib/typescript/src/types/Chatty.types'
@@ -18,7 +18,6 @@ export interface IChatProps
   muted?: boolean
   isSpeaker?: boolean
   calling?: boolean
-  typing: boolean
   avatar: string
   messages: IMessage[]
   renderItem?: (props: any) => any

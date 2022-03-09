@@ -24,7 +24,10 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import type { IMessage } from 'react-native-chatty/lib/typescript/src/types/Chatty.types'
+import type {
+  IMessage,
+  ListRef,
+} from 'react-native-chatty/lib/typescript/src/types/Chatty.types'
 import InCallManager from 'react-native-incall-manager'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useDispatch } from 'react-redux'
@@ -37,13 +40,12 @@ export function MatchChatContainer() {
   const speakersOn = useAppSelector(state => state.chatReducer.speakersOn)
   const dispatch = useDispatch()
   const [message, setMessage] = useState<string>('')
-  const [typing, setTyping] = useState<boolean>(false)
   const [isReceiverMuted, setIsReceiverMuted] = useState<boolean>(false)
   const [messages, setMessages] = useState<IMessage[]>([
     //@ts-ignore
     { text: 'Merhaba!' },
   ])
-  const ref = useRef()
+  const ref = useRef<ListRef>()
   const localUser = useAppSelector(state => state.userReducer.user)
   const navigation = useNavigation()
   const { socket: socketService } = useSocket()
@@ -133,11 +135,11 @@ export function MatchChatContainer() {
     })
 
     socketService.userIsTypingEvent(_typing => {
-      setTyping(prev => !prev && _typing.typing)
+      ref.current?.setIsTyping(true)
     })
 
     socketService.userIsDoneTypingEvent(_typing => {
-      setTyping(false)
+      ref.current?.setIsTyping(false)
     })
 
     socketService.messageRemovedEvent(resp => {
@@ -307,26 +309,23 @@ export function MatchChatContainer() {
   }, [rtc, socketService, uuid, user, navigation])
 
   return (
-    <SafeAreaView>
-      <ChatComponent
-        callFunction={!user.blockIncomingCalls}
-        isOnline
-        ref={ref}
-        inCall={inCall}
-        username={user.username}
-        muted={isReceiverMuted}
-        avatar={user.avatar}
-        onChangeInputText={onChangeText}
-        onPressSend={sendMessage}
-        messages={messages}
-        message={message}
-        userId={user.id}
-        onPressCall={onCall}
-        onPressBack={navigateBack}
-        typing={typing}
-        onBlurInput={onBlurInput}
-        onPressRemove={messageId => removeMessage(messageId)}
-      />
-    </SafeAreaView>
+    <ChatComponent
+      callFunction={!user.blockIncomingCalls}
+      isOnline
+      ref={ref}
+      inCall={inCall}
+      username={user.username}
+      muted={isReceiverMuted}
+      avatar={user.avatar}
+      onChangeInputText={onChangeText}
+      onPressSend={sendMessage}
+      messages={messages}
+      message={message}
+      userId={user.id}
+      onPressCall={onCall}
+      onPressBack={navigateBack}
+      onBlurInput={onBlurInput}
+      onPressRemove={messageId => removeMessage(messageId)}
+    />
   )
 }

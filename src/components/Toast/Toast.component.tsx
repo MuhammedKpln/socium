@@ -61,7 +61,9 @@ const _Toast = (_: any, ref: any) => {
       preset={toastPreset}
       swipeable
       centerMessage
-      position="top"
+      position={'top'}
+      enableHapticFeedback
+      zIndex={100}
       {...additionalOptions}
     />
   )

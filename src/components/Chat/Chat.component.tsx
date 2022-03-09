@@ -36,9 +36,6 @@ function _ChatComponent(props: IChatProps, ref: Ref<ListRef>) {
         ref={ref}
         messages={props.messages}
         enableHapticFeedback
-        patternProps={{
-          allowPatterns: ['mention'],
-        }}
         setDateLocale="tr"
         renderHeader={() => (
           <ChatHeader
@@ -109,9 +106,6 @@ function _ChatComponent(props: IChatProps, ref: Ref<ListRef>) {
             />
           ),
         }}
-        renderTypingBubble={_props => (
-          <ChatBubble customElement={_props?.typingAnimation} />
-        )}
         loadEarlierProps={props.loadEarlierProps}
         showScrollToBottomButton
         onReply={props.onReply}

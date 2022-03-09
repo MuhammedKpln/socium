@@ -42,10 +42,11 @@ import {
 import { Colors } from 'react-native-ui-lib'
 import { AppleButton } from '@invertase/react-native-apple-authentication'
 import { GoogleSignIn } from './components/GoogleSignIn.component'
+import { LoaderScreen } from '@/components/LoaderScreen/LoaderScreen.component'
 
 export function LoginContainer() {
   const [login] = useMutation<ILoginResponse, ILoginVariables>(LOGIN)
-  const [loginWithGoogle] = useMutation<
+  const [loginWithGoogle, loginWithGoogleMeta] = useMutation<
     ILoginWithGoogleResponse,
     ILoginWithGoggleVariables
   >(LOGIN_GOOGLE)
@@ -234,121 +235,125 @@ export function LoginContainer() {
   }, [checkIfUserIsRegistered])
 
   return (
-    <Page flex center scrollable>
-      {/* {googleSignedIn && ( */}
-      <GoogleSignIn
-        visible={showGoogleRegisterDialog}
-        googleOAuth={googleOauth}
-        onSuccess={() => {
-          setShowGoogleRegisterDialog(false)
-        }}
-      />
+    <>
+      {loginWithGoogleMeta.loading && <LoaderScreen />}
 
-      <Logo
-        width={147}
-        height={40}
-        style={{ alignSelf: 'center', margin: 50 }}
-      />
-      <Formik
-        initialValues={initialValues}
-        validationSchema={formValidationSchema}
-        onSubmit={async values => await onPressLogin(values)}
-      >
-        {({
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          values,
-          errors,
-          isValid,
-          isSubmitting,
-        }) => (
-          <View>
-            <View>
-              <Text text70BL>E-Posta</Text>
-              <TextInput
-                onChangeText={handleChange('email')}
-                onBlur={handleBlur('email')}
-                value={values.email}
-                placeholder="muhammed@kaplan.com"
-                enableErrors={errors.email ? true : false}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
-                autoComplete="email"
-                validationMessage={errors.email}
-                onSubmitEditing={() => passwordRef.current?.focus()}
-                returnKeyType="next"
-              />
-            </View>
-            <View marginT-30>
-              <Text text70BL>Parola</Text>
-              <TextInput
-                onChangeText={handleChange('password')}
-                onBlur={handleBlur('password')}
-                value={values.password}
-                placeholder="Parola"
-                enableErrors={errors.password ? true : false}
-                secureTextEntry
-                autoCorrect={false}
-                autoCapitalize="none"
-                autoComplete="password"
-                validationMessage={errors.password}
-                ref={passwordRef}
-                onSubmitEditing={handleSubmit}
-              />
-            </View>
-            <Button
-              onPress={handleSubmit}
-              marginT-36
-              enableShadow
-              loading={isSubmitting}
-              disabled={isSubmitting || !isValid ? true : false}
-            >
-              <Text white>Giriş yap</Text>
-            </Button>
-          </View>
-        )}
-      </Formik>
-
-      <Text greyText marginV-20 center>
-        Yada, bunlarla giriş yapın...
-      </Text>
-
-      <View>
-        <Button
-          iconSource={() => (
-            <Icon
-              name="google"
-              size={24}
-              color={Colors.white}
-              style={{ paddingRight: 10 }}
-            />
-          )}
-          padding-10
-          backgroundColor="#4285F4"
-          onPress={onPressGoogle}
-          label="Google ile giriş yap"
-          marginB-20
-        />
-
-        <AppleButton
-          buttonStyle={AppleButton.Style.BLACK}
-          buttonType={AppleButton.Type.SIGN_IN}
-          cornerRadius={100}
-          style={{
-            width: '100%', // You must specify a width
-            height: 45, // You must specify a height
+      <Page flex center scrollable>
+        {/* {googleSignedIn && ( */}
+        <GoogleSignIn
+          visible={showGoogleRegisterDialog}
+          googleOAuth={googleOauth}
+          onSuccess={() => {
+            setShowGoogleRegisterDialog(false)
           }}
-          onPress={() => null}
         />
-      </View>
 
-      <Button link onPress={onPressRegister}>
-        <Text center marginT-50 greyText>
-          Bir hesabın yok mu ? <Text primary>Kayıt ol</Text>
+        <Logo
+          width={147}
+          height={40}
+          style={{ alignSelf: 'center', margin: 50 }}
+        />
+        <Formik
+          initialValues={initialValues}
+          validationSchema={formValidationSchema}
+          onSubmit={async values => await onPressLogin(values)}
+        >
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            errors,
+            isValid,
+            isSubmitting,
+          }) => (
+            <View>
+              <View>
+                <Text text70BL>E-Posta</Text>
+                <TextInput
+                  onChangeText={handleChange('email')}
+                  onBlur={handleBlur('email')}
+                  value={values.email}
+                  placeholder="muhammed@kaplan.com"
+                  enableErrors={errors.email ? true : false}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  autoComplete="email"
+                  validationMessage={errors.email}
+                  onSubmitEditing={() => passwordRef.current?.focus()}
+                  returnKeyType="next"
+                />
+              </View>
+              <View marginT-30>
+                <Text text70BL>Parola</Text>
+                <TextInput
+                  onChangeText={handleChange('password')}
+                  onBlur={handleBlur('password')}
+                  value={values.password}
+                  placeholder="Parola"
+                  enableErrors={errors.password ? true : false}
+                  secureTextEntry
+                  autoCorrect={false}
+                  autoCapitalize="none"
+                  autoComplete="password"
+                  validationMessage={errors.password}
+                  ref={passwordRef}
+                  onSubmitEditing={handleSubmit}
+                />
+              </View>
+              <Button
+                onPress={handleSubmit}
+                marginT-36
+                enableShadow
+                loading={isSubmitting}
+                disabled={isSubmitting || !isValid ? true : false}
+              >
+                <Text white>Giriş yap</Text>
+              </Button>
+            </View>
+          )}
+        </Formik>
+
+        <Text greyText marginV-20 center>
+          Yada, bunlarla giriş yapın...
         </Text>
-      </Button>
-    </Page>
+
+        <View>
+          <Button
+            iconSource={() => (
+              <Icon
+                name="google"
+                size={24}
+                color={Colors.white}
+                style={{ paddingRight: 10 }}
+              />
+            )}
+            padding-10
+            backgroundColor="#4285F4"
+            onPress={onPressGoogle}
+            label="Google ile giriş yap"
+            marginB-20
+          />
+
+          <AppleButton
+            buttonStyle={AppleButton.Style.BLACK}
+            buttonType={AppleButton.Type.SIGN_IN}
+            cornerRadius={100}
+            style={{
+              width: '100%', // You must specify a width
+              height: 45, // You must specify a height
+            }}
+            onPress={() => null}
+          />
+        </View>
+
+        <Button link onPress={onPressRegister}>
+          <Text center marginT-50 greyText>
+            Bir hesabın yok mu ? <Text primary>Kayıt ol</Text>
+          </Text>
+        </Button>
+      </Page>
+    </>
   )
 }

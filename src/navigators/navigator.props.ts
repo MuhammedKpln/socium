@@ -29,6 +29,7 @@ export enum Routes {
   Call = 'call',
   ConnectToSpotify = 'connect-to-spotify',
   Zodiac = 'zodiac',
+  Notifications = 'notifications',
 }
 export enum RouteTitles {
   Login = 'Giriş yap',
@@ -42,6 +43,7 @@ export enum RouteTitles {
   ChangeAvatar = 'Profil resmini değiştir',
   ConnectToSpotify = 'Spotify ile bağlan',
   Zodiac = 'Socium burç',
+  Notifications = 'Bildirimler',
 }
 
 export const RouteComponents = {
@@ -84,6 +86,9 @@ export const RouteComponents = {
     require('@/containers/ConnectToSpotify/ConnectToSpotify.container')
       .ConnectToSpotifyContainer,
   Zodiac: () => require('@/containers/Zodiac/Zodiac.container').ZodiacContainer,
+  Notifications: () =>
+    require('@/containers/Notifications/Notifications.container')
+      .NotificationContainer,
 }
 
 export interface INavigatorParamsList extends ParamListBase {
@@ -126,4 +131,5 @@ export interface INavigatorParamsList extends ParamListBase {
   [Routes.Zodiac]: {
     currentZodiac: IZodiac
   }
+  [Routes.Notifications]: undefined
 }

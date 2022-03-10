@@ -23,10 +23,19 @@ export const HeaderRight = React.memo(function HeaderRight() {
     navigate(Routes.EarnStar, {})
   }, [])
 
+  const onPressBell = useCallback(() => {
+    navigate(Routes.Notifications, {})
+  }, [])
+
   if (isLoggedIn) {
     if (user?.avatar) {
       return (
         <View row>
+          <View marginR-10>
+            <TouchableOpacity onPress={() => authRequiredFunction(onPressBell)}>
+              <Icon name="bell" size={25} />
+            </TouchableOpacity>
+          </View>
           <View marginR-10>
             <TouchableOpacity onPress={() => authRequiredFunction(onPressStar)}>
               <Icon name="sparkles" color="#FEB200" size={25} />

@@ -184,6 +184,13 @@ const MainNavigator = () => {
           getComponent={RouteComponents.Zodiac}
           options={{ ...applyRouteTitle(RouteTitles.Zodiac) }}
         />
+        <Stack.Screen
+          name={Routes.Notifications}
+          getComponent={RouteComponents.Notifications}
+          options={{
+            ...applyRouteTitle(''),
+          }}
+        />
       </Stack.Group>
       <Stack.Group
         screenOptions={{

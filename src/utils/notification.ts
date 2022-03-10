@@ -1,4 +1,4 @@
-import { INotification, NotificationType } from '@/Types/notification.type'
+import { INotification, NotificationType } from '@/types/notification.type'
 
 export class NotificationHelper {
   public notificationText: string = ''

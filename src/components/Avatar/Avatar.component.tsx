@@ -3,7 +3,7 @@ import React, { useMemo } from 'react'
 import FastImage from 'react-native-fast-image'
 import { TouchableOpacity, View } from 'react-native-ui-lib'
 import { Badge } from '../Badge/Badge.component'
-import { IAvatarProps } from './Avatar.props'
+import type { IAvatarProps } from './Avatar.props'
 
 export const Avatar = React.memo((props: IAvatarProps) => {
   const { userAvatar } = props
@@ -14,6 +14,12 @@ export const Avatar = React.memo((props: IAvatarProps) => {
   return (
     <TouchableOpacity onPress={props?.onPress}>
       <View row>
+        {props.showBadge && (
+          <Badge
+            {...props?.badgeProps}
+            containerStyle={{ position: 'absolute', left: 0, zIndex: 10 }}
+          />
+        )}
         <View
           style={{
             backgroundColor: '#F3F5F7',
@@ -37,9 +43,6 @@ export const Avatar = React.memo((props: IAvatarProps) => {
             }}
           />
         </View>
-        {props.showBadge && (
-          <Badge {...props?.badgeProps} containerStyle={{ marginLeft: -15 }} />
-        )}
       </View>
     </TouchableOpacity>
   )

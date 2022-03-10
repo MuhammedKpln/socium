@@ -1,4 +1,4 @@
-import { ButtonProps } from 'react-native-ui-lib'
+import type { ButtonProps } from 'react-native-ui-lib'
 
 export type IButtonProps = ButtonProps & _IButtonProps
 

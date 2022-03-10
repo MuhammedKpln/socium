@@ -148,6 +148,8 @@ const MainNavigator = () => {
       <Stack.Group
         screenOptions={{
           presentation: 'modal',
+          headerShown: true,
+          title: '',
         }}
       >
         <Stack.Screen

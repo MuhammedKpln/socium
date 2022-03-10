@@ -61,7 +61,7 @@ export function NotificationContainer() {
 
         case 'follower':
           navigation.goBack()
-          navigation.navigate(Routes.MyProfile, {
+          navigation.navigate(Routes.Profile, {
             username: entity.user.username,
           })
           break

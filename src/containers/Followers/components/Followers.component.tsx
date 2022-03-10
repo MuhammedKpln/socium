@@ -25,7 +25,7 @@ import {
 import { Routes } from '@/navigators/navigator.props'
 import { navigate } from '@/navigators/utils/navigation'
 import { useAppSelector } from '@/store'
-import { IFollowers } from '@/Types/followers.types'
+import type { IFollowers } from '@/Types/followers.types'
 import { useMutation, useQuery } from '@apollo/client'
 import React, { useCallback } from 'react'
 import { FlatList } from 'react-native'
@@ -137,7 +137,7 @@ export function Followers(props: IProps) {
   )
 
   const onPressUser = useCallback((username: string) => {
-    navigate(Routes.MyProfile, {
+    navigate(Routes.Profile, {
       username,
     })
   }, [])

@@ -191,6 +191,10 @@ const MainNavigator = () => {
             ...applyRouteTitle(''),
           }}
         />
+        <Stack.Screen
+          name={Routes.Profile}
+          getComponent={RouteComponents.Profile}
+        />
       </Stack.Group>
       <Stack.Group
         screenOptions={{

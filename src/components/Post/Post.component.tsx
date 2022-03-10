@@ -123,7 +123,7 @@ export const Post = React.memo((props: IPostProps) => {
   }
 
   const onPressUsername = () => {
-    navigate(Routes.MyProfile, {
+    navigate(Routes.Profile, {
       username: user.username,
       userId: user.id,
     })

@@ -16,7 +16,7 @@ import View from 'react-native-ui-lib/view'
 import { Avatar } from '../Avatar/Avatar.component'
 import Button from '../Button/Button.component'
 import { Icon } from '../Icon/Icon.component'
-import { IChatProps } from './Chat.props'
+import type { IChatProps } from './Chat.props'
 
 interface IProps
   extends Pick<
@@ -83,7 +83,7 @@ export const ChatHeader = React.memo((props: IProps) => {
   }, [callFunction, onPressCall])
 
   const onPressProfile = useCallback(() => {
-    navigate(Routes.MyProfile, {
+    navigate(Routes.Profile, {
       username,
     })
   }, [username])

@@ -11,7 +11,7 @@ export enum Routes {
   Register = 'register',
   EmailVerification = 'EmailVerification',
   PostDetails = 'post-details',
-  MyProfile = 'profile',
+  MyProfile = 'my-profile',
   Settings = 'app-settings',
   Discover = 'discover',
   Match = 'pair',
@@ -30,6 +30,7 @@ export enum Routes {
   ConnectToSpotify = 'connect-to-spotify',
   Zodiac = 'zodiac',
   Notifications = 'notifications',
+  Profile = 'profile',
 }
 export enum RouteTitles {
   Login = 'Giriş yap',
@@ -89,6 +90,8 @@ export const RouteComponents = {
   Notifications: () =>
     require('@/containers/Notifications/Notifications.container')
       .NotificationContainer,
+  Profile: () =>
+    require('@/containers/Profile/Profile.container').ProfileContainer,
 }
 
 export interface INavigatorParamsList extends ParamListBase {
@@ -132,4 +135,5 @@ export interface INavigatorParamsList extends ParamListBase {
     currentZodiac: IZodiac
   }
   [Routes.Notifications]: undefined
+  [Routes.Profile]: { username: string }
 }

@@ -202,16 +202,6 @@ export function ChatContainer() {
       onBlurInput={onBlurInput}
       // onReply={setReplying}
       // replyingTo={replying ?? undefined}
-      bubbleProps={{
-        replyDragElement: (
-          <Icon
-            name="PaperPlane"
-            color="#ccc"
-            size={20}
-            style={{ alignSelf: 'center' }}
-          />
-        ),
-      }}
       ref={ref}
     />
   )

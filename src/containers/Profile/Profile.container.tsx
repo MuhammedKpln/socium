@@ -51,6 +51,7 @@ import { Platform } from 'react-native'
 import {
   Colors,
   DateTimePicker,
+  Switch,
   TouchableOpacity,
   Typography,
 } from 'react-native-ui-lib'
@@ -172,36 +173,50 @@ export function ProfileContainer() {
     setEnableEdit(prev => !prev)
   }, [localUser])
 
-  const onSubmitEditing = useCallback(async () => {
-    if (username.length > 3) {
-      await editProfile({
-        variables: {
-          username,
-          birthday: date,
-        },
-        update: (cache, { data }) => {
-          cache.writeQuery({
-            query: FETCH_USER_PRFOFILE,
-            variables: {
-              username: localUser?.username,
-            },
-            data: {
-              getUser: { ...data?.editProfile, ...user.data?.getUser },
-              userPosts: user.data?.userPosts,
-            },
-          })
+  const onSubmitEditing = useCallback(
+    async (
+      blockIncomingCalls: boolean = localUser?.blockIncomingCalls ?? false,
+    ) => {
+      if (username.length > 3) {
+        await editProfile({
+          variables: {
+            username,
+            birthday: date,
+            blockIncomingCalls,
+          },
+          update: (cache, { data }) => {
+            cache.writeQuery({
+              query: FETCH_USER_PRFOFILE,
+              variables: {
+                username: localUser?.username,
+              },
+              data: {
+                getUser: { ...data?.editProfile, ...user.data?.getUser },
+                userPosts: user.data?.userPosts,
+              },
+            })
 
-          //@ts-ignore
-          dispatch(updateUser(data?.editProfile))
-        },
-        onCompleted: () => {
-          showToast(ToastStatus.Success, 'Profiliniz başarıyla güncellendi')
-          setEnableEdit(false)
-        },
-        onError: err => console.log(err),
-      })
-    }
-  }, [editProfile, username, user, dispatch, localUser, date])
+            //@ts-ignore
+            dispatch(updateUser(data?.editProfile))
+          },
+          onCompleted: () => {
+            showToast(ToastStatus.Success, 'Profiliniz başarıyla güncellendi')
+          },
+          onError: err => console.log(err),
+        })
+      }
+    },
+    [
+      localUser?.blockIncomingCalls,
+      localUser?.username,
+      username,
+      editProfile,
+      date,
+      user.data?.getUser,
+      user.data?.userPosts,
+      dispatch,
+    ],
+  )
 
   const onPressFollow = useCallback(
     async (userId: number) => {
@@ -426,8 +441,8 @@ export function ProfileContainer() {
                     autoCorrect={false}
                     containerStyle={{ width: 150 }}
                     onChangeText={setUsername}
-                    onSubmitEditing={onSubmitEditing}
-                    onBlur={onSubmitEditing}
+                    onSubmitEditing={() => onSubmitEditing()}
+                    onBlur={() => onSubmitEditing()}
                   />
                 ) : (
                   <View row>
@@ -465,6 +480,19 @@ export function ProfileContainer() {
                         }}
                       />
                     )}
+                  </View>
+                ) : null}
+
+                {enableEdit ? (
+                  <View marginT-20 row center>
+                    <Switch
+                      value={localUser?.blockIncomingCalls}
+                      onValueChange={value => {
+                        onSubmitEditing(value)
+                      }}
+                    />
+
+                    <Text textColor> Gelen aramaları engelle</Text>
                   </View>
                 ) : null}
               </>

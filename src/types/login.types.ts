@@ -1,4 +1,4 @@
-import { IComment } from './comment.types'
+import type { IComment } from './comment.types'
 
 export interface ILoginGoogleData {
   email: string

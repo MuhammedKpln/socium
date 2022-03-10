@@ -115,12 +115,20 @@ export function ProfileContainer() {
   const [checkIfIsFollowing, isFollowing] = useLazyQuery<
     IISUserFollowingActorResponse,
     IISUserFollowingActorVariables
-  >(IS_USER_FOLLOWING_ACTOR)
+  >(IS_USER_FOLLOWING_ACTOR, {
+    onError: error => {
+      console.log(error)
+    },
+  })
 
   const [fetchUserRequests, requestedMessage] = useLazyQuery<
     IFetchUserRequestsResponse,
     IFetchUserRequestsVariables
-  >(FETCH_USER_REQUESTS)
+  >(FETCH_USER_REQUESTS, {
+    onError: error => {
+      console.log(error)
+    },
+  })
 
   const [editProfile] = useMutation<
     IEditProfileResponse,
@@ -569,7 +577,7 @@ export function ProfileContainer() {
       </View>
 
       <View flex>
-        <TabController items={tabItems} asCarousel>
+        <TabController items={tabItems}>
           <TabController.TabBar
             activeBackgroundColor={Colors.surfaceBG}
             backgroundColor={Colors.trueSurfaceBG}
@@ -577,7 +585,7 @@ export function ProfileContainer() {
             containerWidth={350}
             centerSelected
           />
-          <TabController.PageCarousel>
+          <View flex>
             <TabController.TabPage index={0}>
               <View flex marginT-50>
                 <PostsTab
@@ -592,7 +600,7 @@ export function ProfileContainer() {
                 )}
               </View>
             </TabController.TabPage>
-          </TabController.PageCarousel>
+          </View>
         </TabController>
       </View>
     </Page>

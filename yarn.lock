@@ -7463,10 +7463,10 @@
   dependencies:
     "prop-types" "^15.7.2"
 
-"react-native-chatty@^0.2.12":
-  "integrity" "sha512-Ic4QZdZMxpoTCgu3OEXaNtvQR8jTz+c0XzO0vCrzFjugE/+B6/xPJh6N7OKaIWFlXU3jEmbmViphBFoWW/GVVw=="
-  "resolved" "https://registry.npmjs.org/react-native-chatty/-/react-native-chatty-0.2.12.tgz"
-  "version" "0.2.12"
+"react-native-chatty@^0.2.13":
+  "integrity" "sha512-i8Yks1bTARI3cbcUu4f9bwYH90xb1LGpk6dfRn8llNONNz+y0h9uIr31OZEJLkU5SgCW4NVd1AzPvNxmGFneew=="
+  "resolved" "https://registry.npmjs.org/react-native-chatty/-/react-native-chatty-0.2.13.tgz"
+  "version" "0.2.13"
   dependencies:
     "eventemitter3" "^4.0.7"
     "typed-emitter" "^2.1.0"

@@ -22,7 +22,7 @@ import {
   updateAnsweringParent,
   updateComments,
 } from '@/store/reducers/comment.reducer'
-import { IComment } from '@/Types/comment.types'
+import type { IComment } from '@/Types/comment.types'
 import { useMutation, useQuery } from '@apollo/client'
 import React, { useCallback } from 'react'
 import { FlatList } from 'react-native'
@@ -142,6 +142,7 @@ export function PostComments(props: IPostCommentsProps) {
     ({ item }: { item: IComment }) => {
       return (
         <Comment
+          key={item.id}
           parentComments={item.parentComments}
           content={item.content}
           date={item.created_at}

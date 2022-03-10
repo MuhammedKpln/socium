@@ -38,7 +38,7 @@
     "react-native": "0.67.3",
     "react-native-app-auth": "^6.4.3",
     "react-native-big-list": "^1.5.4",
-    "react-native-chatty": "^0.2.12",
+    "react-native-chatty": "^0.2.13",
     "react-native-context-menu-view": "github:mpiannucci/react-native-context-menu-view",
     "react-native-fast-image": "^8.5.11",
     "react-native-gesture-handler": "^2.1.0",

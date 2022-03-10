@@ -82,12 +82,16 @@ export const FETCH_USER_COMMENTS = gql`
         id
         bio
         username
+        avatar
       }
       userLike {
         liked
       }
       postLike {
         likeCount
+      }
+      post {
+        id
       }
       parentUser {
         userParentComments {

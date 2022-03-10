@@ -1,5 +1,5 @@
 import { updateAnsweringParent } from '@/store/reducers/comment.reducer'
-import { IComment } from '@/Types/comment.types'
+import type { IComment } from '@/Types/comment.types'
 import * as dayjs from 'dayjs'
 import 'dayjs/locale/tr'
 import { map } from 'lodash'

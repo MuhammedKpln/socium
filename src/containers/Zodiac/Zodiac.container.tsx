@@ -1,4 +1,5 @@
 import { Icon } from '@/components/Icon/Icon.component'
+import { LoaderScreen } from '@/components/LoaderScreen/LoaderScreen.component'
 import type { INavigatorParamsList, Routes } from '@/navigators/navigator.props'
 import { wait } from '@/utils/utils'
 import { IZodiac, zodiacs } from '@/utils/zodiac'
@@ -11,7 +12,6 @@ import { Dimensions, FlatList, StyleSheet } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Assets } from 'react-native-ui-lib'
-import LoaderScreen from 'react-native-ui-lib/loaderScreen'
 import Slider from 'react-native-ui-lib/slider'
 import Text from 'react-native-ui-lib/text'
 import TouchableOpacity from 'react-native-ui-lib/touchableOpacity'
@@ -78,12 +78,12 @@ export function ZodiacContainer() {
 
       return (
         <TouchableOpacity
+          key={zodiac.name}
           onPress={() => {
             setCurrentZodiac(zodiac)
           }}
         >
           <View
-            ref={r => r}
             style={[
               {
                 borderRadius: 50,
@@ -134,17 +134,9 @@ export function ZodiacContainer() {
       <>
         <FastImage
           source={Assets.app.ZodiacBg}
-          style={{ display: 'none' }}
           onLoad={() => setAppLoading(false)}
         />
-        <LoaderScreen
-          backgroundColor="#02030F"
-          message={'Yükleniyor...'}
-          containerStyle={{
-            backgroundColor: '#02030F',
-          }}
-          messageStyle={{ color: '#fff' }}
-        />
+        <LoaderScreen />
       </>
     )
   }
@@ -174,6 +166,10 @@ export function ZodiacContainer() {
             renderItem={renderZodiacs}
             horizontal
             ref={listRef}
+            showsHorizontalScrollIndicator={false}
+            pagingEnabled
+            centerContent
+            snapToAlignment="center"
           />
         </AnimatePresence>
       </View>
@@ -227,7 +223,12 @@ export function ZodiacContainer() {
           }}
         >
           {infos.map(info => (
-            <View row margin-10 style={{ justifyContent: 'center' }}>
+            <View
+              row
+              margin-10
+              style={{ justifyContent: 'center' }}
+              key={info.title}
+            >
               <Text white font15 marginR-10>
                 {info.title}
               </Text>

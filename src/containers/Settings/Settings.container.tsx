@@ -9,6 +9,7 @@ import { Page } from '@/components/Page/Page.component'
 import { Routes } from '@/navigators/navigator.props'
 import { navigate } from '@/navigators/utils/navigation'
 import { useAppSelector } from '@/store'
+import { toggleNotifications } from '@/store/reducers/app.reducer'
 import { updateTheme } from '@/store/reducers/theme.reducer'
 import { logout } from '@/store/reducers/user.reducer'
 import { map } from 'lodash'
@@ -35,8 +36,11 @@ export function SettingsContainer() {
     state.themeReducer.theme === 'dark' ? true : false,
   )
   const isLoggedIn = useAppSelector(state => state.userReducer.isLoggedIn)
+  const notifications = useAppSelector(state => state.appReducer.notifications)
 
-  const toggleNotifications = useCallback(() => {}, [])
+  const _toggleNotifications = useCallback(() => {
+    dispatch(toggleNotifications())
+  }, [dispatch])
 
   const changeTheme = useCallback(() => {
     dispatch(updateTheme({ theme: darkMode ? 'light' : 'dark' }))
@@ -61,7 +65,9 @@ export function SettingsContainer() {
       {
         icon: <SettingsBell />,
         title: 'Uygulama Bildirimleri',
-        right: <Switch value={darkMode} onValueChange={toggleNotifications} />,
+        right: (
+          <Switch value={notifications} onValueChange={_toggleNotifications} />
+        ),
       },
       {
         icon: <SettingsPrivacy />,
@@ -88,9 +94,10 @@ export function SettingsContainer() {
       },
     ]
   }, [
-    changeTheme,
     darkMode,
-    toggleNotifications,
+    changeTheme,
+    notifications,
+    _toggleNotifications,
     onPressLogout,
     isLoggedIn,
     onPressLogin,

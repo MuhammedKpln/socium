@@ -37,6 +37,7 @@ const HomeContainer = () => {
 
   const dispatch = useDispatch()
   const isLoggedIn = useAppSelector(state => state.userReducer.isLoggedIn)
+  const notifications = useAppSelector(state => state.appReducer.notifications)
   const spotifyLoggedIn = useAppSelector(
     state => state.spotifyReducer.accessToken,
   )
@@ -61,14 +62,14 @@ const HomeContainer = () => {
   }, [dispatch])
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if (isLoggedIn && notifications) {
       Notifications.registerRemoteNotifications()
     }
 
     if (isLoggedIn && spotifyLoggedIn) {
       updateCurrentTrackInterval()
     }
-  }, [isLoggedIn, spotifyLoggedIn])
+  }, [isLoggedIn, notifications, spotifyLoggedIn])
 
   const likePost = useCallback(
     async (props: IUseLikesProps) => {

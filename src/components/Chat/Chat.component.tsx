@@ -40,7 +40,7 @@ function _ChatComponent(props: IChatProps, ref: Ref<ListRef>) {
         renderHeader={() => (
           <ChatHeader
             avatar={props.avatar}
-            callFunction={false}
+            callFunction={props.callFunction}
             isOnline
             username={props.username}
             onPressBack={props.onPressBack}

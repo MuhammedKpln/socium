@@ -1,4 +1,4 @@
-const dev = __DEV__
+const dev = false
 
 export const Config = {
   STATIC_URL: dev

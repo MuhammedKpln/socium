@@ -2,11 +2,11 @@ import { NotFound } from '@/components/NotFound/NotFound.component'
 import { Post } from '@/components/Post/Post.component'
 import { Routes } from '@/navigators/navigator.props'
 import { navigate } from '@/navigators/utils/navigation'
-import { IPost } from '@/types/post.types'
+import type { IPost } from '@/types/post.types'
 import React, { useCallback } from 'react'
 import { FlatList } from 'react-native'
 import { View } from 'react-native-ui-lib'
-import { IPostsTabProps } from '../Profile.props'
+import type { IPostsTabProps } from '../Profile.props'
 
 export function PostsTab({ posts }: IPostsTabProps) {
   const renderItem = useCallback(({ item }: { item: IPost }) => {
@@ -36,6 +36,7 @@ export function PostsTab({ posts }: IPostsTabProps) {
     <View flex>
       <FlatList
         data={posts}
+        contentContainerStyle={{ width: 350 }}
         style={{ height: '100%', width: '100%' }}
         ListEmptyComponent={
           <NotFound

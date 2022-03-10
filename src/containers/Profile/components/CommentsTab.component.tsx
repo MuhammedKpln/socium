@@ -10,11 +10,13 @@ import {
   IFetchUserCommentsResponse,
   IFetchUserCommentsVariables,
 } from '@/graphql/queries/FetchComments.query'
-import { IComment } from '@/Types/comment.types'
+import { Routes } from '@/navigators/navigator.props'
+import { navigate } from '@/navigators/utils/navigation'
+import type { IComment } from '@/Types/comment.types'
 import { useQuery } from '@apollo/client'
 import React, { useCallback } from 'react'
-import { FlatList, View } from 'react-native'
-import { ICommentsTabProps } from '../Profile.props'
+import { FlatList, TouchableOpacity, View } from 'react-native'
+import type { ICommentsTabProps } from '../Profile.props'
 
 export function CommentsTab({ userId }: ICommentsTabProps) {
   const { data, loading } = useQuery<
@@ -28,12 +30,23 @@ export function CommentsTab({ userId }: ICommentsTabProps) {
 
   const renderItem = useCallback(({ item }: { item: IComment }) => {
     return (
-      <Comment
-        content={item.content}
-        date={item.created_at}
-        likeCount={item.postLike.likeCount}
-        username={item.user.username}
-      />
+      <TouchableOpacity
+        key={item.id}
+        onPress={() =>
+          navigate(Routes.PostDetails, {
+            postId: item.post.id,
+          })
+        }
+      >
+        <Comment
+          content={item.content}
+          date={item.created_at}
+          likeCount={item.postLike.likeCount}
+          username={item.user.username}
+          avatar={item.user.avatar}
+          isLiked={item.userLike?.liked ?? false}
+        />
+      </TouchableOpacity>
     )
   }, [])
 
@@ -42,6 +55,7 @@ export function CommentsTab({ userId }: ICommentsTabProps) {
       <View style={{ flex: 1 }}>
         <FlatList
           data={data?.getUserComments}
+          contentContainerStyle={{ width: 350 }}
           ListEmptyComponent={
             <NotFound
               size={100}

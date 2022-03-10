@@ -5,10 +5,12 @@ import FastImage, { Source } from 'react-native-fast-image'
 
 interface IState {
   firstStart: boolean
+  notifications: boolean
 }
 
 const initialState: IState = {
   firstStart: true,
+  notifications: true,
 }
 
 export const fetchAvatars = createAsyncThunk(
@@ -39,12 +41,22 @@ export const fetchAvatars = createAsyncThunk(
 const appSlice = createSlice({
   initialState,
   name: 'app',
+  reducers: {
+    toggleNotifications: state => {
+      if (state.notifications) {
+        state.notifications = false
+      } else {
+        state.notifications = true
+      }
+    },
+  },
   extraReducers: builder => {
     builder.addCase(fetchAvatars.fulfilled, state => {
       state.firstStart = false
     })
   },
-  reducers: {},
 })
+
+export const { toggleNotifications } = appSlice.actions
 
 export default appSlice.reducer

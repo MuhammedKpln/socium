@@ -21,12 +21,11 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { ActivityIndicator, Alert } from 'react-native'
+import { ActivityIndicator } from 'react-native'
 import { ChatEmitter } from 'react-native-chatty'
-import {
+import type {
   IMessage,
   ListRef,
-  MediaType,
 } from 'react-native-chatty/lib/typescript/src/types/Chatty.types'
 
 export function ChatContainer() {
@@ -126,6 +125,12 @@ export function ChatContainer() {
     navigation.setOptions({
       headerShown: false,
     })
+
+    return () => {
+      navigation.setOptions({
+        headerShown: true,
+      })
+    }
   }, [navigation])
 
   const fetchOlderMessages = useCallback(() => {
@@ -195,8 +200,8 @@ export function ChatContainer() {
       onPressRemove={removeMessage}
       onChangeInputText={onChangeText}
       onBlurInput={onBlurInput}
-      onReply={setReplying}
-      replyingTo={replying ?? undefined}
+      // onReply={setReplying}
+      // replyingTo={replying ?? undefined}
       bubbleProps={{
         replyDragElement: (
           <Icon

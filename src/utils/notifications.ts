@@ -4,7 +4,6 @@ import { Routes } from '@/navigators/navigator.props'
 import { navigate, navigationRef } from '@/navigators/utils/navigation'
 import { EncryptedStorageKeys, storage } from '@/storage'
 import { store } from '@/store'
-import { current } from '@reduxjs/toolkit'
 import {
   NotificationCompletion,
   Notifications,
@@ -14,8 +13,9 @@ import { IToastAdditionalOptions, showToast, ToastStatus } from './toast'
 export const configureNotifications = async () => {
   Notifications.events().registerRemoteNotificationsRegistered(async event => {
     const isLoggedIn = store.getState().userReducer.isLoggedIn
+    const notifications = store.getState().appReducer.notifications
 
-    if (!isLoggedIn) return
+    if (!isLoggedIn || !notifications) return
 
     const savedToken = await storage.getStringAsync(
       EncryptedStorageKeys.FcmToken,

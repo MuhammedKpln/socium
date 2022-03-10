@@ -244,6 +244,12 @@ export function MatchChatContainer() {
     navigation.setOptions({
       headerShown: false,
     })
+
+    return () => {
+      navigation.setOptions({
+        headerShown: true,
+      })
+    }
   }, [navigation])
 
   const sendMessage = useCallback(() => {

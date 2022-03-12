@@ -228,6 +228,7 @@ export function ZodiacContainer() {
               margin-10
               style={{ justifyContent: 'center' }}
               key={info.title}
+              pointerEvents="none"
             >
               <Text white font15 marginR-10>
                 {info.title}

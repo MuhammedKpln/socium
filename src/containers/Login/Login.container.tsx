@@ -87,7 +87,7 @@ export function LoginContainer() {
   useEffect(() => {
     GoogleSignin.configure({
       scopes: [
-        'https://www.googleapis.com/auth/userinfo.email',
+        'https://www.rpis.com/auth/userinfo.email',
         'https://www.googleapis.com/auth/userinfo.profile',
       ], // what API you want to access on behalf of the user, default is email and profile
       webClientId:
@@ -101,6 +101,10 @@ export function LoginContainer() {
   }, [])
 
   useEffect(() => {
+    console.log(
+      checkIfUserIsRegisteredMeta.data?.checkIfUserIsRegistered,
+      googleOauth,
+    )
     if (
       checkIfUserIsRegisteredMeta.data?.checkIfUserIsRegistered &&
       googleOauth
@@ -140,15 +144,8 @@ export function LoginContainer() {
         },
       })
     }
-  }, [
-    checkIfUserIsRegisteredMeta,
-    dispatch,
-    googleOauth,
-    loginWithGoogle,
-    saveAccessToken,
-    saveAccessTokenExpireDate,
-    saveRefreshToken,
-  ])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [checkIfUserIsRegisteredMeta, googleOauth])
 
   async function onPressLogin(values: ILoginVariables) {
     return await login({
@@ -204,11 +201,13 @@ export function LoginContainer() {
       await GoogleSignin.hasPlayServices()
       const userInfo = await GoogleSignin.signIn()
 
+      console.log('User Info --> ', userInfo)
+
       await checkIfUserIsRegistered({
         variables: {
           email: userInfo.user.email,
         },
-      })
+      }).catch(err => console.error('SA ', err))
       console.log(userInfo)
       if (userInfo) {
         setGoogleOauth(userInfo)

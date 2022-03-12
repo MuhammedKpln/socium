@@ -21,8 +21,8 @@ import { configureNotifications } from '@/utils/notifications'
 import { showToast, ToastStatus } from '@/utils/toast'
 import { useQuery } from '@apollo/client'
 import React, { useCallback, useEffect } from 'react'
+import { FlatList } from 'react-native'
 import { Platform, RefreshControl } from 'react-native'
-import BigList from 'react-native-big-list'
 import { Notifications } from 'react-native-notifications'
 import { View } from 'react-native-ui-lib'
 import Text from 'react-native-ui-lib/text'
@@ -166,28 +166,41 @@ const HomeContainer = () => {
     )
   }, [fetchPosts])
 
+  const getItemLayout = useCallback(
+    (data: any, index: number) => ({
+      length: 280,
+      offset: 280 * index,
+      index,
+    }),
+    [],
+  )
+
   const renderContent = useCallback(() => {
     return (
       <View style={{ display: 'flex', height: '100%' }}>
-        <BigList
+        <FlatList
           data={fetchPosts.data?.posts}
-          itemHeight={280}
           renderItem={renderItem}
-          renderEmpty={() => <Text>empty</Text>}
-          renderHeader={() => (
+          ListEmptyComponent={() => <Text>empty</Text>}
+          ListHeaderComponent={() => (
             <Text title textColor>
               🚀 Öne çıkanlar
             </Text>
           )}
-          headerHeight={50}
           onEndReached={fetchMorePosts}
           onEndReachedThreshold={0.1}
-          // getItemLayout={getItemLayout}
+          getItemLayout={getItemLayout}
           refreshControl={refreshControl()}
         />
       </View>
     )
-  }, [fetchPosts, renderItem, fetchMorePosts, refreshControl])
+  }, [
+    fetchPosts.data?.posts,
+    renderItem,
+    fetchMorePosts,
+    getItemLayout,
+    refreshControl,
+  ])
 
   return (
     <Page>

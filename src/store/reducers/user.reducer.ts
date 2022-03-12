@@ -4,7 +4,7 @@ import {
   IFetchUserStarsResponse,
 } from '@/graphql/queries/User.query'
 import { EncryptedStorageKeys, storage } from '@/storage'
-import { IUser } from '@/Types/login.types'
+import type { IUser } from '@/Types/login.types'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 interface IState {

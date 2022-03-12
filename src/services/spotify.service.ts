@@ -1,6 +1,5 @@
 import { client } from '@/App'
 import { Config } from '@/config'
-import { REMOVE_CURRENT_TRACK } from '@/graphql/mutations/RemoveCurrentTrack.mutation'
 import { UPDATE_CURRENT_TRACK } from '@/graphql/mutations/UpdateCurrentTrack.mutation'
 import { GET_USER_CURRENT_TRACK } from '@/graphql/queries/GetUserCurrentTrack.query'
 import { store } from '@/store'
@@ -105,35 +104,49 @@ export const getCurrentTrack =
 
 export const updateCurrentTrackInterval = async () => {
   InteractionManager.runAfterInteractions(() => {
-    setInterval(async () => {
-      const currentTrack = await getCurrentTrack()
-      const userId = store.getState().userReducer.user?.id
-      const currentDatabaseTrack = await client.query({
-        query: GET_USER_CURRENT_TRACK,
-        variables: {
-          userId,
-        },
-        fetchPolicy: 'network-only',
-      })
+    store.subscribe(() => {
+      let timer
+      if (
+        store.getState().userReducer.isLoggedIn &&
+        store.getState().spotifyReducer.accessToken
+      ) {
+        timer = setInterval(async () => {
+          const currentTrack = await getCurrentTrack()
+          const userId = store.getState().userReducer.user?.id
+          const currentDatabaseTrack = await client.query({
+            query: GET_USER_CURRENT_TRACK,
+            variables: {
+              userId,
+            },
+            fetchPolicy: 'network-only',
+          })
 
-      if (currentTrack) {
-        const songName = currentTrack.item.name
-        const artistName = currentTrack.item.artists[0].name
-        const imageUrl = currentTrack.item.album.images[0].url
-        const savedSongName =
-          currentDatabaseTrack.data?.getUserCurrentTrack?.songName
+          if (currentTrack) {
+            const songName = currentTrack.item.name
+            const artistName = currentTrack.item.artists[0].name
+            const imageUrl = currentTrack.item.album.images[0].url
+            const savedSongName =
+              currentDatabaseTrack.data?.getUserCurrentTrack?.songName
 
-        if (songName === savedSongName) {
-          return
+            if (songName === savedSongName) {
+              return
+            }
+
+            store.dispatch(
+              updateCurrentTrack({ songName, artistName, imageUrl }),
+            )
+
+            await client.mutate({
+              mutation: UPDATE_CURRENT_TRACK,
+              variables: { songName, artistName, imageUrl },
+            })
+          }
+        }, 10000)
+      } else {
+        if (timer) {
+          clearInterval(timer)
         }
-
-        store.dispatch(updateCurrentTrack({ songName, artistName, imageUrl }))
-
-        await client.mutate({
-          mutation: UPDATE_CURRENT_TRACK,
-          variables: { songName, artistName, imageUrl },
-        })
       }
-    }, 10000)
+    })
   })
 }

@@ -10,6 +10,7 @@ import { Routes } from '@/navigators/navigator.props'
 import { navigate } from '@/navigators/utils/navigation'
 import { useAppSelector } from '@/store'
 import { toggleNotifications } from '@/store/reducers/app.reducer'
+import { clear } from '@/store/reducers/spotify.reducer'
 import { updateTheme } from '@/store/reducers/theme.reducer'
 import { logout } from '@/store/reducers/user.reducer'
 import { map } from 'lodash'
@@ -48,6 +49,7 @@ export function SettingsContainer() {
 
   const onPressLogout = useCallback(() => {
     dispatch(logout())
+    dispatch(clear())
 
     navigate(Routes.Home, {})
   }, [dispatch])

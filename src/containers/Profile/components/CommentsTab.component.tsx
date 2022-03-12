@@ -45,6 +45,7 @@ export function CommentsTab({ userId }: ICommentsTabProps) {
           username={item.user.username}
           avatar={item.user.avatar}
           isLiked={item.userLike?.liked ?? false}
+          showLikeButton={false}
         />
       </TouchableOpacity>
     )

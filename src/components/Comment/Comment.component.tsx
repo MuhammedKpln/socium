@@ -23,6 +23,7 @@ export interface ICommentProps {
   onPressLike: (commentId?: number) => void
   onPressUnlike: (commentId?: number) => void
   isLiked: boolean
+  showLikeButton: boolean
 }
 
 var customParseFormat = require('dayjs/plugin/customParseFormat')
@@ -178,14 +179,16 @@ export function Comment(props: ICommentProps) {
             </View>
           </View>
 
-          <TouchableOpacity
-            onPress={!isLiked ? () => onPressLike() : () => onPressUnlike()}
-          >
-            <Icon
-              name={isLiked ? 'heart-filled' : 'heart'}
-              color={isLiked ? Colors.red30 : ''}
-            />
-          </TouchableOpacity>
+          {props.showLikeButton && (
+            <TouchableOpacity
+              onPress={!isLiked ? () => onPressLike() : () => onPressUnlike()}
+            >
+              <Icon
+                name={isLiked ? 'heart-filled' : 'heart'}
+                color={isLiked ? Colors.red30 : ''}
+              />
+            </TouchableOpacity>
+          )}
         </View>
 
         <View row spread marginL-45>

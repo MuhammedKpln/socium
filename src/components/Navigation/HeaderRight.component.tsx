@@ -31,15 +31,21 @@ export const HeaderRight = React.memo(function HeaderRight() {
     if (user?.avatar) {
       return (
         <View row>
-          <View marginR-10>
-            <TouchableOpacity onPress={() => authRequiredFunction(onPressBell)}>
-              <Icon name="bell" size={25} />
-            </TouchableOpacity>
-          </View>
-          <View marginR-10>
-            <TouchableOpacity onPress={() => authRequiredFunction(onPressStar)}>
-              <Icon name="sparkles" color="#FEB200" size={25} />
-            </TouchableOpacity>
+          <View marginT-5 row>
+            <View marginR-10 marginT-3>
+              <TouchableOpacity
+                onPress={() => authRequiredFunction(onPressBell)}
+              >
+                <Icon name="bell" size={23} />
+              </TouchableOpacity>
+            </View>
+            <View marginR-10>
+              <TouchableOpacity
+                onPress={() => authRequiredFunction(onPressStar)}
+              >
+                <Icon name="sparkles" color="#FEB200" size={25} />
+              </TouchableOpacity>
+            </View>
           </View>
           <Avatar
             userAvatar={user?.avatar}

@@ -302,6 +302,7 @@ export function NewPostContainer() {
               <View marginV-20>
                 <Picker
                   showSearch
+                  migrateTextField
                   searchPlaceholder="Kategori ara"
                   placeholder="Ya da başka bir kategori seçin."
                   value={values.categoryId}

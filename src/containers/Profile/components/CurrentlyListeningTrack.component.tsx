@@ -67,7 +67,7 @@ export default function CurrentlyListeningTrack(props: IProps) {
 
   return (
     <TouchableOpacity onPress={onPress}>
-      <View bg-green padding-10 row left br100 style={{ maxWidth: '50%' }}>
+      <View bg-green padding-10 row left br100>
         <Icon name="spotify" color="#FFF" size={20} />
         <Text white center marginL-10 font15 fontSfProRegular>
           🎶 {currentTrack.data?.getUserCurrentTrack.songName} -{' '}

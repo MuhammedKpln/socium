@@ -89,7 +89,9 @@ export function EarnStarContainer() {
           const date = dayjs(showNextAd)
           const dateNow = dayjs(Date.now())
 
-          setNextAd(date.diff(dateNow, 'minutes', false))
+          if (date.diff(dateNow, 'minutes', false) > 0) {
+            setNextAd(date.diff(dateNow, 'minutes', false))
+          }
         } catch (err) {
           return
         }

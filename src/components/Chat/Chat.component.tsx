@@ -122,9 +122,7 @@ function _ChatComponent(props: IChatProps, ref: Ref<ListRef>) {
           ),
           selfBubbleColor: Colors.primary,
           otherBubbleColor: Colors.white,
-          containerStyle: {
-            borderRadius: 100,
-          },
+
           labelStyle(isSelf) {
             if (isSelf) {
               return {

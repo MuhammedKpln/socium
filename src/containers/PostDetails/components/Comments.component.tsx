@@ -157,6 +157,7 @@ export function PostComments(props: IPostCommentsProps) {
             onPressUnlikeComment(commentId || item.id)
           }
           isLiked={item?.userLike?.liked ?? false}
+          showLikeButton
         />
       )
     },

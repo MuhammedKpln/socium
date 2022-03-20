@@ -1,6 +1,9 @@
+import { Routes } from '@/navigators/navigator.props'
 import { useLazyQuery } from '@apollo/client'
+import { useNavigation } from '@react-navigation/native'
 import { map } from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
+import { useCallback } from 'react'
 import FastImage from 'react-native-fast-image'
 import Text from 'react-native-ui-lib/text'
 import TouchableOpacity from 'react-native-ui-lib/touchableOpacity'
@@ -18,6 +21,7 @@ interface IProps {
 
 export function TwitterPost(props: IProps) {
   const { twitterUrl } = props
+  const navigator = useNavigation()
   const [twitterId, setTwitterId] = useState<string>('')
   const [fetchTwitterPost, twitterPost] = useLazyQuery<
     IFetchTwitterPostResponse,
@@ -57,11 +61,17 @@ export function TwitterPost(props: IProps) {
     const url = twitterUrl
     const regex = /twitter\.com\/(?:[^\/]+\/status\/)?(\d+)/
     const match = url.match(regex)
-    console.log(match)
+
     if (match) {
       setTwitterId(match[1])
     }
   }, [twitterUrl])
+
+  const onPressMedia = useCallback(() => {
+    navigator.navigate(Routes.ImageGallery, {
+      imageSet: [...map(twitterMedias, media => media.url)],
+    })
+  }, [navigator, twitterMedias])
 
   return (
     <Surface padding-10>
@@ -92,18 +102,20 @@ export function TwitterPost(props: IProps) {
         {twitterText}
       </Text>
 
-      {map(twitterMedias, media => (
-        <FastImage
-          source={{ uri: media.url }}
-          style={{
-            width: 150,
-            height: 100,
-            borderRadius: 4,
-            marginTop: 20,
-            marginRight: 10,
-          }}
-        />
-      ))}
+      <TouchableOpacity onPress={onPressMedia}>
+        {map(twitterMedias, media => (
+          <FastImage
+            source={{ uri: media.url }}
+            style={{
+              width: 150,
+              height: 100,
+              borderRadius: 4,
+              marginTop: 20,
+              marginRight: 10,
+            }}
+          />
+        ))}
+      </TouchableOpacity>
     </Surface>
   )
 }

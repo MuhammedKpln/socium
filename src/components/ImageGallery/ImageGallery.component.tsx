@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import FastImage, { Source } from 'react-native-fast-image'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Carousel from 'react-native-ui-lib/carousel'
-import Image from 'react-native-ui-lib/image'
 import Modal from 'react-native-ui-lib/modal'
 import Text from 'react-native-ui-lib/text'
 import TouchableOpacity from 'react-native-ui-lib/touchableOpacity'
@@ -11,17 +11,33 @@ interface IProps {
   imageSet: string[]
   visible: boolean
   onDismiss: () => void
+  onLoadImages: () => void
 }
 
 export function ImageGallery(props: IProps) {
+  const { imageSet, onLoadImages, onDismiss, visible } = props
+
+  useEffect(() => {
+    const images: Source[] = []
+    imageSet.forEach(imageUrl => {
+      images.push({
+        uri: imageUrl,
+      })
+    })
+
+    FastImage.preload(images)
+    onLoadImages()
+  }, [imageSet, onLoadImages])
+
   return (
     <Modal
-      visible={props.visible}
-      onDismiss={props.onDismiss}
+      visible={visible}
+      onDismiss={onDismiss}
       onBackgroundPress={props.onDismiss}
       transparent
       overlayBackgroundColor="rgba(0, 0, 0, 0.5)"
       presentationStyle="overFullScreen"
+      animationType="slide"
       style={{
         justifyContent: 'center',
         alignItems: 'center',
@@ -49,8 +65,7 @@ export function ImageGallery(props: IProps) {
         >
           {props?.imageSet?.map((image, index) => (
             <View flex key={index}>
-              <Image
-                overlayType={Image.overlayTypes.BOTTOM}
+              <FastImage
                 style={{ width: '100%', height: '100%' }}
                 source={{
                   uri: image,

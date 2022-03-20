@@ -1,5 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { Image as IM, ImageBackground, TouchableOpacity } from 'react-native'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import type { NativeSyntheticEvent } from 'react-native'
+import {
+  Image as IM,
+  ImageBackground,
+  Linking,
+  TouchableOpacity,
+} from 'react-native'
+import ContextMenu, {
+  ContextMenuOnPressNativeEvent,
+} from 'react-native-context-menu-view'
 import View from 'react-native-ui-lib/view'
 import YoutubePlayer, { getYoutubeMeta } from 'react-native-youtube-iframe'
 import { Icon } from '../Icon/Icon.component'
@@ -16,6 +25,9 @@ export const YTPlayer = React.memo((props: IYTPlayerProps) => {
 
     setThumbnailUrl(youtubeMeta.thumbnail_url)
   }, [videoId])
+  const contextMenuActions = useMemo(() => {
+    return [{ title: 'YouTube ile aç', systemIcon: 'square.and.arrow.up' }]
+  }, [])
 
   const renderYoutube = useCallback(() => {
     return (
@@ -78,20 +90,40 @@ export const YTPlayer = React.memo((props: IYTPlayerProps) => {
     )
   }, [thumbnailUrl])
 
+  const onPressContextMenuAction = useCallback(
+    (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => {
+      if (e.nativeEvent.index === 0) {
+        Linking.canOpenURL(`https://www.youtube.com/watch?v=${videoId}`).then(
+          supported => {
+            if (supported) {
+              Linking.openURL(`https://www.youtube.com/watch?v=${videoId}`)
+            }
+          },
+        )
+      }
+    },
+    [videoId],
+  )
+
   return (
     <TouchableOpacity onPress={() => setRenderYoutubeFrame(true)}>
-      {renderYoutubeFrame ? (
-        renderYoutube()
-      ) : (
-        <View marginT-20>
-          <SkeletonView
-            width={150}
-            height={100}
-            showContent={showContent}
-            renderContent={renderContent}
-          />
-        </View>
-      )}
+      <ContextMenu
+        actions={contextMenuActions}
+        onPress={onPressContextMenuAction}
+      >
+        {renderYoutubeFrame ? (
+          renderYoutube()
+        ) : (
+          <View marginT-20>
+            <SkeletonView
+              width={150}
+              height={100}
+              showContent={showContent}
+              renderContent={renderContent}
+            />
+          </View>
+        )}
+      </ContextMenu>
     </TouchableOpacity>
   )
 })

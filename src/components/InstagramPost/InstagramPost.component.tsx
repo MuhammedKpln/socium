@@ -1,3 +1,5 @@
+import { Routes } from '@/navigators/navigator.props'
+import { useNavigation } from '@react-navigation/native'
 import React from 'react'
 import FastImage from 'react-native-fast-image'
 import Text from 'react-native-ui-lib/text'
@@ -12,6 +14,7 @@ interface IProps {
 }
 export function InstagramPost(props: IProps) {
   const { authorName, title, thumbnailUrl } = props
+  const navigator = useNavigation()
 
   return (
     <Surface>
@@ -28,16 +31,24 @@ export function InstagramPost(props: IProps) {
         </TouchableOpacity>
       </View>
 
-      <FastImage
-        source={{ uri: thumbnailUrl }}
-        style={{
-          width: '100%',
-          height: 100,
-          borderRadius: 4,
-          marginTop: 20,
-          marginRight: 10,
-        }}
-      />
+      <TouchableOpacity
+        onPress={() =>
+          navigator.navigate(Routes.ImageGallery, {
+            imageSet: [thumbnailUrl],
+          })
+        }
+      >
+        <FastImage
+          source={{ uri: thumbnailUrl }}
+          style={{
+            width: '100%',
+            height: 100,
+            borderRadius: 4,
+            marginTop: 20,
+            marginRight: 10,
+          }}
+        />
+      </TouchableOpacity>
       <Text marginV-10 greyText font13>
         {title.slice(0, 30)}
       </Text>

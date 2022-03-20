@@ -18,6 +18,10 @@ export const Config = {
   ADMOB_UNIT_ID: 'ca-app-pub-5089133101627366~1296090636',
 }
 
+export const EnabledFeatures = {
+  appleLogin: false,
+}
+
 // export const Config = {
 //   STATIC_URL: dev
 //     ? 'https://derdevam.com/static'

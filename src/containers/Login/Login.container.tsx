@@ -43,6 +43,7 @@ import { Colors } from 'react-native-ui-lib'
 import { AppleButton } from '@invertase/react-native-apple-authentication'
 import { GoogleSignIn } from './components/GoogleSignIn.component'
 import { LoaderScreen } from '@/components/LoaderScreen/LoaderScreen.component'
+import { EnabledFeatures } from '@/config'
 
 export function LoginContainer() {
   const [login] = useMutation<ILoginResponse, ILoginVariables>(LOGIN)
@@ -335,16 +336,18 @@ export function LoginContainer() {
             marginB-20
           />
 
-          <AppleButton
-            buttonStyle={AppleButton.Style.BLACK}
-            buttonType={AppleButton.Type.SIGN_IN}
-            cornerRadius={100}
-            style={{
-              width: '100%', // You must specify a width
-              height: 45, // You must specify a height
-            }}
-            onPress={() => null}
-          />
+          {EnabledFeatures.appleLogin && (
+            <AppleButton
+              buttonStyle={AppleButton.Style.BLACK}
+              buttonType={AppleButton.Type.SIGN_IN}
+              cornerRadius={100}
+              style={{
+                width: '100%', // You must specify a width
+                height: 45, // You must specify a height
+              }}
+              onPress={() => null}
+            />
+          )}
         </View>
 
         <Button link onPress={onPressRegister}>

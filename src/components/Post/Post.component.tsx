@@ -70,8 +70,8 @@ export const Post = React.memo((props: IPostProps) => {
     return []
   }, [fetchTwitterMeta])
 
-  const fetchInstagramPost = useCallback(async () => {
-    InteractionManager.runAfterInteractions(async () => {
+  const fetchInstagramPost = useCallback(() => {
+    return InteractionManager.runAfterInteractions(async () => {
       const url = `https://api.instagram.com/oembed/?url=${additional}`
       const response = await fetch(url)
       const data: IInstagramMeta = await response.json()
@@ -81,7 +81,7 @@ export const Post = React.memo((props: IPostProps) => {
     })
   }, [additional])
 
-  const fetchTwitterPost = useCallback(async () => {
+  const fetchTwitterPost = useCallback(() => {
     const url = additional
     const regex = /twitter\.com\/(?:[^\/]+\/status\/)?(\d+)/
 
@@ -89,7 +89,7 @@ export const Post = React.memo((props: IPostProps) => {
     const match = url.match(regex)
 
     if (match) {
-      InteractionManager.runAfterInteractions(() => {
+      return InteractionManager.runAfterInteractions(() => {
         fetchTwitter({
           variables: {
             twitterId: match[1],
@@ -104,7 +104,7 @@ export const Post = React.memo((props: IPostProps) => {
   }, [additional, fetchTwitter])
 
   useEffect(() => {
-    InteractionManager.runAfterInteractions(() => {
+    const task = InteractionManager.runAfterInteractions(() => {
       if (postType === PostType.Instagram) {
         fetchInstagramPost()
       }
@@ -112,6 +112,10 @@ export const Post = React.memo((props: IPostProps) => {
         fetchTwitterPost()
       }
     })
+
+    return () => {
+      task.cancel()
+    }
   }, [fetchInstagramPost, postType, fetchTwitterPost])
 
   const _onPressPost = () => {

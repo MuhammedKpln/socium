@@ -16,9 +16,11 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		15113A0976DF5A36464ACF41 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489D3CEE6152E4BFF4AC211F /* ExpoModulesProvider.swift */; };
 		238E4D07008D44E5BF24D5DD /* Gilroy-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 2BE7E276DBE8428D85DA0718 /* Gilroy-Bold.otf */; };
 		529C1C9CE9DB4C66AB37E8E5 /* Gilroy-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5B7F7728C937425386C56C65 /* Gilroy-Medium.otf */; };
 		54148581F83246C5AA0862C1 /* icomoon.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F8397DE4674C48B69849AE73 /* icomoon.ttf */; };
+		5BFFFAA26C1F111A0377BCB8 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5BFCA32DBE2F54995BE291 /* ExpoModulesProvider.swift */; };
 		6172F2D35A4C3AA820D92908 /* libPods-socium.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6423831EA8574132BED9D8CC /* libPods-socium.a */; };
 		7E4DEA650FD447AB975CF681 /* Gilroy-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7929FAC948A943419AE985FC /* Gilroy-Semibold.otf */; };
 		7EF68E3733C33B6898317E18 /* libPods-socium-sociumTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ABFE59519B596E51CEFDCCC0 /* libPods-socium-sociumTests.a */; };
@@ -54,6 +56,7 @@
 		1D0AE47A65C8663E3B452821 /* Pods-socium-sociumTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-socium-sociumTests.release.xcconfig"; path = "Target Support Files/Pods-socium-sociumTests/Pods-socium-sociumTests.release.xcconfig"; sourceTree = "<group>"; };
 		2BE7E276DBE8428D85DA0718 /* Gilroy-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gilroy-Bold.otf"; path = "../src/assets/fonts/Gilroy-Bold.otf"; sourceTree = "<group>"; };
 		45143BA18E974F9B8E356AF6 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
+		489D3CEE6152E4BFF4AC211F /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-socium-sociumTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		5459DCB96D514B5E88F2AF11 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		5B7F7728C937425386C56C65 /* Gilroy-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gilroy-Medium.otf"; path = "../src/assets/fonts/Gilroy-Medium.otf"; sourceTree = "<group>"; };
 		5EFF22EB43E74D4ABE88D3E2 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
@@ -64,6 +67,7 @@
 		7BE0FB4359F04BBEBF2595B6 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = socium/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		831FF8958C154366A9F5B7A7 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+		8B5BFCA32DBE2F54995BE291 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-socium/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		A4059AFE99A742F8B83D5557 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		A6B6032BEB6843B3BDB3270C /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		ABFE59519B596E51CEFDCCC0 /* libPods-socium-sociumTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-socium-sociumTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -115,6 +119,14 @@
 				00E356F11AD99517003FC87E /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		0BA834BA4FBC8EE33A430791 /* sociumTests */ = {
+			isa = PBXGroup;
+			children = (
+				489D3CEE6152E4BFF4AC211F /* ExpoModulesProvider.swift */,
+			);
+			name = sociumTests;
 			sourceTree = "<group>";
 		};
 		13B07FAE1A68108700A75B9A /* socium */ = {
@@ -172,6 +184,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		36D6C778860A7D3F572AFEA6 /* socium */ = {
+			isa = PBXGroup;
+			children = (
+				8B5BFCA32DBE2F54995BE291 /* ExpoModulesProvider.swift */,
+			);
+			name = socium;
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -189,6 +209,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				E233CBF5F47BEE60B243DCF8 /* Pods */,
 				29EBFF1A5C534A33BF5D1CA9 /* Resources */,
+				B365EF06450B9ED076173AED /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -202,6 +223,15 @@
 				00E356EE1AD99517003FC87E /* sociumTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B365EF06450B9ED076173AED /* ExpoModulesProviders */ = {
+			isa = PBXGroup;
+			children = (
+				36D6C778860A7D3F572AFEA6 /* socium */,
+				0BA834BA4FBC8EE33A430791 /* sociumTests */,
+			);
+			name = ExpoModulesProviders;
 			sourceTree = "<group>";
 		};
 		E233CBF5F47BEE60B243DCF8 /* Pods */ = {
@@ -479,6 +509,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00E356F31AD99517003FC87E /* sociumTests.m in Sources */,
+				15113A0976DF5A36464ACF41 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -488,6 +519,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				5BFFFAA26C1F111A0377BCB8 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -512,7 +544,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = sociumTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -536,7 +568,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = sociumTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -654,7 +686,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
@@ -712,7 +744,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",

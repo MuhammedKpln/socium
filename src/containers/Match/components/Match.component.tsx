@@ -1,6 +1,10 @@
-import MatchBackground from '@/assets/images/MatchBackground'
+import {
+  MatchBackgroundBlack,
+  MatchBackgroundWhite,
+} from '@/assets/images/MatchBackground'
+import { useAppSelector } from '@/store'
 import AnimatedLottieView from 'lottie-react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Colors } from 'react-native-ui-lib'
 import Text from 'react-native-ui-lib/text'
 import TouchableOpacity from 'react-native-ui-lib/touchableOpacity'
@@ -11,9 +15,25 @@ interface IProps {
 }
 
 export function MatchComponent(props: IProps) {
+  const [isDark, setIsDark] = useState(false)
+  const inAppTheme = useAppSelector(state => state.themeReducer.theme)
+
+  useEffect(() => {
+    if (inAppTheme === 'dark') {
+      setIsDark(true)
+    } else {
+      setIsDark(false)
+    }
+  }, [inAppTheme])
+
   return (
     <View style={{ justifyContent: 'space-evenly' }}>
-      <MatchBackground style={{ marginTop: -100 }} />
+      {isDark ? (
+        <MatchBackgroundBlack style={{ marginTop: -100 }} bg-surfaceBG />
+      ) : (
+        <MatchBackgroundWhite style={{ marginTop: -100 }} bg-surfaceBG />
+      )}
+
       <View center style={{ marginTop: -50 }}>
         <TouchableOpacity onPress={props.onPressMatch}>
           <AnimatedLottieView

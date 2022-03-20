@@ -379,7 +379,6 @@ export function ProfileContainer() {
           {localUser?.id !== user.data?.getUser.id && (
             <Button
               padding-5
-              marginL-15
               style={{ width: '50%' }}
               primary={!isFollowing.data?.userFollowsActor}
               outline={!isFollowing.data?.userFollowsActor}

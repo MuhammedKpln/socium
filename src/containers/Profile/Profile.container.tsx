@@ -74,17 +74,19 @@ export function ProfileContainer() {
       },
       onCompleted: async data => {
         if (route.params.username !== localUser?.username) {
-          await checkIfIsFollowing({
-            variables: {
-              actorId: data.getUser.id,
-              userId: localUser?.id ?? 0,
-            },
-          })
-          await fetchUserRequests({
-            variables: {
-              toUserId: data.getUser.id,
-            },
-          })
+          await Promise.all([
+            checkIfIsFollowing({
+              variables: {
+                actorId: data.getUser.id,
+                userId: localUser?.id ?? 0,
+              },
+            }),
+            fetchUserRequests({
+              variables: {
+                toUserId: data.getUser.id,
+              },
+            }),
+          ])
         }
       },
     },

@@ -57,7 +57,6 @@ const HomeContainer = () => {
   )
 
   useEffect(() => {
-    console.warn('runned')
     dispatch(fetchAvatars())
   }, [dispatch])
 

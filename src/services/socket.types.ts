@@ -75,6 +75,7 @@ export interface IJoinRoomArg {
 export interface ISendMessageArg {
   room: string
   message?: string
+  repliedToId?: number
   user: IUser
   receiver: IUser
 }

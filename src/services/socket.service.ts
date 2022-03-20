@@ -1,6 +1,6 @@
 import { Config } from '@/config'
 import { EventEmitter } from 'events'
-import {
+import type {
   RTCIceCandidateType,
   RTCSessionDescriptionType,
 } from 'react-native-webrtc'

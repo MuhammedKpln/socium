@@ -24,12 +24,12 @@ import React, {
   useRef,
   useState,
 } from 'react'
+import { MessageStatus } from 'react-native-chatty'
 import type {
   IMessage,
   ListRef,
 } from 'react-native-chatty/lib/typescript/src/types/Chatty.types'
 import InCallManager from 'react-native-incall-manager'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import { useDispatch } from 'react-redux'
 
 export function MatchChatContainer() {
@@ -40,10 +40,18 @@ export function MatchChatContainer() {
   const speakersOn = useAppSelector(state => state.chatReducer.speakersOn)
   const dispatch = useDispatch()
   const [message, setMessage] = useState<string>('')
+  const [replyingTo, setReplyingTo] = useState<IMessage>()
   const [isReceiverMuted, setIsReceiverMuted] = useState<boolean>(false)
   const [messages, setMessages] = useState<IMessage[]>([
     //@ts-ignore
-    { text: 'Merhaba!' },
+    {
+      text: 'Merhaba!',
+      me: false,
+      createdAt: new Date(),
+      id: 0,
+      user: { id: 0, username: user.username },
+      status: MessageStatus.Delivered,
+    },
   ])
   const ref = useRef<ListRef>()
   const localUser = useAppSelector(state => state.userReducer.user)
@@ -125,11 +133,21 @@ export function MatchChatContainer() {
           text: _message.message.message,
           user: {
             id: _message.message.senderId,
-            username: 'selam',
+            username: _message.message.sender.username,
             avatar: 'https://i.pravatar.cc/300',
           },
           createdAt: _message.message.created_at,
           me: _message.message.senderId === localUser?.id,
+          repliedTo: _message.message.repliedToMessage && {
+            id: _message.message.repliedToMessage?.id,
+            createdAt: _message.message.repliedToMessage?.created_at,
+            me: false,
+            text: _message.message.repliedToMessage?.message,
+            user: {
+              id: _message.message.repliedToMessage?.senderId,
+              username: _message.message.repliedToMessage?.sender.username,
+            },
+          },
         },
       ])
     })
@@ -263,14 +281,16 @@ export function MatchChatContainer() {
       message,
       receiver: user,
       user: localUser,
+      repliedToId: replyingTo?.id,
     })
 
     setMessage('')
+    setReplyingTo(undefined)
     socketService.typing(false, room)
 
     //@ts-ignore
     ref.current?.scrollToEnd({ animated: true })
-  }, [message, room, user, localUser, socketService])
+  }, [message, room, user, localUser, socketService, replyingTo])
 
   const onBlurInput = useCallback(() => {
     socketService.typing(false, room)
@@ -332,6 +352,8 @@ export function MatchChatContainer() {
       onPressBack={navigateBack}
       onBlurInput={onBlurInput}
       onPressRemove={messageId => removeMessage(messageId)}
+      replyingTo={replyingTo}
+      onReply={_message => setReplyingTo(_message)}
     />
   )
 }

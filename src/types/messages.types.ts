@@ -18,6 +18,7 @@ export interface IMessage {
   sender: IUser
   receiver: IUser
   senderId?: number
+  repliedToMessage?: IMessage
 }
 
 export interface IMessagesRoom {

@@ -1,5 +1,4 @@
 import { ChatComponent } from '@/components/Chat/Chat.component'
-import { Icon } from '@/components/Icon/Icon.component'
 import {
   FETCH_ROOM_MESSAGES,
   IFetchRoomMessagesResponse,
@@ -38,7 +37,7 @@ export function ChatContainer() {
   const localUser = useAppSelector(state => state.userReducer.user)
   const [messages, setMessages] = useState<IMessage[]>([])
   const { socket: socketService } = useSocket()
-  const [replying, setReplying] = useState<IMessage | null>(null)
+  const [replyingTo, setReplyingTo] = useState<IMessage | undefined>()
   const messagesResponse = useQuery<
     IFetchRoomMessagesResponse,
     IFetchRoomMessagesVariables
@@ -88,6 +87,16 @@ export function ChatContainer() {
           },
           createdAt: _message.message.created_at,
           me: _message.message.senderId === localUser?.id,
+          repliedTo: _message.message.repliedToMessage && {
+            id: _message.message.repliedToMessage?.id,
+            createdAt: _message.message.repliedToMessage?.created_at,
+            me: false,
+            text: _message.message.repliedToMessage?.message,
+            user: {
+              id: _message.message.repliedToMessage?.senderId,
+              username: _message.message.repliedToMessage?.sender.username,
+            },
+          },
         }),
       )
     })
@@ -148,12 +157,14 @@ export function ChatContainer() {
       message: message.current,
       receiver: user,
       user: localUser,
+      repliedToId: replyingTo?.id,
     })
 
     chatEmitter.emit('cleanTextInputValue')
     message.current = ''
     socketService.typing(false, room.roomAdress)
-  }, [message, room, user, localUser, socketService])
+    setReplyingTo(undefined)
+  }, [message, room, user, localUser, socketService, replyingTo])
 
   const onBlurInput = useCallback(() => {
     socketService.typing(false, room.roomAdress)
@@ -200,8 +211,8 @@ export function ChatContainer() {
       onPressRemove={removeMessage}
       onChangeInputText={onChangeText}
       onBlurInput={onBlurInput}
-      // onReply={setReplying}
-      // replyingTo={replying ?? undefined}
+      onReply={setReplyingTo}
+      replyingTo={replyingTo}
       ref={ref}
     />
   )

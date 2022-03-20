@@ -78,7 +78,6 @@ export const YTPlayer = React.memo((props: IYTPlayerProps) => {
         style={{
           width: 150,
           height: 100,
-          marginTop: 20,
           alignContent: 'center',
           alignItems: 'center',
           justifyContent: 'center',
@@ -114,7 +113,7 @@ export const YTPlayer = React.memo((props: IYTPlayerProps) => {
         {renderYoutubeFrame ? (
           renderYoutube()
         ) : (
-          <View marginT-20>
+          <View>
             <SkeletonView
               width={150}
               height={100}

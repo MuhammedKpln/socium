@@ -1,10 +1,12 @@
 import PlusFilled from '@/assets/icons/PlusFilled'
 import { HeaderRight } from '@/components/Navigation/HeaderRight.component'
 import { HeaderTitle } from '@/components/Navigation/HeaderTitle.component'
+import { useAppSelector } from '@/store'
 import { authRequiredFunction } from '@/utils/auth'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import HomeContainer from '../containers/Home/Home.container'
 import { RouteComponents, Routes, RouteTitles } from './navigator.props'
 import { applyRouteTitle, applyTabIcon } from './utils/navigation'
@@ -92,9 +94,11 @@ const BottomTabBarNavigator = () => {
 }
 
 const MainNavigator = () => {
+  const firstStart = useAppSelector(state => state.appReducer.firstStart)
+  console.log(firstStart)
   return (
     <Stack.Navigator
-      initialRouteName={Routes.App}
+      initialRouteName={firstStart ? Routes.Onboarding : Routes.Home}
       screenOptions={{
         headerBackTitle: '',
         headerTitleStyle: {
@@ -106,6 +110,10 @@ const MainNavigator = () => {
       <Stack.Group screenOptions={{ headerShown: false }}>
         {/* // Header disabled routes */}
         <Stack.Screen name={Routes.App} component={BottomTabBarNavigator} />
+        <Stack.Screen
+          name={Routes.Onboarding}
+          getComponent={RouteComponents.Onboarding}
+        />
       </Stack.Group>
       <Stack.Group
         screenOptions={{

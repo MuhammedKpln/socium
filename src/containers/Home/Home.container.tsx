@@ -14,7 +14,6 @@ import { Routes } from '@/navigators/navigator.props'
 import { navigate } from '@/navigators/utils/navigation'
 import { updateCurrentTrackInterval } from '@/services/spotify.service'
 import { useAppSelector } from '@/store'
-import { fetchAvatars } from '@/store/reducers/app.reducer'
 import { fetchUserStars } from '@/store/reducers/user.reducer'
 import { IPost, PostType } from '@/types/post.types'
 import { configureNotifications } from '@/utils/notifications'
@@ -71,10 +70,6 @@ const HomeContainer = () => {
       },
     },
   )
-
-  useEffect(() => {
-    dispatch(fetchAvatars())
-  }, [dispatch])
 
   useEffect(() => {
     if (isLoggedIn && notifications) {

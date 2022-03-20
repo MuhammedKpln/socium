@@ -49,6 +49,9 @@ const appSlice = createSlice({
         state.notifications = true
       }
     },
+    setFirstStart: (state, payload) => {
+      state.firstStart = payload.payload
+    },
   },
   extraReducers: builder => {
     builder.addCase(fetchAvatars.fulfilled, state => {
@@ -57,6 +60,6 @@ const appSlice = createSlice({
   },
 })
 
-export const { toggleNotifications } = appSlice.actions
+export const { toggleNotifications, setFirstStart } = appSlice.actions
 
 export default appSlice.reducer

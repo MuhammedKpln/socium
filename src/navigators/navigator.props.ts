@@ -32,6 +32,7 @@ export enum Routes {
   Notifications = 'notifications',
   Profile = 'profile',
   EditProfile = 'edit-profile',
+  Onboarding = 'onboarding',
 }
 export enum RouteTitles {
   Login = 'Giriş yap',
@@ -97,6 +98,8 @@ export const RouteComponents = {
   EditProfile: () =>
     require('@/containers/EditProfile/EditProfile.container')
       .EditProfileContainer,
+  Onboarding: () =>
+    require('@/containers/Onboarding/Onboarding.container').OnboardingContainer,
 }
 
 export interface INavigatorParamsList extends ParamListBase {
@@ -142,4 +145,5 @@ export interface INavigatorParamsList extends ParamListBase {
   [Routes.Notifications]: undefined
   [Routes.Profile]: { username: string }
   [Routes.EditProfile]: undefined
+  [Routes.Onboarding]: undefined
 }

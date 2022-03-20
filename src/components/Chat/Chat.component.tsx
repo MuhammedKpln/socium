@@ -111,6 +111,7 @@ function _ChatComponent(props: IChatProps, ref: Ref<ListRef>) {
         onReply={props.onReply}
         replyingTo={props.replyingTo}
         bubbleProps={{
+          enableCornerRounding: false,
           replyDragElement: (
             <Icon
               name="reply"
@@ -122,7 +123,7 @@ function _ChatComponent(props: IChatProps, ref: Ref<ListRef>) {
           selfBubbleColor: Colors.primary,
           otherBubbleColor: Colors.white,
           containerStyle: {
-            borderRadius: 10,
+            borderRadius: 100,
           },
           labelStyle(isSelf) {
             if (isSelf) {

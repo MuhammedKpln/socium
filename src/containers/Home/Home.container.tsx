@@ -110,8 +110,6 @@ const HomeContainer = () => {
           userLike: result?.userLike ? result.userLike : null,
         }
 
-        console.log('qweqweq', prevResults?.posts[index])
-
         fetchPosts.client.cache.writeQuery({
           data: {
             posts: newPost,
@@ -126,20 +124,17 @@ const HomeContainer = () => {
   )
 
   function onPressSave() {
-    showToast(ToastStatus.Success, 'Kaydedilenlerinize ekleni.')
+    showToast(ToastStatus.Success, 'Kaydedilenlerinize eklendi.')
   }
 
   const fetchMorePosts = useCallback(() => {
-    console.log('fetchMorePosts', fetchPosts.data?.posts.length)
     // if (fetchPosts.data?.posts && fetchPosts.data.posts.length <= 15) return
 
-    fetchPosts
-      .fetchMore({
-        variables: {
-          offset: fetchPosts.data?.posts.length,
-        },
-      })
-      .then(r => console.log(r.data.posts.length))
+    fetchPosts.fetchMore({
+      variables: {
+        offset: fetchPosts.data?.posts.length,
+      },
+    })
   }, [fetchPosts])
 
   const refreshControl = useCallback(() => {
@@ -150,15 +145,6 @@ const HomeContainer = () => {
       />
     )
   }, [fetchPosts])
-
-  const getItemLayout = useCallback(
-    (data: any, index: number) => ({
-      length: 280,
-      offset: 280 * index,
-      index,
-    }),
-    [],
-  )
 
   const layoutProvider = useMemo(() => {
     return new LayoutProvider(
@@ -175,7 +161,6 @@ const HomeContainer = () => {
       (type, dim) => {
         switch (type) {
           case 'media':
-            console.log('media')
             dim.width = Dimensions.get('screen').width
             dim.height = 280
             break
@@ -236,21 +221,13 @@ const HomeContainer = () => {
           )}
           onEndReached={fetchMorePosts}
           onEndReachedThreshold={0.1}
-          getItemLayout={getItemLayout}
           refreshControl={refreshControl()}
           canChangeSize={false}
           optimizeForInsertDeleteAnimations
         />
       </View>
     )
-  }, [
-    posts,
-    fetchMorePosts,
-    getItemLayout,
-    refreshControl,
-    layoutProvider,
-    rowRenderer,
-  ])
+  }, [posts, fetchMorePosts, refreshControl, layoutProvider, rowRenderer])
 
   return (
     <Page>

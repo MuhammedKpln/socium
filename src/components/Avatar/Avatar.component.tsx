@@ -21,17 +21,20 @@ export const Avatar = React.memo((props: IAvatarProps) => {
           />
         )}
         <View
-          style={{
-            backgroundColor: '#F3F5F7',
-            justifyContent: 'center',
-            alignContent: 'center',
-            alignItems: 'center',
-            alignSelf: 'center',
-            width: size,
-            height: size,
-            overflow: 'hidden',
-            borderRadius: size,
-          }}
+          style={[
+            {
+              backgroundColor: '#F3F5F7',
+              justifyContent: 'center',
+              alignContent: 'center',
+              alignItems: 'center',
+              alignSelf: 'center',
+              width: size,
+              height: size,
+              overflow: 'hidden',
+              borderRadius: size,
+            },
+            props?.containerStyle,
+          ]}
         >
           <FastImage
             source={{ uri: userAvatarUrl }}

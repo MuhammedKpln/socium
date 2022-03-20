@@ -31,6 +31,7 @@ export enum Routes {
   Zodiac = 'zodiac',
   Notifications = 'notifications',
   Profile = 'profile',
+  EditProfile = 'edit-profile',
 }
 export enum RouteTitles {
   Login = 'Giriş yap',
@@ -45,6 +46,7 @@ export enum RouteTitles {
   ConnectToSpotify = 'Spotify ile bağlan',
   Zodiac = 'Socium burç',
   Notifications = 'Bildirimler',
+  EditProfile = "Profilim'i düzenle",
 }
 
 export const RouteComponents = {
@@ -92,6 +94,9 @@ export const RouteComponents = {
       .NotificationContainer,
   Profile: () =>
     require('@/containers/Profile/Profile.container').ProfileContainer,
+  EditProfile: () =>
+    require('@/containers/EditProfile/EditProfile.container')
+      .EditProfileContainer,
 }
 
 export interface INavigatorParamsList extends ParamListBase {
@@ -136,4 +141,5 @@ export interface INavigatorParamsList extends ParamListBase {
   }
   [Routes.Notifications]: undefined
   [Routes.Profile]: { username: string }
+  [Routes.EditProfile]: undefined
 }

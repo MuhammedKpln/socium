@@ -1,4 +1,5 @@
-import { IBadgeProps } from '../Badge/Badge.props'
+import type { ViewStyle } from 'react-native'
+import type { IBadgeProps } from '../Badge/Badge.props'
 
 export interface IAvatarProps {
   userAvatar: string
@@ -6,4 +7,5 @@ export interface IAvatarProps {
   showBadge?: boolean
   badgeProps?: IBadgeProps
   onPress?: () => void
+  containerStyle?: ViewStyle
 }

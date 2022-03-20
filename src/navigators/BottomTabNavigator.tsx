@@ -197,6 +197,11 @@ const MainNavigator = () => {
           name={Routes.Profile}
           getComponent={RouteComponents.Profile}
         />
+        <Stack.Screen
+          name={Routes.EditProfile}
+          options={{ ...applyRouteTitle(RouteTitles.EditProfile) }}
+          getComponent={RouteComponents.EditProfile}
+        />
       </Stack.Group>
       <Stack.Group
         screenOptions={{

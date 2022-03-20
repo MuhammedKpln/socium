@@ -54,7 +54,7 @@ export function EarnStarContainer() {
   )
   const [addNewStar] = useMutation<{ addNewStar: IStar }>(ADD_NEW_STAR, {
     onCompleted: () => {
-      showToast(ToastStatus.Success, '1DP Kazandiniz!')
+      showToast(ToastStatus.Success, '1 Yıldız Kazandınız!')
       const nextTimeDate = dayjs().add(1, 'hour')
 
       dispatch(updateShowNextAd(nextTimeDate.toDate()))
@@ -176,7 +176,7 @@ export function EarnStarContainer() {
           size={32}
           style={{ marginTop: 20 }}
         />
-        <View marginL-80>
+        <View style={{ marginLeft: !nextAd ? 80 : 20 }}>
           <Text center fontSfProRegular font16 textColor>
             Hemen izle, kazan!
           </Text>
@@ -201,14 +201,7 @@ export function EarnStarContainer() {
               marginT-10
               label={nextAd + ' dakika sonra tekrar geliniz.'}
               backgroundColor={Colors.yellow}
-              iconSource={() => (
-                <Icon
-                  name="sparkles"
-                  color="#fff"
-                  size={18}
-                  style={{ marginRight: 10 }}
-                />
-              )}
+              iconSource={() => <Icon name="sparkles" color="#fff" size={18} />}
             />
           )}
         </View>

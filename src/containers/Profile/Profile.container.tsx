@@ -132,15 +132,17 @@ export function ProfileContainer() {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => (
-        <Icon
-          name="gear"
-          size={25}
-          onPress={() => navigate(Routes.Settings, {})}
-        />
-      ),
+      title: route.params.username,
+      headerRight: () =>
+        route.params.username === localUser?.username && (
+          <Icon
+            name="gear"
+            size={25}
+            onPress={() => navigate(Routes.Settings, {})}
+          />
+        ),
     })
-  }, [navigation])
+  }, [localUser?.username, navigation, route.params.username])
 
   const onPressFollow = useCallback(
     async (userId: number) => {
@@ -439,8 +441,9 @@ export function ProfileContainer() {
       <View row margin-15 marginT-50 spread>
         <View>
           <Text text textColor center style={{ width: 55 }}>
-            {user.data?.getUser._count.posts} Gönderi
+            {user.data?.getUser._count.posts}
           </Text>
+          <Text center>Gönderi</Text>
         </View>
         <View>
           <TouchableOpacity onPress={onPressFollowers}>

@@ -16,17 +16,21 @@ import { updateCurrentTrackInterval } from '@/services/spotify.service'
 import { useAppSelector } from '@/store'
 import { fetchAvatars } from '@/store/reducers/app.reducer'
 import { fetchUserStars } from '@/store/reducers/user.reducer'
-import type { IPost } from '@/types/post.types'
+import { IPost, PostType } from '@/types/post.types'
 import { configureNotifications } from '@/utils/notifications'
 import { showToast, ToastStatus } from '@/utils/toast'
 import { useQuery } from '@apollo/client'
-import React, { useCallback, useEffect } from 'react'
-import { FlatList } from 'react-native'
-import { Platform, RefreshControl } from 'react-native'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { Dimensions, Platform, RefreshControl } from 'react-native'
 import { Notifications } from 'react-native-notifications'
 import { View } from 'react-native-ui-lib'
 import Text from 'react-native-ui-lib/text'
 import { useDispatch } from 'react-redux'
+import {
+  DataProvider,
+  LayoutProvider,
+  RecyclerListView,
+} from 'recyclerlistview'
 
 if (Platform.OS !== 'ios') {
   configureNotifications()
@@ -34,13 +38,24 @@ if (Platform.OS !== 'ios') {
 
 const HomeContainer = () => {
   const { toggleLikeButton } = useLikes()
-
   const dispatch = useDispatch()
   const isLoggedIn = useAppSelector(state => state.userReducer.isLoggedIn)
   const notifications = useAppSelector(state => state.appReducer.notifications)
   const spotifyLoggedIn = useAppSelector(
     state => state.spotifyReducer.accessToken,
   )
+
+  const dataProvider = useMemo(() => {
+    return new DataProvider((r1: IPost, r2: IPost) => {
+      if (r1.id !== r2.id) {
+        return true
+      }
+
+      return false
+    })
+  }, [])
+  const [posts, setPosts] = useState<DataProvider>(dataProvider)
+
   const fetchPosts = useQuery<{ posts: IPost[] }, IFetchPostsVariables>(
     FETCH_POSTS,
     {
@@ -48,7 +63,8 @@ const HomeContainer = () => {
         offset: 0,
         limit: 15,
       },
-      onCompleted() {
+      onCompleted(data) {
+        setPosts(dataProvider.cloneWithRows(data.posts))
         if (isLoggedIn) {
           dispatch(fetchUserStars())
         }
@@ -114,17 +130,66 @@ const HomeContainer = () => {
   }
 
   const fetchMorePosts = useCallback(() => {
-    if (fetchPosts.data?.posts && fetchPosts.data.posts.length <= 15) return
+    console.log('fetchMorePosts', fetchPosts.data?.posts.length)
+    // if (fetchPosts.data?.posts && fetchPosts.data.posts.length <= 15) return
 
-    fetchPosts.fetchMore({
-      variables: {
-        offset: fetchPosts.data?.posts.length,
-      },
-    })
+    fetchPosts
+      .fetchMore({
+        variables: {
+          offset: fetchPosts.data?.posts.length,
+        },
+      })
+      .then(r => console.log(r.data.posts.length))
   }, [fetchPosts])
 
-  const renderItem = useCallback(
-    ({ item }: { item: IPost }) => {
+  const refreshControl = useCallback(() => {
+    return (
+      <RefreshControl
+        refreshing={fetchPosts.loading}
+        onRefresh={fetchPosts.refetch}
+      />
+    )
+  }, [fetchPosts])
+
+  const getItemLayout = useCallback(
+    (data: any, index: number) => ({
+      length: 280,
+      offset: 280 * index,
+      index,
+    }),
+    [],
+  )
+
+  const layoutProvider = useMemo(() => {
+    return new LayoutProvider(
+      index => {
+        const item: IPost = posts.getDataForIndex(index)
+        if (item) {
+          if (item.type !== PostType.Content) {
+            return 'media'
+          }
+        }
+
+        return 'post'
+      },
+      (type, dim) => {
+        switch (type) {
+          case 'media':
+            console.log('media')
+            dim.width = Dimensions.get('screen').width
+            dim.height = 280
+            break
+          case 'post':
+            dim.width = Dimensions.get('screen').width
+            dim.height = 150
+            break
+        }
+      },
+    )
+  }, [posts])
+
+  const rowRenderer = useCallback(
+    (type, item) => {
       return (
         <View key={item.slug}>
           <Post
@@ -156,32 +221,15 @@ const HomeContainer = () => {
     [likePost],
   )
 
-  const refreshControl = useCallback(() => {
-    return (
-      <RefreshControl
-        refreshing={fetchPosts.loading}
-        onRefresh={fetchPosts.refetch}
-      />
-    )
-  }, [fetchPosts])
-
-  const getItemLayout = useCallback(
-    (data: any, index: number) => ({
-      length: 280,
-      offset: 280 * index,
-      index,
-    }),
-    [],
-  )
-
   const renderContent = useCallback(() => {
     return (
       <View style={{ display: 'flex', height: '100%' }}>
-        <FlatList
-          data={fetchPosts.data?.posts}
-          renderItem={renderItem}
-          ListEmptyComponent={() => <Text>empty</Text>}
-          ListHeaderComponent={() => (
+        <RecyclerListView
+          dataProvider={posts}
+          layoutProvider={layoutProvider}
+          rowRenderer={rowRenderer}
+          renderEmpty={() => <Text>empty</Text>}
+          renderHeader={() => (
             <Text title textColor>
               🚀 Öne çıkanlar
             </Text>
@@ -190,15 +238,18 @@ const HomeContainer = () => {
           onEndReachedThreshold={0.1}
           getItemLayout={getItemLayout}
           refreshControl={refreshControl()}
+          canChangeSize={false}
+          optimizeForInsertDeleteAnimations
         />
       </View>
     )
   }, [
-    fetchPosts.data?.posts,
-    renderItem,
+    posts,
     fetchMorePosts,
     getItemLayout,
     refreshControl,
+    layoutProvider,
+    rowRenderer,
   ])
 
   return (

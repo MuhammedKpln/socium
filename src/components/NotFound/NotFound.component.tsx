@@ -1,4 +1,4 @@
-import NoData from '@/assets/images/NoData.svg'
+import NoData from '@/assets/images/NoData'
 import React from 'react'
 import { Text, View } from 'react-native-ui-lib'
 import { Surface } from '../Surface/Surface.component'

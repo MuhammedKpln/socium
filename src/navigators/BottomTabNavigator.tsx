@@ -22,6 +22,7 @@ const BottomTabBarNavigator = () => {
       screenOptions={{
         headerTitleAlign: 'left',
         tabBarShowLabel: false,
+        lazy: true,
       }}
     >
       <Tab.Screen

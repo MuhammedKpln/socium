@@ -44,7 +44,9 @@ export function EditProfileContainer() {
   const initialValues = useMemo(() => {
     return {
       username: user?.username,
-      birthday: new Date(user?.birthday || ''),
+      birthday: Date.parse(user?.birthday || '')
+        ? new Date(user?.birthday || '')
+        : new Date(),
       blockIncomingCalls: user?.blockIncomingCalls,
     }
   }, [user])
@@ -156,7 +158,8 @@ export function EditProfileContainer() {
                   onBlur={handleBlur('username')}
                   enableErrors={!isValid}
                   validationMessage={errors.username}
-                  autoCapitalize="none"a
+                  autoCapitalize="none"
+                  a
                 />
               </View>
 

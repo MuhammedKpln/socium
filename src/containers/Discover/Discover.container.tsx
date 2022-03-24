@@ -265,6 +265,19 @@ export function DiscoverContainer() {
     return <RefreshControl refreshing={loading} onRefresh={refetch} />
   }, [loading, refetch])
 
+  const itemHeight = useCallback(
+    (_, index) => {
+      const item = data?.posts[index]
+
+      if (item?.type !== PostType.Content) {
+        return 450
+      }
+
+      return 180
+    },
+    [data?.posts],
+  )
+
   return (
     <Page>
       <View marginB-10>
@@ -278,7 +291,7 @@ export function DiscoverContainer() {
         onEndReachedThreshold={0.5}
         removeClippedSubviews
         refreshControl={refreshControl()}
-        itemHeight={470}
+        itemHeight={itemHeight}
       />
     </Page>
   )

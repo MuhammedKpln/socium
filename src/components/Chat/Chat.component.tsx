@@ -8,7 +8,6 @@ import { Button, Colors } from 'react-native-ui-lib'
 import View from 'react-native-ui-lib/view'
 import { Icon } from '../Icon/Icon.component'
 import type { IChatProps } from './Chat.props'
-import { ChatBubble } from './ChatBubble.component'
 import { ChatHeader } from './ChatHeader.component'
 
 function _ChatComponent(props: IChatProps, ref: Ref<ListRef>) {

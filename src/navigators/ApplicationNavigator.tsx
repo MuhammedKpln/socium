@@ -6,7 +6,10 @@ import { NavigationContainer, Theme } from '@react-navigation/native'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Linking, StatusBar, useColorScheme } from 'react-native'
 import { Notifications } from 'react-native-notifications'
-import { SafeAreaProvider } from 'react-native-safe-area-context'
+import {
+  initialWindowMetrics,
+  SafeAreaProvider,
+} from 'react-native-safe-area-context'
 import { Colors } from 'react-native-ui-lib'
 import ConnectionStatusBar from 'react-native-ui-lib/connectionStatusBar'
 import { useDispatch } from 'react-redux'
@@ -111,7 +114,7 @@ const ApplicationNavigator = () => {
   }
 
   return (
-    <SafeAreaProvider>
+    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <NavigationContainer
         ref={navigationRef}
         theme={navigationTheme}

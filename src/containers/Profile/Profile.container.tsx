@@ -65,6 +65,15 @@ export function ProfileContainer() {
     ],
     [],
   )
+  const [checkIfIsFollowing, isFollowing] = useLazyQuery<
+    IISUserFollowingActorResponse,
+    IISUserFollowingActorVariables
+  >(IS_USER_FOLLOWING_ACTOR)
+
+  const [fetchUserRequests, requestedMessage] = useLazyQuery<
+    IFetchUserRequestsResponse,
+    IFetchUserRequestsVariables
+  >(FETCH_USER_REQUESTS)
 
   const user = useQuery<IFetchUserProfileResponse, IFetchUserProfileVariables>(
     FETCH_USER_PRFOFILE,
@@ -74,7 +83,7 @@ export function ProfileContainer() {
       },
       onCompleted: async data => {
         if (route.params.username !== localUser?.username) {
-          await Promise.all([
+          await Promise.allSettled([
             checkIfIsFollowing({
               variables: {
                 actorId: data.getUser.id,
@@ -91,24 +100,6 @@ export function ProfileContainer() {
       },
     },
   )
-
-  const [checkIfIsFollowing, isFollowing] = useLazyQuery<
-    IISUserFollowingActorResponse,
-    IISUserFollowingActorVariables
-  >(IS_USER_FOLLOWING_ACTOR, {
-    onError: error => {
-      console.log(error)
-    },
-  })
-
-  const [fetchUserRequests, requestedMessage] = useLazyQuery<
-    IFetchUserRequestsResponse,
-    IFetchUserRequestsVariables
-  >(FETCH_USER_REQUESTS, {
-    onError: error => {
-      console.log(error)
-    },
-  })
 
   const [followUser, followUserMeta] = useMutation<
     IFollowUserResponse,

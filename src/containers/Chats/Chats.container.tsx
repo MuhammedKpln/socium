@@ -196,12 +196,12 @@ export function ChatsContainer() {
 
   const renderSortedMessages = useMemo(() => {
     return messages.data?.messages.sort((a, b) => {
-      if (a.seen && !b.seen) {
+      if ((a.seen && !b.seen) || (!a.seen && b.seen)) {
         return 1
       }
       return -1
     })
-  }, [messages])
+  }, [messages.data?.messages])
 
   const renderData = useCallback(() => {
     return (

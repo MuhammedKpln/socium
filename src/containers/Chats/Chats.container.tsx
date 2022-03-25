@@ -27,21 +27,27 @@ import {
   IFetchMessagesResponse,
   IFetchMessagesVariables,
 } from '@/graphql/queries/FetchMessages.query'
+import {
+  IMessageSendedSubscriptionResponse,
+  IMessageSendedSubscriptionVariables,
+  MESSAGE_SENDED_SUBSCRIPTION,
+} from '@/graphql/subscriptions/MessageAdded.subscription'
 import { Routes } from '@/navigators/navigator.props'
 import { navigate } from '@/navigators/utils/navigation'
 import { useAppSelector } from '@/store'
 import type { IUser } from '@/Types/login.types'
 import type { IMessage, IMessageRequests } from '@/types/messages.types'
 import { showToast, ToastStatus } from '@/utils/toast'
-import { useMutation, useQuery } from '@apollo/client'
+import { useMutation, useQuery, useSubscription } from '@apollo/client'
 import { useNavigation } from '@react-navigation/native'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { FlatList, RefreshControl } from 'react-native'
-import { Colors, Fader } from 'react-native-ui-lib'
+import { Colors } from 'react-native-ui-lib'
 import ActionSheet from 'react-native-ui-lib/actionSheet'
 import Drawer from 'react-native-ui-lib/drawer'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
+import Fader from 'react-native-ui-lib/fader'
 import { findBestMatch } from 'string-similarity'
 import type { IActionSheet } from './Chats.props'
 import { ChatBox } from './components/Chatbox.component'
@@ -80,6 +86,39 @@ export function ChatsContainer() {
     IRejectRequestResponse,
     IRejectRequestVariables
   >(REJECT_REQUEST)
+
+  useSubscription<
+    IMessageSendedSubscriptionResponse,
+    IMessageSendedSubscriptionVariables
+  >(MESSAGE_SENDED_SUBSCRIPTION, {
+    shouldResubscribe: true,
+    fetchPolicy: 'network-only',
+    variables: {
+      userId: localUser?.id ?? 0,
+    },
+    onSubscriptionData: ({ client, subscriptionData }) => {
+      const _messages: IFetchMessagesResponse | null = client.readQuery({
+        query: FETCH_MESSAGES,
+      })
+
+      if (_messages) {
+        const newMessage = subscriptionData.data?.messageSended
+        const _ = [..._messages.messages]
+        const index = _.findIndex(v => v.room.id === newMessage?.room.id)
+
+        if (index !== -1 && newMessage) {
+          _[index] = newMessage
+        }
+
+        client.writeQuery({
+          query: FETCH_MESSAGES,
+          data: {
+            messages: _,
+          },
+        })
+      }
+    },
+  })
 
   useEffect(() => {
     const listener = navigator.addListener('focus', () => {
@@ -207,11 +246,11 @@ export function ChatsContainer() {
   )
 
   const renderSortedMessages = useMemo(() => {
-    return messages.data?.messages.sort((a, b) => {
-      if ((a.seen && !b.seen) || (!a.seen && b.seen)) {
-        return 1
+    return messages.data?.messages.sort(a => {
+      if (!a.seen) {
+        return -1
       }
-      return -1
+      return 1
     })
   }, [messages.data?.messages])
 
@@ -290,6 +329,7 @@ export function ChatsContainer() {
                 data: {
                   messageRequests: newData,
                 },
+                overwrite: true,
               })
             }
           },
@@ -379,7 +419,7 @@ export function ChatsContainer() {
             loading={messageRequests.loading}
             onPress={(item: IMessageRequests) => onPressRecentlyMatched(item)}
           />
-          <Fader visible />
+          <Fader visible position={Fader.position.END} size={200} />
         </View>
       ) : null}
 

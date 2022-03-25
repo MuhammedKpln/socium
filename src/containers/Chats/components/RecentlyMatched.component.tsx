@@ -1,6 +1,6 @@
 import { Avatar } from '@/components/Avatar/Avatar.component'
 import { SkeletonView } from '@/components/SkeletonView/SkeletonView.component'
-import { IMessageRequests } from '@/types/messages.types'
+import type { IMessageRequests } from '@/types/messages.types'
 import React, { useCallback } from 'react'
 import { FlatList, TouchableOpacity } from 'react-native'
 import Fader from 'react-native-ui-lib/fader'

@@ -1,4 +1,5 @@
 import { ChatComponent } from '@/components/Chat/Chat.component'
+import { MARK_ALL_MESSAGES_READ } from '@/graphql/mutations/MarkAllMessagesRead.mutation'
 import {
   FETCH_ROOM_MESSAGES,
   IFetchRoomMessagesResponse,
@@ -11,7 +12,7 @@ import { chatEmitter } from '@/services/events.service'
 import { SocketListenerEvents } from '@/services/socket.types'
 import { useAppSelector } from '@/store'
 import { avatarStatic } from '@/utils/static'
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import React, {
   useCallback,
@@ -71,6 +72,11 @@ export function ChatContainer() {
     },
   })
 
+  const [markAllMessagesRead] = useMutation<
+    { markAllMessagesRead: boolean },
+    { roomId: number }
+  >(MARK_ALL_MESSAGES_READ)
+
   useEffect(() => {
     socketService.joinRoom({ room: room.roomAdress })
 
@@ -113,6 +119,12 @@ export function ChatContainer() {
       ref.current?.removeMessage(resp.messageId)
     })
 
+    markAllMessagesRead({
+      variables: {
+        roomId: room.id,
+      },
+    })
+
     return () => {
       ChatEmitter.removeAllListeners()
       socketService.removeListeners([
@@ -128,6 +140,7 @@ export function ChatContainer() {
     room.roomAdress,
     socketService,
     localUser?.id,
+    markAllMessagesRead,
   ])
 
   useLayoutEffect(() => {

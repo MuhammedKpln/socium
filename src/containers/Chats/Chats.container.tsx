@@ -34,9 +34,10 @@ import type { IUser } from '@/Types/login.types'
 import type { IMessage, IMessageRequests } from '@/types/messages.types'
 import { showToast, ToastStatus } from '@/utils/toast'
 import { useMutation, useQuery } from '@apollo/client'
-import React, { useCallback, useMemo, useState } from 'react'
+import { useNavigation } from '@react-navigation/native'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { FlatList, RefreshControl } from 'react-native'
-import { Colors } from 'react-native-ui-lib'
+import { Colors, Fader } from 'react-native-ui-lib'
 import ActionSheet from 'react-native-ui-lib/actionSheet'
 import Drawer from 'react-native-ui-lib/drawer'
 import Text from 'react-native-ui-lib/text'
@@ -49,6 +50,7 @@ import { Search } from './components/Search.component'
 
 export function ChatsContainer() {
   const localUser = useAppSelector(state => state.userReducer.user)
+  const navigator = useNavigation()
   const [showActionSheet, setShowActionSheet] = useState<IActionSheet>({
     visible: false,
     message: '',
@@ -78,6 +80,16 @@ export function ChatsContainer() {
     IRejectRequestResponse,
     IRejectRequestVariables
   >(REJECT_REQUEST)
+
+  useEffect(() => {
+    const listener = navigator.addListener('focus', () => {
+      messages.refetch()
+    })
+
+    return () => {
+      navigator.removeListener('focus', listener)
+    }
+  }, [messages, navigator])
 
   const [deleteRoom] = useMutation<IDeleteRoomResponse, IDeleteRoomVariables>(
     DELETE_ROOM,
@@ -361,11 +373,13 @@ export function ChatsContainer() {
               setShowActionSheet(prev => ({ ...prev, visible: false }))
             }
           />
+
           <RecentlyMatched
             messageRequests={messageRequests.data.messageRequests}
             loading={messageRequests.loading}
             onPress={(item: IMessageRequests) => onPressRecentlyMatched(item)}
           />
+          <Fader visible />
         </View>
       ) : null}
 

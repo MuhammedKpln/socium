@@ -46,6 +46,12 @@ const BottomTabBarNavigator = () => {
             headerRight: () => <HeaderRight />,
           },
         }}
+        listeners={({ navigation }) => ({
+          tabPress: e => {
+            e.preventDefault()
+            authRequiredFunction(() => navigation.navigate(Routes.Discover))
+          },
+        })}
       />
       <Tab.Screen
         name={'s'}

@@ -30,11 +30,11 @@ import {
 import { Routes } from '@/navigators/navigator.props'
 import { navigate } from '@/navigators/utils/navigation'
 import { useAppSelector } from '@/store'
-import { IUser } from '@/Types/login.types'
-import { IMessage, IMessageRequests } from '@/types/messages.types'
+import type { IUser } from '@/Types/login.types'
+import type { IMessage, IMessageRequests } from '@/types/messages.types'
 import { showToast, ToastStatus } from '@/utils/toast'
 import { useMutation, useQuery } from '@apollo/client'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { FlatList, RefreshControl } from 'react-native'
 import { Colors } from 'react-native-ui-lib'
 import ActionSheet from 'react-native-ui-lib/actionSheet'
@@ -42,7 +42,7 @@ import Drawer from 'react-native-ui-lib/drawer'
 import Text from 'react-native-ui-lib/text'
 import View from 'react-native-ui-lib/view'
 import { findBestMatch } from 'string-similarity'
-import { IActionSheet } from './Chats.props'
+import type { IActionSheet } from './Chats.props'
 import { ChatBox } from './components/Chatbox.component'
 import { RecentlyMatched } from './components/RecentlyMatched.component'
 import { Search } from './components/Search.component'
@@ -136,6 +136,7 @@ export function ChatsContainer() {
     ({ item }: { item: IMessage }) => {
       let username: string = ''
       let avatar: string = ''
+      let renderBadge: boolean = false
 
       if (item.sender.id !== localUser?.id) {
         username = item.sender.username
@@ -144,6 +145,10 @@ export function ChatsContainer() {
       if (item.receiver.id !== localUser?.id) {
         username = item.receiver.username
         avatar = item.receiver.avatar
+      }
+
+      if (item.receiver.id === localUser?.id && item.seen === false) {
+        renderBadge = true
       }
 
       return (
@@ -167,6 +172,7 @@ export function ChatsContainer() {
               lastMessage={item.message}
               date={item.created_at}
               onPress={() => onPressChat(item)}
+              renderBadge={renderBadge}
             />
           </Drawer>
         </View>
@@ -188,10 +194,19 @@ export function ChatsContainer() {
     [messages, messageRequests],
   )
 
+  const renderSortedMessages = useMemo(() => {
+    return messages.data?.messages.sort((a, b) => {
+      if (a.seen && !b.seen) {
+        return 1
+      }
+      return -1
+    })
+  }, [messages])
+
   const renderData = useCallback(() => {
     return (
       <FlatList
-        data={messages.data?.messages}
+        data={renderSortedMessages}
         renderItem={renderChatBox}
         style={{ height: '100%' }}
         refreshControl={refreshControl()}
@@ -204,7 +219,7 @@ export function ChatsContainer() {
         }
       />
     )
-  }, [renderChatBox, messages, refreshControl])
+  }, [renderChatBox, refreshControl, renderSortedMessages])
 
   const onSearch = useCallback(
     (text: string) => {
@@ -216,7 +231,6 @@ export function ChatsContainer() {
             e.sender.username.toLowerCase(),
             e.receiver.username.toLowerCase(),
           ])
-          console.log(compare.bestMatch)
 
           if (compare.bestMatch.rating > 0.5) {
             return e

@@ -73,6 +73,7 @@ function _ChatComponent(props: IChatProps, ref: Ref<ListRef>) {
         footerProps={{
           onChangeText: props.onChangeInputText,
           onPressSend: props.onPressSend,
+          placeholder: 'Mesaj gönderin',
           onPressCancelReply: () => props?.onReply!(null),
           inputStyle: {
             width: '85%',

@@ -107,6 +107,7 @@ const MainNavigator = () => {
       initialRouteName={firstStart ? Routes.Onboarding : Routes.Home}
       screenOptions={{
         headerBackTitle: '',
+        headerTintColor: '#000',
         headerTitleStyle: {
           fontFamily: 'Gilroy-Semibold',
           fontWeight: '600',

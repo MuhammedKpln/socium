@@ -22,6 +22,7 @@ import { PostType } from '@/types/post.types'
 import { IInstagramMeta, IYoutubeMeta } from '@/types/socialMedia.types'
 import { showToast, ToastStatus } from '@/utils/toast'
 import { useMutation, useQuery } from '@apollo/client'
+import Clipboard from '@react-native-community/clipboard'
 import { Formik } from 'formik'
 import { map } from 'lodash'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
@@ -135,6 +136,19 @@ export function NewPostContainer() {
     fetchYoutubeMeta,
     twitterRegex,
   ])
+
+  useEffect(() => {
+    if (showAdditionalDataDialog) {
+      // If user has a string in clipboard, fetch it
+      Clipboard.hasString().then((hasString: boolean) => {
+        if (hasString) {
+          Clipboard.getString().then(text => {
+            setAdditionalData(text)
+          })
+        }
+      })
+    }
+  }, [showAdditionalDataDialog])
 
   useEffect(() => {
     if (!showAdditionalDataDialog) {

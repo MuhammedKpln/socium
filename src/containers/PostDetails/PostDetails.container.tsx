@@ -167,8 +167,8 @@ export function PostDetails() {
             <View>
               <View row>
                 <Avatar userAvatar={post?.user?.avatar} />
-                <View marginL-5>
-                  <Text textColor text text90BL>
+                <View marginL-10>
+                  <Text textColor text font15 bold>
                     {post?.user.username}
                   </Text>
                   <Text text greyText>

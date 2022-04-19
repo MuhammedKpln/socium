@@ -1,14 +1,14 @@
-const dev = true
+const dev = __DEV__
 
 export const Config = {
   STATIC_URL: dev
     ? 'https://derdevam.com/static'
     : 'https://derdevam.com/static',
   GRAPHQL_WS_URL: dev
-    ? 'ws://81.226.94.21:3000/graphql'
+    ? 'ws://localhost:3000/graphql'
     : 'wss://derdevam.com/graphql',
-  API_URL: dev ? 'http://81.226.94.21:3000' : 'https://derdevam.com',
-  SOCKET_URL: dev ? 'ws://81.226.94.21:3001' : 'wss://cio.derdevam.com',
+  API_URL: dev ? 'http://localhost:3000' : 'https://derdevam.com',
+  SOCKET_URL: dev ? 'ws://localhost:3001' : 'wss://cio.derdevam.com',
   APP_TITLE: 'Socium',
   APP_SLOGAN: 'Socium ile içinizi dökmeye hazır mısınız?',
   APP_PLAYSTORE_LINK: 'https://derdevam.com',

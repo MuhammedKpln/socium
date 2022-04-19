@@ -16,11 +16,11 @@ const Animation = (props: IAnimationCPProps) => {
   if (!animationData) return <ActivityIndicator />
   return (
     <Lottie
+      {...props}
       source={animationData}
       autoPlay
       loop
       cacheStrategy="strong"
-      {...props}
     />
   )
 }

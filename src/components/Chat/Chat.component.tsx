@@ -35,6 +35,7 @@ function _ChatComponent(props: IChatProps, ref: Ref<ListRef>) {
         ref={ref}
         messages={props.messages}
         enableHapticFeedback
+        enableUrlPreviews
         setDateLocale="tr"
         renderHeader={() => (
           <ChatHeader

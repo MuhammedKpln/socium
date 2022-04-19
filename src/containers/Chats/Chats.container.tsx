@@ -274,15 +274,14 @@ export function ChatsContainer() {
 
   const onSearch = useCallback(
     (text: string) => {
-      const prevResults = messages.previousData
+      const data = messages.data && messages.previousData
 
-      if (prevResults) {
-        const updatedResults = prevResults.messages.filter(e => {
+      if (data) {
+        const updatedResults = data.messages.filter(e => {
           const compare = findBestMatch(text.toLowerCase(), [
             e.sender.username.toLowerCase(),
             e.receiver.username.toLowerCase(),
           ])
-
           if (compare.bestMatch.rating > 0.5) {
             return e
           }

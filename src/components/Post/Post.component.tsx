@@ -298,7 +298,9 @@ export const Post = React.memo((props: IPostProps) => {
               <View row>{renderTwitterImages()}</View>
             ) : null}
             {postType === PostType.Youtube ? (
-              <View>{renderYoutubeIframe(additional ? additional : '')}</View>
+              <View marginT-10>
+                {renderYoutubeIframe(additional ? additional : '')}
+              </View>
             ) : null}
           </View>
           <View width="85%">

@@ -1,6 +1,6 @@
 # Socium
 
-Backend for an anonymous chat app application made with React Native.
+An anonymous chat app application made with React Native.
 
 ### Tech stack
 - GraphQL (API)
